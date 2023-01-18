@@ -1,0 +1,43 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# abcdutils
+
+<!-- badges: start -->
+<!-- badges: end -->
+
+The goal of abcdutils is to ...
+
+## Installation
+
+You can install the development version of abcdutils from [GitHub](https://github.com/) with:
+
+``` r
+# install.packages("devtools")
+devtools::install_github("psvelayudhan/abcdutils")
+```
+
+## Examples
+
+```{r example}
+library(abcdutils)
+
+# Search the NDA's data dictionary from R
+search_dd("traumatic brain injury")
+
+# Go to the data dictionary page of a dataframe based on its short name
+abcd_dd("abcd_otbi01")
+```
+
