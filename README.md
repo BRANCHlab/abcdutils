@@ -34,7 +34,7 @@ search_dd("traumatic brain injury")
 # Go to the data dictionary page of a dataframe based on its short name
 abcd_dd("abcd_otbi01")
 
-# Remove the data dictionary (yes, this is just df[-1, ]
+# Remove the data dictionary (yes, this is just df[-1, ])
 abcd_otbi01 <- read_csv("abcd_otbi01.txt")
 remove_dd(abcd_otbi01)
 ```
