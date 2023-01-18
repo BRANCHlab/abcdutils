@@ -22,7 +22,7 @@ devtools::install_github("psvelayudhan/abcdutils")
 
 ## Usage
 
-### Accessing the data dictionary
+### Working with the data dictionary
 
 ``` r
 library(abcdutils)
@@ -119,8 +119,6 @@ filter_subjects(abcd_otbi01, subject_list)
 ```
 
 ### Concussion data prep
-
-Variety of useful processing for the TBI dataframe:
 
 ``` r
 abcd_otbi01 <- read_csv("abcd_otbi01.txt")
