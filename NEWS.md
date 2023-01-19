@@ -1,5 +1,9 @@
 # abcdutils 0.1.1
 
+## Minor changes
+
+* Depend on master branch of visdat to avoid outdated gather_ warnings
+
 # abcdutils 0.1.0
 
 * Initial package release, including:
