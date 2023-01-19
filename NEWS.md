@@ -64,4 +64,6 @@
         * `remove_dd`: remove the data dictionary from a dataframe
         * `search_dd`: open the data dictionary search results for a string
         * `abcd_dd`: open the data dictionary page for a data item's short name
+    * plotting functions:
+        * `vis_missing_by_df`: visualize missing data across multiple dataframes
 * Added a `NEWS.md` file to track changes to the package.
