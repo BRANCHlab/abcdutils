@@ -166,3 +166,16 @@ identify_latest_mtbi_mem_daze(abcd_otbi01)
 detail_mtbi(abcd_otbi01)
 ```
 
+### Plotting
+
+```{r eval = FALSE}
+# Visualize missing data across several dataframes
+
+df_list <- list(
+    "loss of consciousness" = as_mtbi_loc,
+    "mechanism of injury" = as_mtbi_mechanism,
+    "memory loss / dazed" = as_mtbi_mem_daze,
+    "income" = d_income)
+
+vis_missing_by_df(df_list)
+```
