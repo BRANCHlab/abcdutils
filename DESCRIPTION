@@ -12,5 +12,7 @@ RoxygenNote: 7.2.1
 Imports: 
     dplyr,
     fastDummies,
+    purrr,
     rlang,
-    utils
+    utils,
+    visdat
