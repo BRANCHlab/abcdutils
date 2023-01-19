@@ -22,11 +22,15 @@ A collection of utility functions for working with the Adolescent Brain and Cogn
 
 ## Installation
 
-You can install the development version of abcdutils from [GitHub](https://github.com/) with:
+You can install abcdutils from [GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("psvelayudhan/abcdutils")
+devtools::install_github("psvelayudhan/abcdutils") # latest development
+
+devtools::install_github("psvelayudhan/abcdutils@stable") # latest stable
+
+devtools::install_github("psvelayudhan/abcdutils@v0.1.0") # specific version
 ```
 
 ## Usage
