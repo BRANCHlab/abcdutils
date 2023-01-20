@@ -1,10 +1,12 @@
 Package: abcdutils
-Title: What the Package Does (One Line, Title Case)
+Title: Utility Functions for the ABCD Dataset
 Version: 0.1.1
-Authors@R: 
-    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"),
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
+Authors@R: c(
+    person("Prashanth", "Velayudhan", , "prashanth.velayudhan@sickkids.ca", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0003-4678-7315")),
+    person("Eman", "Nishat", , "eman.nishat@sickkids.ca", role = c("ctb"))
+    )
+Description: A variety of data extraction, cleaning, and plotting functions to facilitate working with the NDA's Adolescent Brain and Cognitive Development dataset.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
