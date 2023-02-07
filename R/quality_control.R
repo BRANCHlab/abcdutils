@@ -13,7 +13,7 @@
 #' 2. A list of subjectkeys of dropped QC participants
 #'
 #' @export
-qc_rsfmri <- function(abcd_df, mriqcrp10301, t = 0) {
+qc_rsfmri <- function(abcd_df, mriqcrp10301, t = 0, no_na = FALSE) {
     mri_qc <- mriqcrp10301 |>
         abcd_import(t = t, subjects = abcd_df[, "subjectkey"]) |>
         dplyr::select("subjectkey",
@@ -29,9 +29,8 @@ qc_rsfmri <- function(abcd_df, mriqcrp10301, t = 0) {
     print(paste0(length(failed_qc), " subjects failed rsFMRI QC"))
     passing_qc <- which(rsfmri_qc$"min_qc" == 1)
     abcd_df_qc <- abcd_df[passing_qc, ]
-    rsfmri_qc_list <- list(abcd_df_qc, failed_qc)
-    names(rsfmri_qc_list) <- c("qc_passing_df", "failed_qc")
-    return(rsfmri_qc_list)
+    if (no_na) abcd_df_qc <- stats::na.omit(abcd_df_qc)
+    return(abcd_df_qc)
 }
 
 
@@ -50,7 +49,7 @@ qc_rsfmri <- function(abcd_df, mriqcrp10301, t = 0) {
 #' 2. A list of subjectkeys of dropped QC participants
 #'
 #' @export
-qc_dmri <- function(abcd_df, mriqcrp10301, t = 0) {
+qc_dmri <- function(abcd_df, mriqcrp10301, t = 0, no_na = FALSE) {
     mri_qc <- mriqcrp10301 |>
         abcd_import(t = t, subjects = abcd_df[, "subjectkey"]) |>
         dplyr::select("subjectkey",
@@ -66,9 +65,8 @@ qc_dmri <- function(abcd_df, mriqcrp10301, t = 0) {
     print(paste0(length(failed_qc), " subjects failed dmri QC"))
     passing_qc <- which(dmri_qc$"min_qc" == 1)
     abcd_df_qc <- abcd_df[passing_qc, ]
-    dmri_qc_list <- list(abcd_df_qc, failed_qc)
-    names(dmri_qc_list) <- c("qc_passing_df", "failed_qc")
-    return(dmri_qc_list)
+    if (no_na) abcd_df_qc <- stats::na.omit(abcd_df_qc)
+    return(abcd_df_qc)
 }
 
 #' smri QC
@@ -86,7 +84,7 @@ qc_dmri <- function(abcd_df, mriqcrp10301, t = 0) {
 #' 2. A list of subjectkeys of dropped QC participants
 #'
 #' @export
-qc_smri <- function(abcd_df, mriqcrp10301, t = 0) {
+qc_smri <- function(abcd_df, mriqcrp10301, t = 0, no_na = FALSE) {
     mri_qc <- mriqcrp10301 |>
         abcd_import(t = t, subjects = abcd_df[, "subjectkey"]) |>
         dplyr::select("subjectkey",
@@ -102,7 +100,6 @@ qc_smri <- function(abcd_df, mriqcrp10301, t = 0) {
     print(paste0(length(failed_qc), " subjects failed smri QC"))
     passing_qc <- which(smri_qc$"min_qc" == 1)
     abcd_df_qc <- abcd_df[passing_qc, ]
-    smri_qc_list <- list(abcd_df_qc, failed_qc)
-    names(smri_qc_list) <- c("qc_passing_df", "failed_qc")
-    return(smri_qc_list)
+    if (no_na) abcd_df_qc <- stats::na.omit(abcd_df_qc)
+    return(abcd_df_qc)
 }
