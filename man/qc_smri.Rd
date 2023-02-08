@@ -4,7 +4,7 @@
 \alias{qc_smri}
 \title{smri QC}
 \usage{
-qc_smri(abcd_df, mriqcrp10301, t = 0)
+qc_smri(abcd_df, mriqcrp10301, t = 0, no_na = FALSE)
 }
 \arguments{
 \item{abcd_df}{A dataframe containing subjectkeys}
@@ -12,6 +12,8 @@ qc_smri(abcd_df, mriqcrp10301, t = 0)
 \item{mriqcrp10301}{The \code{mriqcrp10301} data object}
 
 \item{t}{The collection period of interest (defaults to baseline: 0)}
+
+\item{no_na}{whether observations containing NAs should be removed}
 }
 \value{
 smri_qc_list a list of:

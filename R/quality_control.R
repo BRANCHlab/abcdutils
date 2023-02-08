@@ -7,6 +7,7 @@
 #' @param abcd_df A dataframe containing subjectkeys
 #' @param mriqcrp10301 The `mriqcrp10301` data object
 #' @param t The collection period of interest (defaults to baseline: 0)
+#' @param no_na whether observations containing NAs should be removed
 #'
 #' @return rsfmri_qc_list a list of:
 #' 1. The original dataframe with failing QC participants dropped
@@ -43,6 +44,7 @@ qc_rsfmri <- function(abcd_df, mriqcrp10301, t = 0, no_na = FALSE) {
 #' @param abcd_df A dataframe containing subjectkeys
 #' @param mriqcrp10301 The `mriqcrp10301` data object
 #' @param t The collection period of interest (defaults to baseline: 0)
+#' @param no_na whether observations containing NAs should be removed
 #'
 #' @return dmri_qc_list a list of:
 #' 1. The original dataframe with failing QC participants dropped
@@ -78,6 +80,7 @@ qc_dmri <- function(abcd_df, mriqcrp10301, t = 0, no_na = FALSE) {
 #' @param abcd_df A dataframe containing subjectkeys
 #' @param mriqcrp10301 The `mriqcrp10301` data object
 #' @param t The collection period of interest (defaults to baseline: 0)
+#' @param no_na whether observations containing NAs should be removed
 #'
 #' @return smri_qc_list a list of:
 #' 1. The original dataframe with failing QC participants dropped
