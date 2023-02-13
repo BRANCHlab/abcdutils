@@ -61,9 +61,34 @@ char_to_fac <- function(df) {
 #' @export
 train_test_split <- function(train_frac, subjects) {
     train_thresh <- 2147483647 * train_frac
-    train <- subjects[abs(digest::digest2int(subjects, seed = 42)) < train_thresh]
-    test <- subjects[abs(digest::digest2int(subjects, seed = 42)) >= train_thresh]
-    split <- list(train, test)
-    names(split) <- c("training_set", "testing_set")
-    return(split)
+    train <-
+        subjects[abs(digest::digest2int(subjects, seed = 42)) < train_thresh]
+    test <-
+        subjects[abs(digest::digest2int(subjects, seed = 42)) >= train_thresh]
+    train_df <- data.frame(subjectkey = train, split = "train")
+    test_df <- data.frame(subjectkey = test, split = "test")
+    assigned_df <- rbind(train_df, test_df)
+    return(assigned_df)
+}
+
+#' Filter data to training or testing subjects only
+#'
+#' @description
+#' Given a dataframe, assigned_df object (from train_test_split()), and split,
+#'  return just the data for subjects that were assigned the specified split
+#'
+#' @param assigned_df Dataframe containing "subjectkey" and "split" cols
+#' @param df Dataframe to be subsetted into training or testing split
+#' @param split Split to keep ("train" or "test")
+#'
+#' @return split_df
+#'
+#' @export
+keep_split <- function(df, assigned_df, split) {
+    train_or_test <- split
+    split_df <- assigned_df |>
+        dplyr::filter(split == train_or_test) |>
+        dplyr::inner_join(df, by = "subjectkey") |>
+        dplyr::select(-split)
+    return(split_df)
 }
