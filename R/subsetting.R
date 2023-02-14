@@ -55,7 +55,7 @@ filter_subjects <- function(abcd_df, subjects = NULL) {
 #'
 #' @export
 common_subjects <- function(list) {
-    shared_df <- full_df_list |>
+    shared_df <- list |>
         purrr::reduce(dplyr::inner_join, by = "subjectkey")
     common_subs <- shared_df$subjectkey
     return(common_subs)

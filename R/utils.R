@@ -59,7 +59,7 @@ char_to_fac <- function(df) {
 #' @return split a named list containing the training and testing subject_ids
 #'
 #' @export
-train_test_split <- function(train_frac, subjects) {
+train_test_assign <- function(train_frac, subjects) {
     train_thresh <- 2147483647 * train_frac
     train <-
         subjects[abs(digest::digest2int(subjects, seed = 42)) < train_thresh]

@@ -1002,6 +1002,8 @@ get_cbcl_sleeping_less <- function(abcd_cbcl01, subjects = NULL, t = NULL) {
 #' @param abcd_cbcls01 NDA cbcl dataframe
 #' @param subjects list of subjects to receive data for
 #' @param t timepoint for data collection (0: baseline, 1: 1yfu, ... 3: 3yfu)
+#' @param raw Logical value indicating if raw or borderline/clinical
+#'  thresholded values should be obtained
 #'
 #' @return cbcl_depress_r depression data
 #'
@@ -1038,6 +1040,8 @@ get_cbcl_depress <- function(abcd_cbcls01, subjects = NULL, t = NULL,
 #' @param abcd_cbcls01 NDA cbcl dataframe
 #' @param subjects list of subjects to receive data for
 #' @param t timepoint for data collection (0: baseline, 1: 1yfu, ... 3: 3yfu)
+#' @param raw Logical value indicating if raw or borderline/clinical
+#'  thresholded values should be obtained
 #'
 #' @return cbcl_anxiety_r anxiety data
 #'
@@ -1072,6 +1076,8 @@ get_cbcl_anxiety <- function(abcd_cbcls01, subjects = NULL, t = NULL,
 #' @param abcd_cbcls01 NDA cbcl dataframe
 #' @param subjects list of subjects to receive data for
 #' @param t timepoint for data collection (0: baseline, 1: 1yfu, ... 3: 3yfu)
+#' @param raw Logical value indicating if raw or borderline/clinical
+#'  thresholded values should be obtained
 #'
 #' @return cbcl_attention_r attention data
 #'
@@ -1106,6 +1112,8 @@ get_cbcl_attention <- function(abcd_cbcls01, subjects = NULL, t = NULL,
 #' @param abcd_cbcls01 NDA cbcl dataframe
 #' @param subjects list of subjects to receive data for
 #' @param t timepoint for data collection (0: baseline, 1: 1yfu, ... 3: 3yfu)
+#' @param raw Logical value indicating if raw or borderline/clinical
+#'  thresholded values should be obtained
 #'
 #' @return cbcl_aggressive_r aggressive data
 #'
