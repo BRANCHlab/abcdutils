@@ -51,7 +51,6 @@ char_to_fac <- function(df) {
 #'  function relies on whether or not the absolute value of the Jenkins's
 #'  one_at_a_time hash function exceeds the maximum possible value
 #'  (2147483647) multiplied by the threshold
-#'  
 #'
 #' @param train_frac The fraction (0 to 1) of subjects for training
 #' @param subjects The available subjects for distribution
