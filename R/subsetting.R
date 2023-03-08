@@ -44,19 +44,19 @@ filter_subjects <- function(abcd_df, subjects = NULL) {
     }
 }
 
+
 #' Get common subjects
 #'
 #' @description
 #' Extract subjects common across a list of dataframes
 #'
-#' @param list List of dataframes
+#' @param df_list List of dataframes
 #'
 #' @return common_subs Subjects common across list of dataframes
 #'
 #' @export
-common_subjects <- function(list) {
-    shared_df <- list |>
-        purrr::reduce(dplyr::inner_join, by = "subjectkey")
+common_subjects <- function(df_list) {
+    shared_df <- merge_df_list(df_list)
     common_subs <- shared_df$subjectkey
     return(common_subs)
 }

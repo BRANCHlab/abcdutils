@@ -91,3 +91,26 @@ keep_split <- function(df, assigned_df, split) {
         dplyr::select(-split)
     return(split_df)
 }
+
+
+#' Merge list of dataframes
+#'
+#' @param df_list list of dataframes
+#' @param join String indicating if join should be "inner" or "full"
+#'
+#' @return merged_df inner join of all dataframes in list
+#'
+#' @export
+merge_df_list <- function(df_list, join = "inner") {
+    if (join == "inner") {
+        merged_df <- df_list |>
+            purrr::reduce(dplyr::inner_join, by = "subjectkey")
+    } else if (join == "full") {
+        merged_df <- df_list |>
+            purrr::reduce(dplyr::full_join, by = "subjectkey")
+    } else {
+        print("Invalid join type specified. Options are 'inner' and 'full'.")
+        return(NULL)
+    }
+    return(merged_df)
+}

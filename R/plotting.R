@@ -21,7 +21,7 @@ vis_missing_by_df <- function(df_list) {
         df_list[[i]] <- df_list[[i]] |>
             dplyr:: select("subjectkey", dplyr::contains(sum_name))
     }
-    merged_df <- df_list |> purrr::reduce(dplyr::full_join, by = "subjectkey")
+    merged_df <- merge_df_list(df_list, join = "full")
     visdat::vis_miss(merged_df)
     output_list <- list(visdat::vis_miss(merged_df), merged_df)
     return(output_list)

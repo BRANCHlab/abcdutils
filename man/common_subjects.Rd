@@ -4,10 +4,10 @@
 \alias{common_subjects}
 \title{Get common subjects}
 \usage{
-common_subjects(list)
+common_subjects(df_list)
 }
 \arguments{
-\item{list}{List of dataframes}
+\item{df_list}{List of dataframes}
 }
 \value{
 common_subs Subjects common across list of dataframes
