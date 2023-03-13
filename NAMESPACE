@@ -3,6 +3,7 @@
 export(abcd_dd)
 export(abcd_import)
 export(char_to_fac)
+export(clean_plot)
 export(col_to_num)
 export(common_subjects)
 export(detail_mtbi)
