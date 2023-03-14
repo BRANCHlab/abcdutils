@@ -39,3 +39,42 @@ path_maker <- function(path) {
     }
     return(path_fn)
 }
+
+
+#' Neatly read in a csv file
+#'
+#' @param path_maker_fn A function made by path_maker
+#' @param df_it Boolean indicating if file should be read as a dataframe
+#' @param date Boolean indicating if read file should have today (TRUE), no
+#'  date (FALSE), or a particular date (string) prefix for the file being read.
+#'  Default is FALSE - assumes the user will specify the full file name.
+#'
+#' @return reader function that will load a file from a particular source
+#'
+#' @export
+make_reader <- function(path_maker_fn, df_it = TRUE, date = FALSE) {
+    reader <- function(path) {
+        readr::read_csv(path_maker_fn(path))
+    }
+    return(reader)
+}
+
+
+#' Neatly write a csv file
+#'
+#' @param path_maker_fn A function made by path_maker
+#' @param date Boolean indicating if written file should have today (TRUE), no
+#'  date (FALSE), or a particular date (string) prefix for the file being read.
+#'  Default is TRUE - an opinionated choice to ensure that written files can't
+#'  only destroy things made on the day of the code being run.
+#'
+#' @return writer function that will load a file from a particular source
+#'
+#' @export
+make_writer <- function(path_maker_fn, date = TRUE) {
+    writer <- function(file, path) {
+        #readr::write_csv(path_maker_fn(path))
+        print(path_maker_fn(path, date = date))
+    }
+    return(writer)
+}
