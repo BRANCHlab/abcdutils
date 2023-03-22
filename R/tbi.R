@@ -69,7 +69,7 @@ rename_tbi <- function(tbi_df) {
                 grepl("tbi_7l", .) ~ "other_multi_effect_end_age",
                 . == "tbi_8" ~ "num_sport_concussions",
                 . == "tbi_8a" ~ "school_missed_sport_concussion",
-                . == "tbi_8b" ~ "school_missed_worst_recent_concussion",
+                . == "tbi_8b" ~ "school_missed_worst_sport_concussion",
                 grepl("tbi_8g", .) ~ "other_other_multi_inj",
                 grepl("tbi_8i", .) ~ "other_other_multi_effect_type",
                 grepl("tbi_8k", .) ~ "other_other_multi_effect_start_age",
@@ -87,47 +87,135 @@ rename_tbi <- function(tbi_df) {
 #' Return conversion table of original and new otbi names
 #'
 #' @export
-original_otbi_names <- function() {
-    print("| New name                           | Old name | Description                                  |")
-    print("|------------------------------------+----------+----------------------------------------------|")
-    print("| hosp_er_inj                        | tbi_1    | ever hospitalized/ER for head/neck injury?   |")
-    print("| hosp_er_loc                        | tbi_1b   | if LOC, how long?                            |")
-    print("| hosp_er_mem_daze                   | tbi_1c   | were they dazed or have memory gap?          |")
-    print("| hosp_er_age                        | tbi_1d   | how old were they?                           |")
-    print("| vehicle_inj                        | tbi_2    | ever injured in a vehicle accident?          |")
-    print("| vehicle_loc                        | tbi_2b   | if LOC, how long?                            |")
-    print("| vehicle_mem_daze                   | tbi_2c   | were they dazed or have memory gap?          |")
-    print("| vehicle_age                        | tbi_2d   | how old were they?                           |")
-    print("| fall_hit_inj                       | tbi_3    | ever injured head/neck from fall or hit?     |")
-    print("| fall_hit_loc                       | tbi_3b   | if LOC, how long?                            |")
-    print("| fall_hit_mem_daze                  | tbi_3c   | were they dazed or have memory gap?          |")
-    print("| fall_hit_age                       | tbi_3d   | how old were they?                           |")
-    print("| violent_inj                    | tbi_4    | ever injure head/neck from violence?         |")
-    print("| violent_loc                    | tbi_4b   | if LOC, how long?                            |")
-    print("| violent_mem_daze               | tbi_4c   | were they dazed or have memory gap?          |")
-    print("| violent_age                    | tbi_4d   | how old were they?                           |")
-    print("| blast_inj                          | tbi_5    | ever injure head or neck from blast?         |")
-    print("| blast_loc                          | tbi_5b   | if LOC, how long?                            |")
-    print("| blast_mem_daze                     | tbi_5c   | were they dazed or have memory gap?          |")
-    print("| blast_age                          | tbi_5d   | how old were they?                           |")
-    print("| other_loc_inj                      | tbi_6o   | any other injuries with LOC?                 |")
-    print("| other_loc_num                      | tbi_6p   | how many more?                               |")
-    print("| other_loc_max_loc_mins             | tbi_6q   | how long was longest LOC?                    |")
-    print("| other_loc_num_over_30              | tbi_6r   | how many were >= 30 min?                     |")
-    print("| other_loc_min_age                  | tbi_6s   | what was their youngest age?                 |")
-    print("| multi_inj                          | tbi_7a   | did they have a period of multiple injuries? |")
-    print("| multi_loc                          | tbi_7c1  | if LOC, how long?                            |")
-    print("| multi_mem_daze                     | tbl_7c2  | were they dazed or have memory gap?          |")
-    print("| multi_effect_start_age             | tbi_7e   | at what age did the effects begin?           |")
-    print("| multi_effect_end_age               | tbi_7f   | at what age did the effects end?             |")
-    print("| other_multi_inj                    | tbi_7g   | was there another multiple injury period?    |")
-    print("| other_multi_effect_type            | tbi_7i   | typical effect of the injury?                |")
-    print("| other_multi_effect_start_age       | tbi_7k   | start age of those effects?                  |")
-    print("| other_multi_effect_end_age         | tbi_7l   | end age of those effects?                    |")
-    print("| other_other_multi_inj              | tbi_8g   | another period of multiple inj?              |")
-    print("| other_other_multi_effect_type      | tbi_8i   | typical effects?                             |")
-    print("| other_other_multi_effect_start_age | tbi_8k   | start age of effects?                        |")
-    print("| other_other_multi_effect_end_age   | tbi_8l   | end age of effects?                          |")
+original_tbi_names <- function() {
+    df <- data.frame(
+        new_name = c(
+            "hosp_er_inj",
+            "hosp_er_loc",
+            "hosp_er_mem_daze",
+            "hosp_er_age",
+            "vehicle_inj",
+            "vehicle_loc",
+            "vehicle_mem_daze",
+            "vehicle_age",
+            "fall_hit_inj",
+            "fall_hit_loc",
+            "fall_hit_mem_daze",
+            "fall_hit_age",
+            "violent_inj",
+            "violent_loc",
+            "violent_mem_daze",
+            "violent_age",
+            "blast_inj",
+            "blast_loc",
+            "blast_mem_daze",
+            "blast_age",
+            "other_loc_inj",
+            "other_loc_num",
+            "other_loc_max_loc_mins",
+            "other_loc_num_over_30",
+            "other_loc_min_age",
+            "multi_inj",
+            "multi_loc",
+            "multi_mem_daze",
+            "multi_effect_start_age",
+            "multi_effect_end_age",
+            "other_multi_inj",
+            "other_multi_effect_type",
+            "other_multi_effect_start_age",
+            "other_multi_effect_end_age",
+            "num_sport_concussions",
+            "school_missed_sport_concussion",
+            "school_missed_worst_sport_concussion",
+            "other_other_multi_inj",
+            "other_other_multi_effect_type",
+            "other_other_multi_effect_start_age",
+            "other_other_multi_effect_end_age"),
+        old_name = c(
+            "tbi_1",
+            "tbi_1b",
+            "tbi_1c",
+            "tbi_1d",
+            "tbi_2",
+            "tbi_2b",
+            "tbi_2c",
+            "tbi_2d",
+            "tbi_3",
+            "tbi_3b",
+            "tbi_3c",
+            "tbi_3d",
+            "tbi_4",
+            "tbi_4b",
+            "tbi_4c",
+            "tbi_4d",
+            "tbi_5",
+            "tbi_5b",
+            "tbi_5c",
+            "tbi_5d",
+            "tbi_6o",
+            "tbi_6p",
+            "tbi_6q",
+            "tbi_6r",
+            "tbi_6s",
+            "tbi_7a",
+            "tbi_7c1",
+            "tbl_7c2",
+            "tbi_7e",
+            "tbi_7f",
+            "tbi_7g",
+            "tbi_7i",
+            "tbi_7k",
+            "tbi_7l",
+            "tbi_8",
+            "tbi_8a",
+            "tbi_8b",
+            "tbi_8g",
+            "tbi_8i",
+            "tbi_8k",
+            "tbi_8l"),
+        description = c(
+            "ever hospitalized/ER for head/neck injury?",
+            "if LOC, how long?",
+            "were they dazed or have memory gap?",
+            "how old were they?",
+            "ever injured in a vehicle accident?",
+            "if LOC, how long?",
+            "were they dazed or have memory gap?",
+            "how old were they?",
+            "ever injured head/neck from fall or hit?",
+            "if LOC, how long?",
+            "were they dazed or have memory gap?",
+            "how old were they?",
+            "ever injure head/neck from violence?",
+            "if LOC, how long?",
+            "were they dazed or have memory gap?",
+            "how old were they?",
+            "ever injure head or neck from blast?",
+            "if LOC, how long?",
+            "were they dazed or have memory gap?",
+            "how old were they?",
+            "any other injuries with LOC?",
+            "how many more?",
+            "how long was longest LOC?",
+            "how many were >= 30 min?",
+            "what was their youngest age?",
+            "did they have a period of multiple injuries?",
+            "if LOC, how long?",
+            "were they dazed or have memory gap?",
+            "at what age did the effects begin?",
+            "at what age did the effects end?",
+            "was there another multiple injury period?",
+            "typical effect of the injury?",
+            "start age of those effects?",
+            "end age of those effects?",
+            "how many sport/activity-related concussions?*",
+            "days of school missed due to worst concussion (if multiple)?",
+            "days of school missed due to concussion?",
+            "another period of multiple inj?",
+            "typical effects?",
+            "start age of effects?",
+            "end age of effects?"))
+    return(df)
 }
 
 
