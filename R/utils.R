@@ -30,6 +30,27 @@ col_to_num <- function(df, col_indices) {
     return(df)
 }
 
+#' Convert all possible columns to numeric
+#'
+#' @param df A dataframe or tibble
+#'
+#' @return df The same dataframe with all possible columns made numeric
+#'
+#' @export
+col_to_num_all_possible <- function(df) {
+    df[] <- lapply(df,
+        function(x) {
+            tryCatch({
+                return(as.numeric(x))
+            },
+            warning = function(cond) {
+                if (cond$"message" == "NAs introduced by coercion")
+                return(x)
+            })
+        })
+    return(df)
+}
+
 #' Convert char columns to factors
 #'
 #' @param df The dataframe containing char columns to be converted
