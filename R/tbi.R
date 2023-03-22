@@ -151,11 +151,8 @@ original_otbi_names <- function() {
 identify_all_tbi <- function(tbi_df) {
     # Assign column types
     dfct <- tbi_df |>
-        dplyr::mutate(
-            dplyr::across(
-                "hosp_er_inj":"other_other_multi_effect_end_age", as.numeric
-            )
-        )
+        dplyr::mutate(dplyr::across(
+            "hosp_er_inj":"other_other_multi_effect_end_age", as.numeric))
     dfct$"interview_age" <- as.numeric(dfct$"interview_age")
     # Generate mtbi and moderate_or_severe_tbi columns
     df_all_tbi <- dfct |> dplyr::mutate(
