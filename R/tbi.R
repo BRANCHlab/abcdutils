@@ -232,50 +232,48 @@ original_tbi_names <- function() {
 #'
 #' @param tbi_df A TBI dataframe
 #'
-#' @return renamed_tbi A modified form of tbi_df with clearer column names
+#' @return tbi_df A modified form of tbi_df added tbi columns
 #'
 #' @export
 #'
 identify_all_tbi <- function(tbi_df) {
     # Assign column types
-    dfct <- tbi_df |>
-        dplyr::mutate(dplyr::across(
-            "hosp_er_inj":"other_other_multi_effect_end_age", as.numeric))
-    dfct$"interview_age" <- as.numeric(dfct$"interview_age")
+    tbi_df <- abcdutils::col_to_num_all_possible(tbi_df)
     # Generate mtbi and moderate_or_severe_tbi columns
-    df_all_tbi <- dfct |> dplyr::mutate(
+    tbi_df <- tbi_df |> dplyr::mutate(
         mtbi = dplyr::case_when(
-            (dfct$"hosp_er_loc" < 2 & dfct$"hosp_er_mem_daze" == 1) |
-                dfct$"hosp_er_loc" == 1 ~ 1,
-            (dfct$"vehicle_loc" < 2 & dfct$"vehicle_mem_daze" == 1) |
-                dfct$"vehicle_loc" == 1 ~ 1,
-            (dfct$"fall_hit_loc" < 2 & dfct$"fall_hit_mem_daze" == 1) |
-                dfct$"fall_hit_loc" == 1 ~ 1,
-            (dfct$"violent_loc" < 2 & dfct$"violent_mem_daze" == 1) |
-                dfct$"violent_loc" == 1 ~ 1,
-            (dfct$"blast_loc" < 2 & dfct$"blast_mem_daze" == 1) |
-                dfct$"blast_loc" == 1 ~ 1,
-            (dfct$"other_loc_num" - dfct$"other_loc_num_over_30") > 0 ~ 1,
-            (dfct$"multi_loc" < 2 & dfct$"multi_mem_daze" == 1) |
-                dfct$"multi_loc" == 1 ~ 1,
-            dfct$"other_multi_inj" == 1 ~ 0.5,
-            dfct$"other_other_multi_inj" == 1 ~ 0.5,
+            (tbi_df$"hosp_er_loc" < 2 & tbi_df$"hosp_er_mem_daze" == 1) |
+                tbi_df$"hosp_er_loc" == 1 ~ 1,
+            (tbi_df$"vehicle_loc" < 2 & tbi_df$"vehicle_mem_daze" == 1) |
+                tbi_df$"vehicle_loc" == 1 ~ 1,
+            (tbi_df$"fall_hit_loc" < 2 & tbi_df$"fall_hit_mem_daze" == 1) |
+                tbi_df$"fall_hit_loc" == 1 ~ 1,
+            (tbi_df$"violent_loc" < 2 & tbi_df$"violent_mem_daze" == 1) |
+                tbi_df$"violent_loc" == 1 ~ 1,
+            (tbi_df$"blast_loc" < 2 & tbi_df$"blast_mem_daze" == 1) |
+                tbi_df$"blast_loc" == 1 ~ 1,
+            (tbi_df$"other_loc_num" - tbi_df$"other_loc_num_over_30") > 0 ~ 1,
+            (tbi_df$"multi_loc" < 2 & tbi_df$"multi_mem_daze" == 1) |
+                tbi_df$"multi_loc" == 1 ~ 1,
+            abcdutils::flex_cond(tbi_df$"num_sport_concussions" > 0) ~ 1,
+            abcdutils::flex_cond(tbi_df$"other_multi_inj" == 1) ~ 0.5,
+            abcdutils::flex_cond(tbi_df$"other_other_multi_inj" == 1) ~ 0.5,
             TRUE ~ 0
         ),
         moderate_or_severe_tbi = dplyr::case_when(
-            (dfct$"hosp_er_loc" > 1 |
-                dfct$"vehicle_loc" > 1 |
-                dfct$"fall_hit_loc" > 1 |
-                dfct$"violent_loc" > 1 |
-                dfct$"blast_loc" > 1 |
-                dfct$"other_loc_num_over_30" > 0 |
-                dfct$"multi_loc" > 1) ~ 1,
-            dfct$"other_multi_inj" == 1 ~ 0.5,
-            dfct$"other_other_multi_inj" == 1 ~ 0.5,
+            (tbi_df$"hosp_er_loc" > 1 |
+                tbi_df$"vehicle_loc" > 1 |
+                tbi_df$"fall_hit_loc" > 1 |
+                tbi_df$"violent_loc" > 1 |
+                tbi_df$"blast_loc" > 1 |
+                tbi_df$"other_loc_num_over_30" > 0 |
+                tbi_df$"multi_loc" > 1) ~ 1,
+            abcdutils::flex_cond(tbi_df$"other_multi_inj" == 1) ~ 0.5,
+            abcdutils::flex_cond(tbi_df$"other_other_multi_inj" == 1) ~ 0.5,
             TRUE ~ 0
         )
     )
-    return(df_all_tbi)
+    return(tbi_df)
 }
 
 
