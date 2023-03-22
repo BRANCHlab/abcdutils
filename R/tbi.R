@@ -545,7 +545,7 @@ detail_mtbi <- function(otbi01, subjects, t = NULL) {
 #' Extract mTBI subjects with a minimum time-since-last-mtbi threshold
 #'
 #' @param abcd_otbi01 A TBI dataframe
-#' @param min_latest_mtbi_mpi The minimum time-since-last-mtbi to be selected
+#' @param min_mpi The minimum time-since-last-mtbi to be selected
 #' @param t Integer representing which timepoint to filter to:
 #'  - 0: baseline
 #'  - 1: 1-year follow-up
@@ -556,7 +556,7 @@ detail_mtbi <- function(otbi01, subjects, t = NULL) {
 #'
 #' @export
 #'
-get_mtbi_subjects <- function(abcd_otbi01, min_latest_mtbi_mpi, t = NULL) {
+get_mtbi_subjects <- function(abcd_otbi01, min_mpi = -10, t = NULL) {
     abcd_otbi01 <- abcd_import(abcd_otbi01, t = t) |>
         rename_tbi() |>
         identify_all_tbi() |>
@@ -565,7 +565,7 @@ get_mtbi_subjects <- function(abcd_otbi01, min_latest_mtbi_mpi, t = NULL) {
     subjects <- abcd_otbi01 |>
         dplyr::filter(abcd_otbi01$"mtbi" == 1 &
                       abcd_otbi01$"moderate_or_severe_tbi" == 0 &
-                      abcd_otbi01$"latest_mtbi_mpi" >= min_latest_mtbi_mpi) |>
+                      abcd_otbi01$"latest_mtbi_mpi" >= min_mpi) |>
         dplyr::select("subjectkey")
     return(subjects)
 }
