@@ -135,3 +135,28 @@ merge_df_list <- function(df_list, join = "inner") {
     }
     return(merged_df)
 }
+
+#' Flexible conditional statement evaluation
+#'
+#' If a conditional statement would have returns an error or 0-length vector,
+#'  this function returns FALSE instead. Otherwise, evaluates the expression
+#'  normally.
+#'
+#' @param x a conditional statement
+#'
+#' @export
+flex_cond <- function(x) {
+    tryCatch({
+        if (length(x) > 0) {
+            return(x)
+        } else {
+            return(FALSE)
+        }
+    },
+    warning = function(cond) {
+            return(FALSE)
+    },
+    error = function(cond) {
+        return(FALSE)
+    })
+}
