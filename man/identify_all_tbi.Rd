@@ -10,7 +10,7 @@ identify_all_tbi(tbi_df)
 \item{tbi_df}{A TBI dataframe}
 }
 \value{
-renamed_tbi A modified form of tbi_df with clearer column names
+tbi_df A modified form of tbi_df added tbi columns
 }
 \description{
 Calculates whether or not child had an mTBI using the following definition:
