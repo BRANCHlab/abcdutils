@@ -4,7 +4,7 @@
 \alias{detail_mtbi}
 \title{Chain several TBI annotation functions to add multiple helpful mTBI columns}
 \usage{
-detail_mtbi(otbi01, subjects, t = NULL)
+detail_mtbi(otbi01, subjects = NULL, t = NULL)
 }
 \arguments{
 \item{otbi01}{The baseline TBI dataframe}

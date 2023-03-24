@@ -4,7 +4,7 @@
 \alias{get_mtbi_mechanism}
 \title{Get acute symptom input variable 'latest_mtbi_mechanism'}
 \usage{
-get_mtbi_mechanism(otbi01, subjects = NULL, t = NULL, format = "dummied")
+get_mtbi_mechanism(otbi01, subjects = NULL, t = NULL, format = "undummied")
 }
 \arguments{
 \item{otbi01}{The baseline TBI dataframe}

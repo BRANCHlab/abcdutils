@@ -528,7 +528,7 @@ identify_latest_mtbi_mem_daze <- function(tbi_df) {
 #' @return detailed_otbi01 The modified dataframe
 #'
 #' @export
-detail_mtbi <- function(otbi01, subjects, t = NULL) {
+detail_mtbi <- function(otbi01, subjects = NULL, t = NULL) {
     detailed_otbi01 <- abcd_import(otbi01, subjects, t = t) |>
         rename_tbi() |>
         identify_all_tbi() |>
@@ -568,4 +568,33 @@ get_mtbi_subjects <- function(abcd_otbi01, min_mpi = -10, t = NULL) {
                       abcd_otbi01$"latest_mtbi_mpi" >= min_mpi) |>
         dplyr::select("subjectkey")
     return(subjects)
+}
+
+#' Extract list of ABCD subjects who have not sustained any head injury
+#'
+#' @param abcd_otbi01 Baseline mtbi dataset
+#' @param abcd_lpohstbi01 Longitudinal mtbi dataset
+#'
+#' @return uninjured_subjects List of uninjured subjects
+#'
+#' @export
+get_uninjured_subjects <- function(abcd_otbi01, abcd_lpohstbi01) {
+    sink("/dev/null")
+    detailed_baseline <- detail_mtbi(abcd_otbi01)
+    detailed_longitudinal <- detail_mtbi(abcd_lpohstbi01)
+    sink()
+    ever_injured_b <- detailed_baseline |>
+        dplyr::filter(detailed_baseline$"mtbi" > 0 |
+                      detailed_baseline$"moderate_or_severe_tbi" > 0) |>
+        dplyr::select("subjectkey")
+    ever_injured_l <- detailed_longitudinal |>
+        dplyr::filter(detailed_longitudinal$"mtbi" > 0 |
+                      detailed_longitudinal$"moderate_or_severe_tbi" > 0) |>
+        dplyr::select("subjectkey")
+    ever_injured <-
+        dplyr::full_join(ever_injured_b, ever_injured_l, by = "subjectkey")
+    uninjured_subjects <-
+        dplyr::anti_join(detailed_baseline, ever_injured, by = "subjectkey") |>
+        dplyr::select("subjectkey")
+    return(uninjured_subjects)
 }
