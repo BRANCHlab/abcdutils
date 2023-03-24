@@ -1155,7 +1155,7 @@ get_cbcl_aggressive <- function(abcd_cbcls01, subjects = NULL, t = NULL,
 #'
 #' @export
 get_mtbi_mechanism <- function(otbi01, subjects = NULL, t = NULL,
-                               format = "dummied") {
+                               format = "undummied") {
     mtbi_mechanism <- detail_mtbi(otbi01, subjects, t = t) |>
         dplyr::select(
             "subjectkey",
