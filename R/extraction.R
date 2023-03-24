@@ -431,6 +431,39 @@ get_wmnd <- function(drsip201, subjects = NULL, t = NULL) {
 }
 
 
+#' Extract white matter neurite densities
+#'
+#' Extract neurite densities for major white matter tracts (AtlasTrack ROIs) as
+#'  well as peri-cortical/sub-adjacent white matter structures defined relative
+#'  to the Desikan Cortical Parcellation.
+#'
+#' @param drsip201 Data file containing neurite density data
+#' @param subjects Dataframe containing list of required subjects
+#' @param t timepoint for data collection (0: baseline, 1: 1yfu, ... 3: 3yfu)
+#'
+#' @return wmnd_df Dataframe of white matter neurite densities
+#'
+#' @export
+get_all_wmnd <- function(drsip201, subjects = NULL, t = NULL) {
+    nd_raw <- abcdutils::abcd_import(drsip201, subjects, t = t)
+    wmnd_df <- nd_raw |>
+        dplyr::select(
+            "subjectkey",
+            dplyr::contains(c("rsirnd_fib", "rsirndwm"))) |>
+        dplyr::select(-c( # Not interested in redundant mean ROIs:
+            "dmri_rsirnd_fib_fxcutrh", # Duplicate right fornix without fimbria
+            "dmri_rsirnd_fib_fxcutlh", # Duplicate left fornix without fimbria
+            "dmri_rsirnd_fib_allfib", # All fibers
+            "dmri_rsirnd_fib_afbncrh", # All right hemisphere without CC
+            "dmri_rsirnd_fib_afbnclh", # All left hemisphere without CC
+            "dmri_rsirnd_fib_allfibrh", # All right hemisphere
+            "dmri_rsirnd_fib_allfiblh", # All left hemisphere
+            "dmri_rsirndwm_cdx_mean", # overall mean (peri-cortical wm)
+            "dmri_rsirndwm_cdx_meanlh", # left hemisphere (peri-cortical wm)
+            "dmri_rsirndwm_cdx_meanrh")) # right hemisphere (peri-cortical wm)
+    return(wmnd_df)
+}
+
 #' Extract cortical network correlations
 #'
 #' @param betnet02 Data file containing neurite density data
