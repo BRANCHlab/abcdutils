@@ -1204,6 +1204,8 @@ get_mtbi_mechanism <- function(otbi01, subjects = NULL, t = NULL,
     return(mtbi_mechanism)
 }
 
+
+
 #' Get acute symptom input variable 'latest_mtbi_loc'
 #'
 #' @param otbi01 The baseline TBI dataframe
@@ -1222,6 +1224,39 @@ get_mtbi_loc <- function(otbi01, subjects = NULL, t = NULL) {
     return(mtbi_loc)
 }
 
+#' Get LOC data for subjects who exclusively had a latest injury in follow up
+#'
+#' @param abcd_lpohstbi01 longitudinal tbi dataframe
+#' @param l_subs subjects who had an mTBI exclusively in a longitudinal tp
+#' @param y1_subs subjects who had an mTBI at year 1
+#' @param y2_subs subjects who had an mTBI at year 2
+#'
+#' @return l_df latest mTBI LOC data for l subjects
+#'
+#' @export
+get_mtbi_loc_l <- function(abcd_lpohstbi01, l_subs, y1_subs, y2_subs) {
+    # Collect data for 1yfu and 2yfu
+    loc_l_1 <- get_mtbi_loc(abcd_lpohstbi01, l_subs, t = 1)
+    loc_l_2 <- get_mtbi_loc(abcd_lpohstbi01, l_subs, t = 2)
+    colnames(loc_l_1) <- c("subjectkey", "latest_mtbi_loc_1")
+    colnames(loc_l_2) <- c("subjectkey", "latest_mtbi_loc_2")
+    # Determine which children need data from 2yfu and which need from 1yfu
+    l_df <- l_subs
+    l_df$"collect_2" <- l_df$"subjectkey" %in% y2_subs$"subjectkey"
+    l_df <- merge_df_list(list(l_df,
+                       loc_l_1,
+                       loc_l_2),
+                  join = "full")
+    l_df <- l_df |>
+        dplyr::mutate("latest_mtbi_loc" =
+            dplyr::case_when(
+                l_df$"collect_2" == TRUE ~ l_df$"latest_mtbi_loc_2",
+                l_df$"collect_2" == FALSE ~ l_df$"latest_mtbi_loc_1",
+                TRUE ~ NA)) |>
+        dplyr::select("subjectkey", "latest_mtbi_loc")
+    return(l_df)
+}
+
 #' Get acute symptom input variable 'latest_mtbi_mem_daze'
 #'
 #' @param otbi01 The baseline TBI dataframe
@@ -1238,4 +1273,71 @@ get_mtbi_mem_daze <- function(otbi01, subjects = NULL, t = NULL) {
             "latest_mtbi_mem_daze"
         )
     return(mtbi_mem_daze)
+}
+
+#' Get mem daze data for subjects who exclusively had a latest mtbi post bl
+#'
+#' @param abcd_lpohstbi01 longitudinal tbi dataframe
+#' @param l_subs subjects who had an mTBI exclusively in a longitudinal tp
+#' @param y1_subs subjects who had an mTBI at year 1
+#' @param y2_subs subjects who had an mTBI at year 2
+#'
+#' @return l_df latest mTBI mem daze data for l subjects
+#'
+#' @export
+get_mtbi_mem_daze_l <- function(abcd_lpohstbi01, l_subs, y1_subs, y2_subs) {
+    # Collect data for 1yfu and 2yfu
+    mem_daze_l_1 <- get_mtbi_mem_daze(abcd_lpohstbi01, l_subs, t = 1)
+    mem_daze_l_2 <- get_mtbi_mem_daze(abcd_lpohstbi01, l_subs, t = 2)
+    colnames(mem_daze_l_1) <- c("subjectkey", "latest_mtbi_mem_daze_1")
+    colnames(mem_daze_l_2) <- c("subjectkey", "latest_mtbi_mem_daze_2")
+    # Determine which children need data from 2yfu and which need from 1yfu
+    l_df <- l_subs
+    l_df$"collect_2" <- l_df$"subjectkey" %in% y2_subs$"subjectkey"
+    l_df <- merge_df_list(list(l_df,
+                       mem_daze_l_1,
+                       mem_daze_l_2),
+                  join = "full")
+    l_df <- l_df |>
+        dplyr::mutate("latest_mtbi_mem_daze" =
+            dplyr::case_when(
+                l_df$"collect_2" == TRUE ~ l_df$"latest_mtbi_mem_daze_2",
+                l_df$"collect_2" == FALSE ~ l_df$"latest_mtbi_mem_daze_1",
+                TRUE ~ NA)) |>
+        dplyr::select("subjectkey", "latest_mtbi_mem_daze")
+   return(l_df)
+}
+
+
+#' Get mechanism data for subjects who exclusively had a latest mtbi post bl
+#'
+#' @param abcd_lpohstbi01 longitudinal tbi dataframe
+#' @param l_subs subjects who had an mTBI exclusively in a longitudinal tp
+#' @param y1_subs subjects who had an mTBI at year 1
+#' @param y2_subs subjects who had an mTBI at year 2
+#'
+#' @return l_df latest mTBI mechanism data for l subjects
+#'
+#' @export
+get_mtbi_mechanism_l <- function(abcd_lpohstbi01, l_subs, y1_subs, y2_subs) {
+    # Collect data for 1yfu and 2yfu
+    mechanism_l_1 <- get_mtbi_mechanism(abcd_lpohstbi01, l_subs, t = 1)
+    mechanism_l_2 <- get_mtbi_mechanism(abcd_lpohstbi01, l_subs, t = 2)
+    colnames(mechanism_l_1) <- c("subjectkey", "latest_mtbi_mechanism_1")
+    colnames(mechanism_l_2) <- c("subjectkey", "latest_mtbi_mechanism_2")
+    # Determine which children need data from 2yfu and which need from 1yfu
+    l_df <- l_subs
+    l_df$"collect_2" <- l_df$"subjectkey" %in% y2_subs$"subjectkey"
+    l_df <- merge_df_list(list(l_df,
+                       mechanism_l_1,
+                       mechanism_l_2),
+                  join = "full")
+    l_df <- l_df |>
+        dplyr::mutate("latest_mtbi_mechanism" =
+            dplyr::case_when(
+                l_df$"collect_2" == TRUE ~ l_df$"latest_mtbi_mechanism_2",
+                l_df$"collect_2" == FALSE ~ l_df$"latest_mtbi_mechanism_1",
+                TRUE ~ NA)) |>
+        dplyr::select("subjectkey", "latest_mtbi_mechanism")
+   return(l_df)
 }
