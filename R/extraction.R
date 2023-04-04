@@ -897,6 +897,40 @@ get_mtbi_age <- function(otbi01, subjects = NULL, t = NULL) {
 }
 
 
+#' Get age data for subjects who exclusively had a latest mtbi post bl
+#'
+#' @param abcd_lpohstbi01 longitudinal tbi dataframe
+#' @param l_subs subjects who had an mTBI exclusively in a longitudinal tp
+#' @param y1_subs subjects who had an mTBI at year 1
+#' @param y2_subs subjects who had an mTBI at year 2
+#'
+#' @return l_df latest mTBI age data for l subjects
+#'
+#' @export
+get_mtbi_age_l <- function(abcd_lpohstbi01, l_subs, y1_subs, y2_subs) {
+    # Collect data for 1yfu and 2yfu
+    age_l_1 <- get_mtbi_age(abcd_lpohstbi01, l_subs, t = 1)
+    age_l_2 <- get_mtbi_age(abcd_lpohstbi01, l_subs, t = 2)
+    colnames(age_l_1) <- c("subjectkey", "latest_mtbi_age_1")
+    colnames(age_l_2) <- c("subjectkey", "latest_mtbi_age_2")
+    # Determine which children need data from 2yfu and which need from 1yfu
+    l_df <- l_subs
+    l_df$"collect_2" <- l_df$"subjectkey" %in% y2_subs$"subjectkey"
+    l_df <- merge_df_list(list(l_df,
+                       age_l_1,
+                       age_l_2),
+                  join = "full")
+    l_df <- l_df |>
+        dplyr::mutate("latest_mtbi_age" =
+            dplyr::case_when(
+                l_df$"collect_2" == TRUE ~ l_df$"latest_mtbi_age_2",
+                l_df$"collect_2" == FALSE ~ l_df$"latest_mtbi_age_1",
+                TRUE ~ NA)) |>
+        dplyr::select("subjectkey", "latest_mtbi_age")
+   return(l_df)
+}
+
+
 #' Get CBCL headache data
 #'
 #' @param abcd_cbcl01 NDA cbcl dataframe
