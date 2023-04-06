@@ -160,3 +160,15 @@ flex_cond <- function(x) {
         return(FALSE)
     })
 }
+
+#' All equal function without attributes
+#'
+#' Check if two objects are equal, not considering their attributes
+#'
+#' @param x object 1
+#' @param y object 2
+#'
+#' @export
+ae <- function(x, y) {
+    return(all.equal(x, y, check.attributes = FALSE))
+}
