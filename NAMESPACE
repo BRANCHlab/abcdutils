@@ -2,6 +2,7 @@
 
 export(abcd_dd)
 export(abcd_import)
+export(cbcl_raw_to_thresh)
 export(char_to_fac)
 export(clean_plot)
 export(col_to_num)
