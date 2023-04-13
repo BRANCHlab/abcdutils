@@ -23,6 +23,5 @@ detail_mtbi(otbi01, subjects = NULL, t = NULL)
 detailed_otbi01 The modified dataframe
 }
 \description{
-Deprecated function - details most recent head injury rather than mTBI. Use
-detail_mtbi2 instead.
+Chain several TBI annotation functions to add multiple helpful mTBI columns
 }

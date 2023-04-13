@@ -2,7 +2,7 @@
 % Please edit documentation in R/tbi.R
 \name{identify_mtbi_times}
 \alias{identify_mtbi_times}
-\title{Identify time since and age at each mTBI / most recent HEAD INJURY}
+\title{Identify time since and age at each mTBI / most recent mTBI}
 \usage{
 identify_mtbi_times(tbi_df)
 }
@@ -13,6 +13,5 @@ identify_mtbi_times(tbi_df)
 dfa The modified dataframe
 }
 \description{
-Deprecated function - details most recent head injury rather than mTBI. Use
-identify_mtbi_times2 instead.
+Identify time since and age at each mTBI / most recent mTBI
 }

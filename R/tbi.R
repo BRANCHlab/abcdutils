@@ -333,92 +333,6 @@ identify_mtbi <- function(tbi_df) {
     return(df_mtbi)
 }
 
-#' Identify time since and age at each mTBI / most recent HEAD INJURY
-#'
-#' Deprecated function - details most recent head injury rather than mTBI. Use
-#'  identify_mtbi_times2 instead.
-#'
-#' @param tbi_df A TBI dataframe
-#'
-#' @return dfa The modified dataframe
-#'
-#' @export
-identify_mtbi_times <- function(tbi_df) {
-    # Scale injury ages to match interview ages if necessary
-    if (mean(tbi_df$"hosp_er_age", na.rm = TRUE) < 20) {
-        tbi_df$"blast_age" <-
-            tbi_df$"blast_age" * 12
-        tbi_df$"hosp_er_age" <-
-            tbi_df$"hosp_er_age" * 12
-        tbi_df$"vehicle_age" <-
-            tbi_df$"vehicle_age" * 12
-        tbi_df$"fall_hit_age" <-
-            tbi_df$"fall_hit_age" * 12
-        tbi_df$"violent_age" <-
-            tbi_df$"violent_age" * 12
-        tbi_df$"other_loc_min_age" <-
-            tbi_df$"other_loc_min_age" * 12
-        tbi_df$"multi_effect_end_age" <-
-            tbi_df$"multi_effect_end_age" * 12
-    }
-    # Time since each type of mTBI
-    dft <- tbi_df |> dplyr::mutate(
-        hosp_er_mtbi_mpi = dplyr::case_when(
-            tbi_df$"hosp_er_mtbi" == 1 ~
-                tbi_df$"interview_age" - tbi_df$"hosp_er_age"
-        ),
-        vehicle_mtbi_mpi = dplyr::case_when(
-            tbi_df$"vehicle_mtbi" == 1 ~
-                tbi_df$"interview_age" - tbi_df$"vehicle_age"
-        ),
-        fall_hit_mtbi_mpi = dplyr::case_when(
-            tbi_df$"fall_hit_mtbi" == 1 ~
-                tbi_df$"interview_age" - tbi_df$"fall_hit_age"
-        ),
-        violent_mtbi_mpi = dplyr::case_when(
-            tbi_df$"violent_mtbi" == 1 ~
-                tbi_df$"interview_age" - tbi_df$"violent_age"
-        ),
-        blast_mtbi_mpi = dplyr::case_when(
-            tbi_df$"blast_mtbi" == 1 ~
-                tbi_df$"interview_age" - tbi_df$"blast_age"
-        ),
-        other_loc_mtbi_mpi = dplyr::case_when(
-            tbi_df$"other_loc_mtbi" > 0 ~
-                tbi_df$"interview_age" - tbi_df$"other_loc_min_age"
-        ),
-        multi_mtbi_mpi = dplyr::case_when(
-            tbi_df$"multi_mtbi" == 1 ~
-                tbi_df$"interview_age" - tbi_df$"multi_effect_end_age"
-        )
-    )
-    # Time since latest mTBI
-    dft2 <- dft |>
-        dplyr::mutate(latest_mtbi_mpi = pmin(
-            dft$"hosp_er_mtbi_mpi",
-            dft$"vehicle_mtbi_mpi",
-            dft$"fall_hit_mtbi_mpi",
-            dft$"violent_mtbi_mpi",
-            dft$"blast_mtbi_mpi",
-            dft$"other_loc_mtbi_mpi",
-            dft$"multi_mtbi_mpi",
-            na.rm = TRUE
-        ))
-    # Age at latest mTBI
-    dfa <- dft2 |>
-        dplyr::mutate(latest_mtbi_age = pmax(
-            dft2$"hosp_er_age",
-            dft2$"vehicle_age",
-            dft2$"fall_hit_age",
-            dft2$"violent_age",
-            dft2$"blast_age",
-            dft2$"other_loc_min_age",
-            dft2$"multi_effect_end_age",
-            na.rm = TRUE
-        ))
-    return(dfa)
-}
-
 
 #' Identify time since and age at each mTBI / most recent mTBI
 #'
@@ -427,7 +341,7 @@ identify_mtbi_times <- function(tbi_df) {
 #' @return dfa The modified dataframe
 #'
 #' @export
-identify_mtbi_times2 <- function(tbi_df) {
+identify_mtbi_times <- function(tbi_df) {
     # Scale injury ages to match interview ages if necessary
     if (mean(tbi_df$"hosp_er_age", na.rm = TRUE) < 20) {
         tbi_df$"blast_age" <-
@@ -604,9 +518,6 @@ identify_latest_mtbi_mem_daze <- function(tbi_df) {
 
 #' Chain several TBI annotation functions to add multiple helpful mTBI columns
 #'
-#' Deprecated function - details most recent head injury rather than mTBI. Use
-#'  detail_mtbi2 instead.
-#'
 #' @param otbi01 The baseline TBI dataframe
 #' @param subjects Dataframe containing list of required subjects
 #' @param t Integer representing which timepoint to filter to:
@@ -632,37 +543,7 @@ detail_mtbi <- function(otbi01, subjects = NULL, t = NULL) {
 }
 
 
-#' Chain several TBI annotation functions to add multiple helpful mTBI columns
-#'
-#' @param otbi01 The baseline TBI dataframe
-#' @param subjects Dataframe containing list of required subjects
-#' @param t Integer representing which timepoint to filter to:
-#'  - 0: baseline
-#'  - 1: 1-year follow-up
-#'  - 2: 2-year follow-up
-#'  - 3: 3-year follow-up
-#'
-#' @return detailed_otbi01 The modified dataframe
-#'
-#' @export
-detail_mtbi2 <- function(otbi01, subjects = NULL, t = NULL) {
-    detailed_otbi01 <- abcd_import(otbi01, subjects, t = t) |>
-        rename_tbi() |>
-        identify_all_tbi() |>
-        identify_mtbi() |>
-        identify_mtbi_times2() |>
-        identify_latest_mtbi_mechanism() |>
-        identify_num_mtbi() |>
-        identify_latest_mtbi_loc() |>
-        identify_latest_mtbi_mem_daze()
-    return(detailed_otbi01)
-}
-
-
 #' Extract mTBI subjects with a minimum time-since-last-mtbi threshold
-#'
-#' Deprecated function - makes use of old identify_mtbi_times function. Use
-#'  get_mtbi_subjects2 instead.
 #'
 #' @param abcd_otbi01 A TBI dataframe
 #' @param min_mpi The minimum time-since-last-mtbi to be selected
@@ -689,37 +570,6 @@ get_mtbi_subjects <- function(abcd_otbi01, min_mpi = -10, t = NULL) {
         dplyr::select("subjectkey")
     return(subjects)
 }
-
-
-#' Extract mTBI subjects with a minimum time-since-last-mtbi threshold
-#'
-#' @param abcd_otbi01 A TBI dataframe
-#' @param min_mpi The minimum time-since-last-mtbi to be selected
-#' @param t Integer representing which timepoint to filter to:
-#'  - 0: baseline
-#'  - 1: 1-year follow-up
-#'  - 2: 2-year follow-up
-#'  - 3: 3-year follow-up
-#'
-#' @return subjects Dataframe containing list of required subjects
-#'
-#' @export
-#'
-get_mtbi_subjects2 <- function(abcd_otbi01, min_mpi = -10, t = NULL) {
-    abcd_otbi01 <- abcd_import(abcd_otbi01, t = t) |>
-        rename_tbi() |>
-        identify_all_tbi() |>
-        identify_mtbi() |>
-        identify_mtbi_times2()
-    subjects <- abcd_otbi01 |>
-        dplyr::filter(abcd_otbi01$"mtbi" == 1 &
-                      abcd_otbi01$"moderate_or_severe_tbi" == 0 &
-                      abcd_otbi01$"latest_mtbi_mpi" >= min_mpi) |>
-        dplyr::select("subjectkey")
-    return(subjects)
-}
-
-
 
 
 #' Extract list of ABCD subjects who have not sustained any head injury

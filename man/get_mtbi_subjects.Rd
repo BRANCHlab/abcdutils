@@ -23,6 +23,5 @@ get_mtbi_subjects(abcd_otbi01, min_mpi = -10, t = NULL)
 subjects Dataframe containing list of required subjects
 }
 \description{
-Deprecated function - makes use of old identify_mtbi_times function. Use
-get_mtbi_subjects2 instead.
+Extract mTBI subjects with a minimum time-since-last-mtbi threshold
 }
