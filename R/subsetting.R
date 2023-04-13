@@ -79,7 +79,8 @@ abcd_import <- function(abcd_df, t = NULL, subjects = NULL) {
     abcd_clean_df <- abcd_df |>
         remove_dd() |>
         filter_timepoint(t) |>
-        filter_subjects(subjects)
+        filter_subjects(subjects) |>
+        col_to_num_all_possible()
     abcd_clean_df <- abcd_clean_df |>
         dplyr::arrange(abcd_clean_df$"subjectkey")
     return(abcd_clean_df)
