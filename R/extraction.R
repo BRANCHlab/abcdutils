@@ -275,6 +275,14 @@ get_sports_and_activities <- function(abcd_saiq02, subjects = NULL, t = NULL) {
 get_exercise <- function(abcd_yrb01, subjects = NULL, t = NULL) {
     exercise <- abcd_import(abcd_yrb01, subjects, t = t) |>
         dplyr::select("subjectkey", dplyr::ends_with("y"))
+    # Taking the scaled average of all physical activity scores
+    exercise <- exercise |>
+        dplyr::mutate(
+            physical_activity =
+                (exercise$"physical_activity1_y"/7 +
+                exercise$"physical_activity2_y"/7 +
+                exercise$"physical_activity5_y"/5) / 3) |>
+        dplyr::select("subjectkey", "physical_activity")
     return(exercise)
 }
 
