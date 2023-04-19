@@ -1323,6 +1323,8 @@ get_mtbi_mem_daze <- function(otbi01, subjects = NULL, t = NULL) {
 #' @param l_subs subjects who had an mTBI exclusively in a longitudinal tp
 #' @param y1_subs subjects who had an mTBI at year 1
 #' @param y2_subs subjects who had an mTBI at year 2
+#' @param keep_collect_cols boolean on whether or not where each var came from
+#'  should be stored
 #'
 #' @return l_df latest mTBI mem daze data for l subjects
 #'
