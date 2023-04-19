@@ -4,7 +4,13 @@
 \alias{get_mtbi_mem_daze_l}
 \title{Get mem daze data for subjects who exclusively had a latest mtbi post bl}
 \usage{
-get_mtbi_mem_daze_l(abcd_lpohstbi01, l_subs, y1_subs, y2_subs)
+get_mtbi_mem_daze_l(
+  abcd_lpohstbi01,
+  l_subs,
+  y1_subs,
+  y2_subs,
+  keep_collect_cols = FALSE
+)
 }
 \arguments{
 \item{abcd_lpohstbi01}{longitudinal tbi dataframe}
@@ -14,6 +20,9 @@ get_mtbi_mem_daze_l(abcd_lpohstbi01, l_subs, y1_subs, y2_subs)
 \item{y1_subs}{subjects who had an mTBI at year 1}
 
 \item{y2_subs}{subjects who had an mTBI at year 2}
+
+\item{keep_collect_cols}{boolean on whether or not where each var came from
+should be stored}
 }
 \value{
 l_df latest mTBI mem daze data for l subjects

@@ -1327,7 +1327,8 @@ get_mtbi_mem_daze <- function(otbi01, subjects = NULL, t = NULL) {
 #' @return l_df latest mTBI mem daze data for l subjects
 #'
 #' @export
-get_mtbi_mem_daze_l <- function(abcd_lpohstbi01, l_subs, y1_subs, y2_subs) {
+get_mtbi_mem_daze_l <- function(abcd_lpohstbi01, l_subs, y1_subs, y2_subs,
+                                keep_collect_cols = FALSE) {
     # Collect data for 1yfu and 2yfu
     mem_daze_l_1 <- get_mtbi_mem_daze(abcd_lpohstbi01, l_subs, t = 1)
     mem_daze_l_2 <- get_mtbi_mem_daze(abcd_lpohstbi01, l_subs, t = 2)
@@ -1345,9 +1346,20 @@ get_mtbi_mem_daze_l <- function(abcd_lpohstbi01, l_subs, y1_subs, y2_subs) {
             dplyr::case_when(
                 l_df$"collect_2" == TRUE ~ l_df$"latest_mtbi_mem_daze_2",
                 l_df$"collect_2" == FALSE ~ l_df$"latest_mtbi_mem_daze_1",
-                TRUE ~ NA)) |>
-        dplyr::select("subjectkey", "latest_mtbi_mem_daze")
-   return(l_df)
+                TRUE ~ NA))
+    if (keep_collect_cols == FALSE) {
+        l_df <- l_df |> dplyr::select("subjectkey", "latest_mtbi_mem_daze")
+    } else {
+        l_df <- l_df |>
+            dplyr::mutate(
+                collect_time = dplyr::case_when(
+                    l_df$"collect_2" == FALSE ~ 1,
+                    l_df$"collect_2" == TRUE ~ 2
+                )
+            ) |>
+            dplyr::select("subjectkey", "latest_mtbi_mem_daze", "collect_time")
+    }
+    return(l_df)
 }
 
 
