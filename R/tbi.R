@@ -317,10 +317,14 @@ identify_mtbi <- function(tbi_df) {
                 blast_loc == 1 ~ 1,
             TRUE ~ 0
         ),
-        other_loc_mtbi = dplyr::case_when(
+        other_loc_mtbi_num = dplyr::case_when(
             (
                 tbi_df$"other_loc_num" - tbi_df$"other_loc_num_over_30") > 0 ~
                 tbi_df$"other_loc_num" - tbi_df$"other_loc_num_over_30",
+            TRUE ~ 0
+        ),
+        other_loc_mtbi = dplyr::case_when(
+            tbi_df$"other_loc_num" - tbi_df$"other_loc_num_over_30" > 0 ~ 1,
             TRUE ~ 0
         ),
         multi_mtbi = dplyr::case_when(
@@ -409,10 +413,10 @@ identify_mtbi_times <- function(tbi_df) {
         (dft2$"fall_hit_age" * dft2$"fall_hit_mtbi"),
         (dft2$"violent_age" * dft2$"violent_mtbi"),
         (dft2$"blast_age" * dft2$"blast_mtbi"),
+        # The only mTBI variable that has count info beyond the binary 0/1
         (dft2$"other_loc_min_age" * dft2$"other_loc_mtbi"),
         (dft2$"multi_effect_end_age" * dft2$"multi_mtbi"))
     mtbi_ages_max <- do.call(pmax, c(mtbi_ages, na.rm = TRUE))
-    mtbi_ages_max[mtbi_ages_max == 0] <- NA
     dft2$latest_mtbi_age <- mtbi_ages_max
     return(dft2)
 }
@@ -454,7 +458,7 @@ identify_num_mtbi <- function(tbi_df) {
                 tbi_df$"fall_hit_mtbi" +
                 tbi_df$"violent_mtbi" +
                 tbi_df$"blast_mtbi" +
-                tbi_df$"other_loc_mtbi" +
+                tbi_df$"other_loc_mtbi_num" +
                 tbi_df$"multi_mtbi"))
     return(df_num_mtbi)
 }
