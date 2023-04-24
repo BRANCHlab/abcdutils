@@ -235,7 +235,6 @@ original_tbi_names <- function() {
 #' @return tbi_df A modified form of tbi_df added tbi columns
 #'
 #' @export
-#'
 identify_all_tbi <- function(tbi_df) {
     # Assign column types
     tbi_df <- abcdutils::col_to_num_all_possible(tbi_df)
@@ -560,7 +559,6 @@ detail_mtbi <- function(otbi01, subjects = NULL, t = NULL) {
 #' @return subjects Dataframe containing list of required subjects
 #'
 #' @export
-#'
 get_mtbi_subjects <- function(abcd_otbi01, min_mpi = -10, t = NULL) {
     abcd_otbi01 <- abcd_import(abcd_otbi01, t = t) |>
         rename_tbi() |>
