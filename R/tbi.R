@@ -362,6 +362,7 @@ identify_mtbi_times <- function(tbi_df) {
         tbi_df$"multi_effect_end_age" <-
             tbi_df$"multi_effect_end_age" * 12
     }
+    print("apple")
     # Time since each type of mTBI
     dft <- tbi_df |> dplyr::mutate(
         hosp_er_mtbi_mpi = dplyr::case_when(
@@ -393,6 +394,7 @@ identify_mtbi_times <- function(tbi_df) {
                 tbi_df$"interview_age" - tbi_df$"multi_effect_end_age"
         )
     )
+    print("banana")
     # Time since latest mTBI
     dft2 <- dft |>
         dplyr::mutate(latest_mtbi_mpi = pmin(
@@ -419,6 +421,90 @@ identify_mtbi_times <- function(tbi_df) {
     dft2$latest_mtbi_age <- mtbi_ages_max
     return(dft2)
 }
+
+#' Identify time since and age at each mTBI / most recent mTBI
+#'
+#' @param tbi_df A TBI dataframe
+#'
+#' @return dfa The modified dataframe
+#'
+#' @export
+identify_mtbi_times_five <- function(tbi_df) {
+    # Scale injury ages to match interview ages if necessary
+    if (mean(tbi_df$"hosp_er_age", na.rm = TRUE) < 20) {
+        tbi_df$"blast_age" <-
+            tbi_df$"blast_age" * 12
+        tbi_df$"hosp_er_age" <-
+            tbi_df$"hosp_er_age" * 12
+        tbi_df$"vehicle_age" <-
+            tbi_df$"vehicle_age" * 12
+        tbi_df$"fall_hit_age" <-
+            tbi_df$"fall_hit_age" * 12
+        tbi_df$"violent_age" <-
+            tbi_df$"violent_age" * 12
+        tbi_df$"other_loc_min_age" <-
+            tbi_df$"other_loc_min_age" * 12
+        tbi_df$"multi_effect_end_age" <-
+            tbi_df$"multi_effect_end_age" * 12
+    }
+    ## Time since each type of mTBI
+    #dft <- tbi_df |> dplyr::mutate(
+    #    hosp_er_mtbi_mpi = dplyr::case_when(
+    #        tbi_df$"hosp_er_mtbi" == 1 ~
+    #            tbi_df$"interview_age" - tbi_df$"hosp_er_age"
+    #    ),
+    #    vehicle_mtbi_mpi = dplyr::case_when(
+    #        tbi_df$"vehicle_mtbi" == 1 ~
+    #            tbi_df$"interview_age" - tbi_df$"vehicle_age"
+    #    ),
+    #    fall_hit_mtbi_mpi = dplyr::case_when(
+    #        tbi_df$"fall_hit_mtbi" == 1 ~
+    #            tbi_df$"interview_age" - tbi_df$"fall_hit_age"
+    #    ),
+    #    violent_mtbi_mpi = dplyr::case_when(
+    #        tbi_df$"violent_mtbi" == 1 ~
+    #            tbi_df$"interview_age" - tbi_df$"violent_age"
+    #    ),
+    #    blast_mtbi_mpi = dplyr::case_when(
+    #        tbi_df$"blast_mtbi" == 1 ~
+    #            tbi_df$"interview_age" - tbi_df$"blast_age"
+    #    ),
+    #    other_loc_mtbi_mpi = dplyr::case_when(
+    #        tbi_df$"other_loc_mtbi" > 0 ~
+    #            tbi_df$"interview_age" - tbi_df$"other_loc_min_age"
+    #    ),
+    #    multi_mtbi_mpi = dplyr::case_when(
+    #        tbi_df$"multi_mtbi" == 1 ~
+    #            tbi_df$"interview_age" - tbi_df$"multi_effect_end_age"
+    #    )
+    #)
+    ## Time since latest mTBI
+    #dft2 <- dft |>
+    #    dplyr::mutate(latest_mtbi_mpi = pmin(
+    #        dft$"hosp_er_mtbi_mpi",
+    #        dft$"vehicle_mtbi_mpi",
+    #        dft$"fall_hit_mtbi_mpi",
+    #        dft$"violent_mtbi_mpi",
+    #        dft$"blast_mtbi_mpi",
+    #        dft$"other_loc_mtbi_mpi",
+    #        dft$"multi_mtbi_mpi",
+    #        na.rm = TRUE
+    #    ))
+    ## Age at latest mTBI
+    #mtbi_ages <- list(
+    #    (dft2$"hosp_er_age" * dft2$"hosp_er_mtbi"),
+    #    (dft2$"vehicle_age" * dft2$"vehicle_mtbi"),
+    #    (dft2$"fall_hit_age" * dft2$"fall_hit_mtbi"),
+    #    (dft2$"violent_age" * dft2$"violent_mtbi"),
+    #    (dft2$"blast_age" * dft2$"blast_mtbi"),
+    #    # The only mTBI variable that has count info beyond the binary 0/1
+    #    (dft2$"other_loc_min_age" * dft2$"other_loc_mtbi"),
+    #    (dft2$"multi_effect_end_age" * dft2$"multi_mtbi"))
+    #mtbi_ages_max <- do.call(pmax, c(mtbi_ages, na.rm = TRUE))
+    #dft2$latest_mtbi_age <- mtbi_ages_max
+    #return(dft2)
+}
+
 
 #' Add columns to a TBI dataframe indicating mechanism of the latest mTBI
 #'
@@ -559,18 +645,82 @@ detail_mtbi <- function(otbi01, subjects = NULL, t = NULL) {
 #' @return subjects Dataframe containing list of required subjects
 #'
 #' @export
+get_mtbi_subjects_five <- function(abcd_otbi01, min_mpi = -10, t = NULL) {
+    abcd_otbi01 <- abcd_otbi01 |>
+        dplyr::rename("subjectkey" = "src_subject_id")
+    abcd_otbi01 <- abcd_import(abcd_otbi01, t = t) |>
+        col_collapse("tbi_1", "tbi_1_l", "hosp_er_inj") |>
+        col_collapse("tbi_1b", "tbi_1b_l", "hosp_er_loc") |>
+        col_collapse("tbi_1c", "tbi_1c_l", "hosp_er_mem_daze") |>
+        col_collapse("tbi_1d", "tbi_1d_l", "hosp_er_age") |>
+        col_collapse("tbi_2", "tbi_2_l", "vehicle_inj") |>
+        col_collapse("tbi_2b", "tbi_2b_l", "vehicle_loc") |>
+        col_collapse("tbi_2c", "tbi_2c_l", "vehicle_mem_daze") |>
+        col_collapse("tbi_2d", "tbi_2d_l", "vehicle_age") |>
+        col_collapse("tbi_3", "tbi_3_l", "fall_hit_inj") |>
+        col_collapse("tbi_3b", "tbi_3b_l", "fall_hit_loc") |>
+        col_collapse("tbi_3c", "tbi_3c_l", "fall_hit_mem_daze") |>
+        col_collapse("tbi_3d", "tbi_3d_l", "fall_hit_age") |>
+        col_collapse("tbi_4", "tbi_4_l", "violent_inj") |>
+        col_collapse("tbi_4b", "tbi_4b_l", "violent_loc") |>
+        col_collapse("tbi_4c", "tbi_4c_l", "violent_mem_daze") |>
+        col_collapse("tbi_4d", "tbi_4d_l", "violent_age") |>
+        col_collapse("tbi_5", "tbi_5_l", "blast_inj") |>
+        col_collapse("tbi_5b", "tbi_5b_l", "blast_loc") |>
+        col_collapse("tbi_5c", "tbi_5c_l", "blast_mem_daze") |>
+        col_collapse("tbi_5d", "tbi_5d_l", "blast_age") |>
+        col_collapse("tbi_6o", "tbi_6o_l", "other_loc_inj") |>
+        col_collapse("tbi_6p", "tbi_6p_l", "other_loc_num") |>
+        col_collapse("tbi_6q", "tbi_6q_l", "other_loc_max_loc_mins") |>
+        col_collapse("tbi_6r", "tbi_6r_l", "other_loc_num_over_30") |>
+        col_collapse("tbi_6s", "tbi_6s_l", "other_loc_min_age") |>
+        col_collapse("tbi_7a", "tbi_7a_l", "multi_inj") |>
+        col_collapse("tbi_7c1", "tbi_7c1_l", "multi_loc") |>
+        col_collapse("tbl_7c2", "tbl_7c2_l", "multi_mem_daze") |>
+        col_collapse("tbi_7e", "tbi_7e_l", "multi_effect_start_age") |>
+        col_collapse("tbi_7f", "tbi_7f_l", "multi_effect_end_age") |>
+        rename_tbi()
+    return(abcd_otbi01)
+    #    identify_all_tbi() |>
+    #    identify_mtbi() |>
+    #    identify_mtbi_times_five()
+    #return(abcd_otbi01)
+    #subjects <- abcd_otbi01 |>
+    #    dplyr::filter(abcd_otbi01$"mtbi" == 1 &
+    #                  abcd_otbi01$"moderate_or_severe_tbi" == 0 &
+    #                  abcd_otbi01$"latest_mtbi_mpi" >= min_mpi) |>
+    #    dplyr::select("subjectkey")
+    #return(subjects)
+}
+
+
+#' Extract mTBI subjects with a minimum time-since-last-mtbi threshold
+#'
+#' @param abcd_otbi01 A TBI dataframe
+#' @param min_mpi The minimum time-since-last-mtbi to be selected
+#' @param t Integer representing which timepoint to filter to:
+#'  - 0: baseline
+#'  - 1: 1-year follow-up
+#'  - 2: 2-year follow-up
+#'  - 3: 3-year follow-up
+#'
+#' @return subjects Dataframe containing list of required subjects
+#'
+#' @export
 get_mtbi_subjects <- function(abcd_otbi01, min_mpi = -10, t = NULL) {
     abcd_otbi01 <- abcd_import(abcd_otbi01, t = t) |>
-        rename_tbi() |>
-        identify_all_tbi() |>
-        identify_mtbi() |>
-        identify_mtbi_times()
-    subjects <- abcd_otbi01 |>
-        dplyr::filter(abcd_otbi01$"mtbi" == 1 &
-                      abcd_otbi01$"moderate_or_severe_tbi" == 0 &
-                      abcd_otbi01$"latest_mtbi_mpi" >= min_mpi) |>
-        dplyr::select("subjectkey")
-    return(subjects)
+        rename_tbi()
+    return(abcd_otbi01)
+    #    identify_all_tbi() |>
+    #    identify_mtbi()
+    #return(colnames(abcd_otbi01))
+    #    identify_mtbi_times()
+    #subjects <- abcd_otbi01 |>
+    #    dplyr::filter(abcd_otbi01$"mtbi" == 1 &
+    #                  abcd_otbi01$"moderate_or_severe_tbi" == 0 &
+    #                  abcd_otbi01$"latest_mtbi_mpi" >= min_mpi) |>
+    #    dplyr::select("subjectkey")
+    #return(subjects)
 }
 
 
