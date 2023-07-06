@@ -8,7 +8,7 @@
 #' @export
 abcd_load <- function(csv, rename_src = TRUE) {
     data <- data.table::fread(csv)
-    if (rename_src) {
+    if (rename_src && "src_subject_id" %in% colnames(data)) {
         data <- data |>
             dplyr::rename("subjectkey" = "src_subject_id")
     }
