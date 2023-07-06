@@ -1,3 +1,20 @@
+#' Import an abcd csv file
+#'
+#' Wraps around fread and renames src_subject_id to subjectkey
+#'
+#' @param csv path to csv to be imported
+#' @param rename_src if true, converts "src_subject_id" to "subjectkey"
+#'
+#' @export
+abcd_load <- function(csv, rename_src = TRUE) {
+    data <- data.table::fread(csv)
+    if (rename_src) {
+        data <- data |>
+            dplyr::rename("subjectkey" = "src_subject_id")
+    }
+    return(data)
+}
+
 #' Initialize a path maker
 #'
 #' @description
