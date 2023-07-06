@@ -4,7 +4,14 @@
 \alias{get_cbcl_aggressive}
 \title{Get CBCL aggressive data}
 \usage{
-get_cbcl_aggressive(abcd_cbcls01, subjects = NULL, t = NULL, raw = TRUE)
+get_cbcl_aggressive(
+  abcd_cbcls01,
+  subjects = NULL,
+  t = NULL,
+  raw = TRUE,
+  aggressive_thresh_borderline = 11,
+  aggressive_thresh_clinical = 15
+)
 }
 \arguments{
 \item{abcd_cbcls01}{NDA cbcl dataframe}
@@ -15,6 +22,10 @@ get_cbcl_aggressive(abcd_cbcls01, subjects = NULL, t = NULL, raw = TRUE)
 
 \item{raw}{Logical value indicating if raw or borderline/clinical
 thresholded values should be obtained}
+
+\item{aggressive_thresh_borderline}{threshold for borderline clinical}
+
+\item{aggressive_thresh_clinical}{threshold for clinical}
 }
 \value{
 cbcl_aggressive_r aggressive data

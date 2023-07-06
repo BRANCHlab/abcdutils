@@ -4,7 +4,14 @@
 \alias{get_cbcl_attention}
 \title{Get CBCL attention data}
 \usage{
-get_cbcl_attention(abcd_cbcls01, subjects = NULL, t = NULL, raw = TRUE)
+get_cbcl_attention(
+  abcd_cbcls01,
+  subjects = NULL,
+  t = NULL,
+  raw = TRUE,
+  attention_thresh_borderline = 9,
+  attention_thresh_clinical = 12
+)
 }
 \arguments{
 \item{abcd_cbcls01}{NDA cbcl dataframe}
@@ -15,6 +22,10 @@ get_cbcl_attention(abcd_cbcls01, subjects = NULL, t = NULL, raw = TRUE)
 
 \item{raw}{Logical value indicating if raw or borderline/clinical
 thresholded values should be obtained}
+
+\item{attention_thresh_borderline}{threshold for borderline clinical}
+
+\item{attention_thresh_clinical}{threshold for clinical}
 }
 \value{
 cbcl_attention_r attention data

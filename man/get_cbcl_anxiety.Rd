@@ -4,7 +4,14 @@
 \alias{get_cbcl_anxiety}
 \title{Get CBCL anxiety data}
 \usage{
-get_cbcl_anxiety(abcd_cbcls01, subjects = NULL, t = NULL, raw = TRUE)
+get_cbcl_anxiety(
+  abcd_cbcls01,
+  subjects = NULL,
+  t = NULL,
+  raw = TRUE,
+  anxiety_thresh_borderline = 6,
+  anxiety_thresh_clinical = 8
+)
 }
 \arguments{
 \item{abcd_cbcls01}{NDA cbcl dataframe}
@@ -15,6 +22,10 @@ get_cbcl_anxiety(abcd_cbcls01, subjects = NULL, t = NULL, raw = TRUE)
 
 \item{raw}{Logical value indicating if raw or borderline/clinical
 thresholded values should be obtained}
+
+\item{anxiety_thresh_borderline}{threshold for borderline clinical}
+
+\item{anxiety_thresh_clinical}{threshold for clinical}
 }
 \value{
 cbcl_anxiety_r anxiety data

@@ -171,3 +171,33 @@ flex_cond <- function(x) {
 ae <- function(x, y) {
     return(all.equal(x, y, check.attributes = FALSE))
 }
+
+#' Collapse two columns
+#'
+#' When two columns contain complementary information (i.e., when one column has
+#'  a value, the other must always be NA), replace both columns with a single
+#'  one.
+#'
+#' @param df dataframe containing columns
+#' @param c1 string name of first column
+#' @param c2 string name of second column
+#' @param new_col string name of collapsed column
+#'
+#' @return RETURN
+#'
+#' @export
+col_collapse <- function(df, c1, c2, new_col) {
+    c1_col <- df[, c1]
+    c2_col <- df[, c2]
+    df <- df |> dplyr::mutate(
+        collapsed_col = ifelse(
+            is.na(c1_col) | is.na(c2_col),
+            dplyr::coalesce(c1_col, c2_col),
+            NA
+        )
+    )
+    df <- df |> dplyr::select(-c(!!c1, !!c2))
+    new_col_pos <- which(colnames(df) == "collapsed_col")
+    colnames(df)[new_col_pos] <- new_col
+    return(df)
+}

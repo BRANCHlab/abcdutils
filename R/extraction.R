@@ -1079,6 +1079,8 @@ get_cbcl_sleeping_less <- function(abcd_cbcl01, subjects = NULL, t = NULL) {
 #' @param t timepoint for data collection (0: baseline, 1: 1yfu, ... 3: 3yfu)
 #' @param raw Logical value indicating if raw or borderline/clinical
 #'  thresholded values should be obtained
+#' @param depress_thresh_borderline threshold for borderline clinical
+#' @param depress_thresh_clinical threshold for clinical
 #'
 #' @return cbcl_depress_r depression data
 #'
@@ -1117,6 +1119,8 @@ get_cbcl_depress <- function(abcd_cbcls01, subjects = NULL, t = NULL,
 #' @param t timepoint for data collection (0: baseline, 1: 1yfu, ... 3: 3yfu)
 #' @param raw Logical value indicating if raw or borderline/clinical
 #'  thresholded values should be obtained
+#' @param anxiety_thresh_borderline threshold for borderline clinical
+#' @param anxiety_thresh_clinical threshold for clinical
 #'
 #' @return cbcl_anxiety_r anxiety data
 #'
@@ -1153,6 +1157,8 @@ get_cbcl_anxiety <- function(abcd_cbcls01, subjects = NULL, t = NULL,
 #' @param t timepoint for data collection (0: baseline, 1: 1yfu, ... 3: 3yfu)
 #' @param raw Logical value indicating if raw or borderline/clinical
 #'  thresholded values should be obtained
+#' @param attention_thresh_borderline threshold for borderline clinical
+#' @param attention_thresh_clinical threshold for clinical
 #'
 #' @return cbcl_attention_r attention data
 #'
@@ -1190,6 +1196,8 @@ get_cbcl_attention <- function(abcd_cbcls01, subjects = NULL, t = NULL,
 #' @param t timepoint for data collection (0: baseline, 1: 1yfu, ... 3: 3yfu)
 #' @param raw Logical value indicating if raw or borderline/clinical
 #'  thresholded values should be obtained
+#' @param aggressive_thresh_borderline threshold for borderline clinical
+#' @param aggressive_thresh_clinical threshold for clinical
 #'
 #' @return cbcl_aggressive_r aggressive data
 #'
