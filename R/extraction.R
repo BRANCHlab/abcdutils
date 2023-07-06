@@ -279,9 +279,9 @@ get_exercise <- function(abcd_yrb01, subjects = NULL, t = NULL) {
     exercise <- exercise |>
         dplyr::mutate(
             physical_activity =
-                (exercise$"physical_activity1_y"/7 +
-                exercise$"physical_activity2_y"/7 +
-                exercise$"physical_activity5_y"/5) / 3) |>
+                (exercise$"physical_activity1_y" / 7 +
+                exercise$"physical_activity2_y" / 7 +
+                exercise$"physical_activity5_y" / 5) / 3) |>
         dplyr::select("subjectkey", "physical_activity")
     return(exercise)
 }
@@ -1084,7 +1084,9 @@ get_cbcl_sleeping_less <- function(abcd_cbcl01, subjects = NULL, t = NULL) {
 #'
 #' @export
 get_cbcl_depress <- function(abcd_cbcls01, subjects = NULL, t = NULL,
-                             raw = TRUE) {
+                             raw = TRUE,
+                             depress_thresh_borderline = 5,
+                             depress_thresh_clinical = 7) {
     cbcl_full <- abcd_import(abcd_cbcls01, subjects, t = t)
     cbcl_depress_r <- cbcl_full |>
         dplyr::select(
@@ -1095,13 +1097,11 @@ get_cbcl_depress <- function(abcd_cbcls01, subjects = NULL, t = NULL,
     if (raw) {
         return(cbcl_depress_r)
     } else {
-        depress_threshold_borderline <- 5
-        depress_threshold_clinical <- 7
         cbcl_depress <- cbcl_depress_r |>
             dplyr::mutate(cbcl_depress = dplyr::case_when(
-                cbcl_depress_r < depress_threshold_borderline ~ 0,
-                cbcl_depress_r < depress_threshold_clinical ~ 1,
-                cbcl_depress_r >= depress_threshold_clinical ~ 2,
+                cbcl_depress_r < depress_thresh_borderline ~ 0,
+                cbcl_depress_r < depress_thresh_clinical ~ 1,
+                cbcl_depress_r >= depress_thresh_clinical ~ 2,
                 TRUE ~ NA)) |>
             dplyr::select("subjectkey", "cbcl_depress")
         return(cbcl_depress)
@@ -1122,7 +1122,9 @@ get_cbcl_depress <- function(abcd_cbcls01, subjects = NULL, t = NULL,
 #'
 #' @export
 get_cbcl_anxiety <- function(abcd_cbcls01, subjects = NULL, t = NULL,
-                               raw = TRUE) {
+                             raw = TRUE,
+                             anxiety_thresh_borderline = 6,
+                             anxiety_thresh_clinical = 8) {
     cbcl_full <- abcd_import(abcd_cbcls01, subjects, t = t)
     cbcl_anxiety_r <- cbcl_full |>
         dplyr::select(
@@ -1133,13 +1135,11 @@ get_cbcl_anxiety <- function(abcd_cbcls01, subjects = NULL, t = NULL,
     if (raw) {
         return(cbcl_anxiety_r)
     } else {
-        anxiety_threshold_borderline <- 6
-        anxiety_threshold_clinical <- 8
         cbcl_anxiety <- cbcl_anxiety_r |>
             dplyr::mutate(cbcl_anxiety = dplyr::case_when(
-                cbcl_anxiety_r < anxiety_threshold_borderline ~ 0,
-                cbcl_anxiety_r < anxiety_threshold_clinical ~ 1,
-                cbcl_anxiety_r >= anxiety_threshold_clinical ~ 2,
+                cbcl_anxiety_r < anxiety_thresh_borderline ~ 0,
+                cbcl_anxiety_r < anxiety_thresh_clinical ~ 1,
+                cbcl_anxiety_r >= anxiety_thresh_clinical ~ 2,
                 TRUE ~ NA)) |>
             dplyr::select("subjectkey", "cbcl_anxiety")
         return(cbcl_anxiety)
@@ -1158,24 +1158,25 @@ get_cbcl_anxiety <- function(abcd_cbcls01, subjects = NULL, t = NULL,
 #'
 #' @export
 get_cbcl_attention <- function(abcd_cbcls01, subjects = NULL, t = NULL,
-                               raw = TRUE) {
+                               raw = TRUE,
+                               attention_thresh_borderline = 9,
+                               attention_thresh_clinical = 12) {
     cbcl_full <- abcd_import(abcd_cbcls01, subjects, t = t)
     cbcl_attention_r <- cbcl_full |>
         dplyr::select(
             "subjectkey",
             "cbcl_scr_syn_attention_r") |>
         dplyr::rename("cbcl_attention_r" = "cbcl_scr_syn_attention_r")
-    cbcl_attention_r$cbcl_attention_r <- as.numeric(cbcl_attention_r$cbcl_attention_r)
+    cbcl_attention_r$cbcl_attention_r <-
+        as.numeric(cbcl_attention_r$cbcl_attention_r)
     if (raw) {
         return(cbcl_attention_r)
     } else {
-        attention_threshold_borderline <- 9
-        attention_threshold_clinical <- 12
         cbcl_attention <- cbcl_attention_r |>
             dplyr::mutate(cbcl_attention = dplyr::case_when(
-                cbcl_attention_r < attention_threshold_borderline ~ 0,
-                cbcl_attention_r < attention_threshold_clinical ~ 1,
-                cbcl_attention_r >= attention_threshold_clinical ~ 2,
+                cbcl_attention_r < attention_thresh_borderline ~ 0,
+                cbcl_attention_r < attention_thresh_clinical ~ 1,
+                cbcl_attention_r >= attention_thresh_clinical ~ 2,
                 TRUE ~ NA)) |>
             dplyr::select("subjectkey", "cbcl_attention")
         return(cbcl_attention)
@@ -1194,19 +1195,20 @@ get_cbcl_attention <- function(abcd_cbcls01, subjects = NULL, t = NULL,
 #'
 #' @export
 get_cbcl_aggressive <- function(abcd_cbcls01, subjects = NULL, t = NULL,
-                                raw = TRUE) {
+                                raw = TRUE,
+                                aggressive_thresh_borderline = 11,
+                                aggressive_thresh_clinical = 15) {
     cbcl_full <- abcd_import(abcd_cbcls01, subjects, t = t)
     cbcl_aggressive_r <- cbcl_full |>
         dplyr::select(
             "subjectkey",
             "cbcl_scr_syn_aggressive_r") |>
         dplyr::rename("cbcl_aggressive_r" = "cbcl_scr_syn_aggressive_r")
-    cbcl_aggressive_r$cbcl_aggressive_r <- as.numeric(cbcl_aggressive_r$cbcl_aggressive_r)
+    cbcl_aggressive_r$cbcl_aggressive_r <-
+        as.numeric(cbcl_aggressive_r$cbcl_aggressive_r)
     if (raw) {
         return(cbcl_aggressive_r)
     } else {
-        aggressive_threshold_borderline <- 11
-        aggressive_threshold_clinical <- 15
         cbcl_aggressive <- cbcl_aggressive_r |>
             dplyr::mutate(cbcl_aggressive = dplyr::case_when(
                 cbcl_aggressive_r < aggressive_threshold_borderline ~ 0,
