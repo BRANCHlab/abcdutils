@@ -635,7 +635,7 @@ detail_mtbi <- function(otbi01, subjects = NULL, t = NULL) {
 #' Extract mTBI subjects with a minimum time-since-last-mtbi threshold
 #'
 #' @param ph_p_otbi TBI dataframe
-#' @param ph_p_otbi Dataframe containing age information
+#' @param abcd_y_lt Dataframe containing age information
 #' @param min_mpi The minimum time-since-last-mtbi to be selected
 #' @param t Integer representing which timepoint to filter to:
 #'  - 0: baseline
@@ -683,7 +683,7 @@ detail_mtbi_five <- function(ph_p_otbi,
 #' Extract mTBI subjects with a minimum time-since-last-mtbi threshold
 #'
 #' @param ph_p_otbi TBI dataframe
-#' @param ph_p_otbi Dataframe containing age information
+#' @param abcd_y_lt Dataframe containing age information
 #' @param min_mpi The minimum time-since-last-mtbi to be selected
 #' @param t Integer representing which timepoint to filter to:
 #'  - 0: baseline
