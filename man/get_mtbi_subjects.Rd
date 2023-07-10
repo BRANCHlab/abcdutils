@@ -4,10 +4,12 @@
 \alias{get_mtbi_subjects}
 \title{Extract mTBI subjects with a minimum time-since-last-mtbi threshold}
 \usage{
-get_mtbi_subjects(abcd_otbi01, min_mpi = -10, t = NULL)
+get_mtbi_subjects(ph_p_otbi, abcd_y_lt, min_mpi = -10, t = NULL)
 }
 \arguments{
-\item{abcd_otbi01}{A TBI dataframe}
+\item{ph_p_otbi}{TBI dataframe}
+
+\item{abcd_y_lt}{Dataframe containing age information}
 
 \item{min_mpi}{The minimum time-since-last-mtbi to be selected}
 

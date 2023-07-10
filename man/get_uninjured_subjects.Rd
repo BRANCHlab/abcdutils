@@ -4,12 +4,21 @@
 \alias{get_uninjured_subjects}
 \title{Extract list of ABCD subjects who have not sustained any head injury}
 \usage{
-get_uninjured_subjects(abcd_otbi01, abcd_lpohstbi01)
+get_uninjured_subjects(ph_p_otbi, abcd_y_lt, t = NULL)
 }
 \arguments{
-\item{abcd_otbi01}{Baseline mtbi dataset}
+\item{ph_p_otbi}{TBI dataframe}
 
-\item{abcd_lpohstbi01}{Longitudinal mtbi dataset}
+\item{abcd_y_lt}{Dataframe containing age information}
+
+\item{t}{Integer representing which timepoint to filter to:
+\itemize{
+\item 0: baseline
+\item 1: 1-year follow-up
+\item 2: 2-year follow-up
+\item 3: 3-year follow-up
+\item 4: 4-year follow-up
+}}
 }
 \value{
 uninjured_subjects List of uninjured subjects

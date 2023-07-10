@@ -12,106 +12,122 @@
 #'
 #' @examples
 #' # Mock abcd_otbi01.txt
-#' abcd_otbi01 <- data.frame(matrix(NA, nrow = 2, ncol = 49))
-#' colnames(abcd_otbi01) <- c("collection_id", "abcd_otbi01_id", "dataset_id",
-#'     "subjectkey", "src_subject_id", "interview_date", "interview_age", "sex",
-#'     "eventname", "tbi_select_language___1", "tbi_1", "tbi_1b", "tbi_1c",
-#'     "tbi_1d", "tbi_2", "tbi_2b", "tbi_2c", "tbi_2d", "tbi_3", "tbi_3b",
-#'     "tbi_3c", "tbi_3d", "tbi_4", "tbi_4b", "tbi_4c", "tbi_4d", "tbi_5",
-#'     "tbi_5b", "tbi_5c", "tbi_5d", "tbi_6o", "tbi_6p", "tbi_6q", "tbi_6r",
-#'     "tbi_6s", "tbi_7a", "tbi_7c1", "tbl_7c2", "tbi_7e", "tbi_7f", "tbi_7g",
-#'     "tbi_7i", "tbi_7k", "tbi_7l", "tbi_8g", "tbi_8i", "tbi_8k", "tbi_8l",
-#'     "collection_title")
+#' ph_p_otbi <- data.frame(matrix(NA, nrow = 2, ncol = 107))
 #'
-#' otbi01_renamed <- rename_tbi(abcd_otbi01)
-#' otbi01_renamed
+#' colnames(ph_p_otbi) <- c(
+#'     "subjectkey",
+#'     "eventname",
+#'     "tbi_select_language___1",
+#'     "tbi_1",
+#'     "tbi_1b",
+#'     "tbi_1c",
+#'     "tbi_1d",
+#'     "tbi_2",
+#'     "tbi_2b",
+#'     "tbi_2c",
+#'     "tbi_2d",
+#'     "tbi_3",
+#'     "tbi_3b",
+#'     "tbi_3c",
+#'     "tbi_3d",
+#'     "tbi_4",
+#'     "tbi_4b",
+#'     "tbi_4c",
+#'     "tbi_4d",
+#'     "tbi_5",
+#'     "tbi_5b",
+#'     "tbi_5c",
+#'     "tbi_5d",
+#'     "tbi_6o",
+#'     "tbi_6p",
+#'     "tbi_6q",
+#'     "tbi_6r",
+#'     "tbi_6s",
+#'     "tbi_7a",
+#'     "tbi_7c1",
+#'     "tbl_7c2",
+#'     "tbi_7e",
+#'     "tbi_7f",
+#'     "tbi_7g",
+#'     "tbi_7i",
+#'     "tbi_7k",
+#'     "tbi_7l",
+#'     "tbi_8g",
+#'     "tbi_8i",
+#'     "tbi_8k",
+#'     "tbi_8l",
+#'     "tbi_ss_ntbiloc",
+#'     "tbi_ss_ntbiloc_nm",
+#'     "tbi_ss_ntbiloc30",
+#'     "tbi_ss_ntbiloc30_nm",
+#'     "tbi_ss_nmrpi",
+#'     "tbi_ss_nmrpi_nm",
+#'     "tbi_ss_agefirst",
+#'     "tbi_ss_agefirst_nm",
+#'     "tbi_ss_before15",
+#'     "tbi_ss_worst1",
+#'     "tbi_ss_worst1b",
+#'     "tbi_ss_worst2",
+#'     "tbi_ss_worst3",
+#'     "tbi_ss_worst4",
+#'     "tbi_ss_worst5",
+#'     "tbi_ss_worst_overall",
+#'     "tbi_l_select_language___1",
+#'     "tbi_1_l",
+#'     "tbi_1b_l",
+#'     "tbi_1c_l",
+#'     "tbi_1d_l",
+#'     "tbi_2_l",
+#'     "tbi_2b_l",
+#'     "tbi_2c_l",
+#'     "tbi_2d_l",
+#'     "tbi_3_l",
+#'     "tbi_3b_l",
+#'     "tbi_3c_l",
+#'     "tbi_3d_l",
+#'     "tbi_4_l",
+#'     "tbi_4b_l",
+#'     "tbi_4c_l",
+#'     "tbi_4d_l",
+#'     "tbi_5_l",
+#'     "tbi_5b_l",
+#'     "tbi_5c_l",
+#'     "tbi_5d_l",
+#'     "tbi_6o_l",
+#'     "tbi_6p_l",
+#'     "tbi_6q_l",
+#'     "tbi_6r_l",
+#'     "tbi_6s_l",
+#'     "tbi_7a_l",
+#'     "tbi_7c1_l",
+#'     "tbl_7c2_l",
+#'     "tbi_7e_l",
+#'     "tbi_7f_l",
+#'     "tbi_8",
+#'     "tbi_ss_ntbiloc_l",
+#'     "tbi_ss_ntbiloc_nm_l",
+#'     "tbi_ss_ntbiloc30_l",
+#'     "tbi_ss_ntbiloc30_nm_l",
+#'     "tbi_ss_nmrpi_l",
+#'     "tbi_ss_nmrpi_nm_l",
+#'     "tbi_ss_agefirst_l",
+#'     "tbi_ss_agefirst_nm_l",
+#'     "tbi_ss_worst_overall_l",
+#'     "tbi_ss_before15_nm_l",
+#'     "tbi_ss_worst1_l",
+#'     "tbi_ss_worst1b_l",
+#'     "tbi_ss_worst2_l",
+#'     "tbi_ss_worst3_l",
+#'     "tbi_ss_worst4_l",
+#'     "tbi_ss_worst5_l",
+#'     "tbi_ss_agefirst_nt_l",
+#'     "tbi_ss_before15_l"
+#' )
+#'
+#' ph_p_otbi_renamed <- rename_tbi(ph_p_otbi)
+#'
+#' ph_p_otbi_renamed
 rename_tbi <- function(tbi_df) {
-    if (!is.data.frame(tbi_df)) {
-        rlang::abort("Object is not a dataframe.",
-            class = "non_df")
-    }
-    renamed_tbi <- tbi_df |>
-        dplyr::rename_with(
-            ~ dplyr::case_when(
-                . == "tbi_1" | . == "tbi_1_l" ~ "hosp_er_inj",
-                grepl("tbi_1b", .) ~ "hosp_er_loc",
-                grepl("tbi_1c", .) ~ "hosp_er_mem_daze",
-                grepl("tbi_1d", .) ~ "hosp_er_age",
-                . == "tbi_2" | . == "tbi_2_l" ~ "vehicle_inj",
-                grepl("tbi_2b", .) ~ "vehicle_loc",
-                grepl("tbi_2c", .) ~ "vehicle_mem_daze",
-                grepl("tbi_2d", .) ~ "vehicle_age",
-                . == "tbi_3" | . == "tbi_3_l" ~ "fall_hit_inj",
-                grepl("tbi_3b", .) ~ "fall_hit_loc",
-                grepl("tbi_3c", .) ~ "fall_hit_mem_daze",
-                grepl("tbi_3d", .) ~ "fall_hit_age",
-                . == "tbi_4" | . == "tbi_4_l" ~ "violent_inj",
-                grepl("tbi_4b", .) ~ "violent_loc",
-                grepl("tbi_4c", .) ~ "violent_mem_daze",
-                grepl("tbi_4d", .) ~ "violent_age",
-                . == "tbi_5" | . == "tbi_5_l" ~ "blast_inj",
-                grepl("tbi_5b", .) ~ "blast_loc",
-                grepl("tbi_5c", .) ~ "blast_mem_daze",
-                grepl("tbi_5d", .) ~ "blast_age",
-                grepl("tbi_6o", .) ~ "other_loc_inj",
-                grepl("tbi_6p", .) ~ "other_loc_num",
-                grepl("tbi_6q", .) ~ "other_loc_max_loc_mins",
-                grepl("tbi_6r", .) ~ "other_loc_num_over_30",
-                grepl("tbi_6s", .) ~ "other_loc_min_age",
-                grepl("tbi_7a", .) ~ "multi_inj",
-                grepl("tbi_7c1", .) ~ "multi_loc",
-                grepl("tbl_7c2", .) ~ "multi_mem_daze",
-                grepl("tbi_7e", .) ~ "multi_effect_start_age",
-                grepl("tbi_7f", .) ~ "multi_effect_end_age",
-                grepl("tbi_7g", .) ~ "other_multi_inj",
-                grepl("tbi_7i", .) ~ "other_multi_effect_type",
-                grepl("tbi_7k", .) ~ "other_multi_effect_start_age",
-                grepl("tbi_7l", .) ~ "other_multi_effect_end_age",
-                . == "tbi_8" ~ "num_sport_concussions",
-                . == "tbi_8a" ~ "school_missed_sport_concussion",
-                . == "tbi_8b" ~ "school_missed_worst_sport_concussion",
-                grepl("tbi_8g", .) ~ "other_other_multi_inj",
-                grepl("tbi_8i", .) ~ "other_other_multi_effect_type",
-                grepl("tbi_8k", .) ~ "other_other_multi_effect_start_age",
-                grepl("tbi_8l", .) ~ "other_other_multi_effect_end_age",
-                TRUE ~ .)
-            )
-    if (identical(renamed_tbi, tbi_df)) {
-        rlang::warn("No changes were made to the object.",
-            class = "no_effect")
-    }
-    return(renamed_tbi)
-}
-
-
-#' Rename ambiguous columns in otbi01 file.
-#'
-#' Renames column names of ABCD's Ohio TBI Screen data to meaningful names
-#' that are easier to work with.
-#' Use 'original_otbi_names()' to print out a conversion table of old and new
-#'  column names.
-#'
-#' @param tbi_df The complete file abcd_otbi01.txt
-#'
-#' @return renamed_tbi A modified form of tbi_df with clearer column names
-#' @export
-#'
-#' @examples
-#' # Mock abcd_otbi01.txt
-#' abcd_otbi01 <- data.frame(matrix(NA, nrow = 2, ncol = 49))
-#' colnames(abcd_otbi01) <- c("collection_id", "abcd_otbi01_id", "dataset_id",
-#'     "subjectkey", "src_subject_id", "interview_date", "interview_age", "sex",
-#'     "eventname", "tbi_select_language___1", "tbi_1", "tbi_1b", "tbi_1c",
-#'     "tbi_1d", "tbi_2", "tbi_2b", "tbi_2c", "tbi_2d", "tbi_3", "tbi_3b",
-#'     "tbi_3c", "tbi_3d", "tbi_4", "tbi_4b", "tbi_4c", "tbi_4d", "tbi_5",
-#'     "tbi_5b", "tbi_5c", "tbi_5d", "tbi_6o", "tbi_6p", "tbi_6q", "tbi_6r",
-#'     "tbi_6s", "tbi_7a", "tbi_7c1", "tbl_7c2", "tbi_7e", "tbi_7f", "tbi_7g",
-#'     "tbi_7i", "tbi_7k", "tbi_7l", "tbi_8g", "tbi_8i", "tbi_8k", "tbi_8l",
-#'     "collection_title")
-#'
-#' otbi01_renamed <- rename_tbi(abcd_otbi01)
-#' otbi01_renamed
-rename_tbi_five <- function(tbi_df) {
     if (!is.data.frame(tbi_df)) {
         rlang::abort("Object is not a dataframe.",
             class = "non_df")
@@ -605,37 +621,11 @@ identify_latest_mtbi_mem_daze <- function(tbi_df) {
     return(dfmd)
 }
 
-
-#' Chain several TBI annotation functions to add multiple helpful mTBI columns
-#'
-#' @param otbi01 The baseline TBI dataframe
-#' @param subjects Dataframe containing list of required subjects
-#' @param t Integer representing which timepoint to filter to:
-#'  - 0: baseline
-#'  - 1: 1-year follow-up
-#'  - 2: 2-year follow-up
-#'  - 3: 3-year follow-up
-#'
-#' @return detailed_otbi01 The modified dataframe
-#'
-#' @export
-detail_mtbi <- function(otbi01, subjects = NULL, t = NULL) {
-    detailed_otbi01 <- abcd_import(otbi01, subjects, t = t) |>
-        rename_tbi() |>
-        identify_all_tbi() |>
-        identify_mtbi() |>
-        identify_mtbi_times() |>
-        identify_latest_mtbi_mechanism() |>
-        identify_num_mtbi() |>
-        identify_latest_mtbi_loc() |>
-        identify_latest_mtbi_mem_daze()
-    return(detailed_otbi01)
-}
-
 #' Extract mTBI subjects with a minimum time-since-last-mtbi threshold
 #'
 #' @param ph_p_otbi TBI dataframe
 #' @param abcd_y_lt Dataframe containing age information
+#' @param subjects Dataframe containing list of required subjects
 #' @param min_mpi The minimum time-since-last-mtbi to be selected
 #' @param t Integer representing which timepoint to filter to:
 #'  - 0: baseline
@@ -646,15 +636,20 @@ detail_mtbi <- function(otbi01, subjects = NULL, t = NULL) {
 #' @return subjects Dataframe containing list of required subjects
 #'
 #' @export
-detail_mtbi_five <- function(ph_p_otbi,
-                             abcd_y_lt,
-                             min_mpi = -10,
-                             t = NULL) {
+detail_mtbi <- function(ph_p_otbi,
+                        abcd_y_lt,
+                        subjects = NULL,
+                        min_mpi = -10,
+                        t = NULL) {
     # restrict to specific eventname (if provided)
     sink("/dev/null")
     on.exit(sink())
-    ph_p_otbi <- filter_timepoint(ph_p_otbi, t = t)
-    abcd_y_lt <- filter_timepoint(abcd_y_lt, t = t)
+    ph_p_otbi <- ph_p_otbi |>
+        filter_timepoint(t) |>
+        filter_subjects(subjects)
+    abcd_y_lt <- abcd_y_lt |>
+        filter_timepoint(t) |>
+        filter_subjects(subjects)
     # integrate age feature into tbi df
     abcd_y_lt <- dplyr::select(
         abcd_y_lt, "subjectkey", "interview_age", "eventname"
@@ -673,7 +668,7 @@ detail_mtbi_five <- function(ph_p_otbi,
     ph_p_otbi <- dplyr::arrange(ph_p_otbi, ph_p_otbi$"subjectkey")
     # renaming ambiguous columns
     ph_p_otbi <- ph_p_otbi |>
-        rename_tbi_five() |>
+        rename_tbi() |>
         identify_all_tbi() |>
         identify_mtbi() |>
         identify_mtbi_times() |>
@@ -699,11 +694,11 @@ detail_mtbi_five <- function(ph_p_otbi,
 #' @return subjects Dataframe containing list of required subjects
 #'
 #' @export
-get_mtbi_subjects_five <- function(ph_p_otbi,
-                                   abcd_y_lt,
-                                   min_mpi = -10,
-                                   t = NULL) {
-    ph_p_otbi <- detail_mtbi_five(
+get_mtbi_subjects <- function(ph_p_otbi,
+                              abcd_y_lt,
+                              min_mpi = -10,
+                              t = NULL) {
+    ph_p_otbi <- detail_mtbi(
         ph_p_otbi,
         abcd_y_lt,
         min_mpi = min_mpi,
@@ -715,64 +710,6 @@ get_mtbi_subjects_five <- function(ph_p_otbi,
                       ph_p_otbi$"latest_mtbi_mpi" >= min_mpi) |>
         dplyr::select("subjectkey")
     return(subjects)
-}
-
-
-#' Extract mTBI subjects with a minimum time-since-last-mtbi threshold
-#'
-#' @param abcd_otbi01 A TBI dataframe
-#' @param min_mpi The minimum time-since-last-mtbi to be selected
-#' @param t Integer representing which timepoint to filter to:
-#'  - 0: baseline
-#'  - 1: 1-year follow-up
-#'  - 2: 2-year follow-up
-#'  - 3: 3-year follow-up
-#'
-#' @return subjects Dataframe containing list of required subjects
-#'
-#' @export
-get_mtbi_subjects <- function(abcd_otbi01, min_mpi = -10, t = NULL) {
-    abcd_otbi01 <- abcd_import(abcd_otbi01, t = t) |>
-        rename_tbi() |>
-        identify_all_tbi() |>
-        identify_mtbi() |>
-        identify_mtbi_times()
-    subjects <- abcd_otbi01 |>
-        dplyr::filter(abcd_otbi01$"mtbi" == 1 &
-                      abcd_otbi01$"moderate_or_severe_tbi" == 0 &
-                      abcd_otbi01$"latest_mtbi_mpi" >= min_mpi) |>
-        dplyr::select("subjectkey")
-    return(subjects)
-}
-
-
-#' Extract list of ABCD subjects who have not sustained any head injury
-#'
-#' @param abcd_otbi01 Baseline mtbi dataset
-#' @param abcd_lpohstbi01 Longitudinal mtbi dataset
-#'
-#' @return uninjured_subjects List of uninjured subjects
-#'
-#' @export
-get_uninjured_subjects <- function(abcd_otbi01, abcd_lpohstbi01) {
-    sink("/dev/null")
-    on.exit(sink())
-    detailed_baseline <- detail_mtbi(abcd_otbi01)
-    detailed_longitudinal <- detail_mtbi(abcd_lpohstbi01)
-    ever_injured_b <- detailed_baseline |>
-        dplyr::filter(detailed_baseline$"mtbi" > 0 |
-                      detailed_baseline$"moderate_or_severe_tbi" > 0) |>
-        dplyr::select("subjectkey")
-    ever_injured_l <- detailed_longitudinal |>
-        dplyr::filter(detailed_longitudinal$"mtbi" > 0 |
-                      detailed_longitudinal$"moderate_or_severe_tbi" > 0) |>
-        dplyr::select("subjectkey")
-    ever_injured <-
-        dplyr::full_join(ever_injured_b, ever_injured_l, by = "subjectkey")
-    uninjured_subjects <-
-        dplyr::anti_join(detailed_baseline, ever_injured, by = "subjectkey") |>
-        dplyr::select("subjectkey")
-    return(uninjured_subjects)
 }
 
 
@@ -790,8 +727,8 @@ get_uninjured_subjects <- function(abcd_otbi01, abcd_lpohstbi01) {
 #' @return uninjured_subjects List of uninjured subjects
 #'
 #' @export
-get_uninjured_subjects_five <- function(ph_p_otbi, abcd_y_lt, t = NULL) {
-    ph_p_otbi <- detail_mtbi_five(
+get_uninjured_subjects <- function(ph_p_otbi, abcd_y_lt, t = NULL) {
+    ph_p_otbi <- detail_mtbi(
         ph_p_otbi,
         abcd_y_lt,
         t = t

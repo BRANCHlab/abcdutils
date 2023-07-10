@@ -2,14 +2,18 @@
 % Please edit documentation in R/tbi.R
 \name{detail_mtbi}
 \alias{detail_mtbi}
-\title{Chain several TBI annotation functions to add multiple helpful mTBI columns}
+\title{Extract mTBI subjects with a minimum time-since-last-mtbi threshold}
 \usage{
-detail_mtbi(otbi01, subjects = NULL, t = NULL)
+detail_mtbi(ph_p_otbi, abcd_y_lt, subjects = NULL, min_mpi = -10, t = NULL)
 }
 \arguments{
-\item{otbi01}{The baseline TBI dataframe}
+\item{ph_p_otbi}{TBI dataframe}
+
+\item{abcd_y_lt}{Dataframe containing age information}
 
 \item{subjects}{Dataframe containing list of required subjects}
+
+\item{min_mpi}{The minimum time-since-last-mtbi to be selected}
 
 \item{t}{Integer representing which timepoint to filter to:
 \itemize{
@@ -20,8 +24,8 @@ detail_mtbi(otbi01, subjects = NULL, t = NULL)
 }}
 }
 \value{
-detailed_otbi01 The modified dataframe
+subjects Dataframe containing list of required subjects
 }
 \description{
-Chain several TBI annotation functions to add multiple helpful mTBI columns
+Extract mTBI subjects with a minimum time-since-last-mtbi threshold
 }
