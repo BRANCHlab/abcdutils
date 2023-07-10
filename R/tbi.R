@@ -671,12 +671,6 @@ detail_mtbi_five <- function(ph_p_otbi,
         identify_latest_mtbi_loc() |>
         identify_latest_mtbi_mem_daze()
     return(ph_p_otbi)
-    #subjects <- ph_p_otbi |>
-    #    dplyr::filter(ph_p_otbi$"mtbi" == 1 &
-    #                  ph_p_otbi$"moderate_or_severe_tbi" == 0 &
-    #                  ph_p_otbi$"latest_mtbi_mpi" >= min_mpi) |>
-    #    dplyr::select("subjectkey")
-    #return(subjects)
 }
 
 
@@ -698,52 +692,12 @@ get_mtbi_subjects_five <- function(ph_p_otbi,
                                    abcd_y_lt,
                                    min_mpi = -10,
                                    t = NULL) {
-    # restrict to specific eventname (if provided)
-    ph_p_otbi <- filter_timepoint(ph_p_otbi, t = t)
-    abcd_y_lt <- filter_timepoint(abcd_y_lt, t = t)
-    # integrate age feature into tbi df
-    abcd_y_lt <- dplyr::select(abcd_y_lt, "subjectkey", "interview_age")
-    ph_p_otbi <- dplyr::inner_join(ph_p_otbi, abcd_y_lt, by = "subjectkey")
-    # ensure all columns that may be numeric are treated as numeric
-    ph_p_otbi <- col_to_num_all_possible(ph_p_otbi)
-    # sorting by subjectkey
-    ph_p_otbi <- dplyr::arrange(ph_p_otbi, ph_p_otbi$"subjectkey")
-    # renaming ambiguous columns
-    ph_p_otbi <- ph_p_otbi |>
-        col_collapse("tbi_1", "tbi_1_l", "hosp_er_inj") |>
-        col_collapse("tbi_1b", "tbi_1b_l", "hosp_er_loc") |>
-        col_collapse("tbi_1c", "tbi_1c_l", "hosp_er_mem_daze") |>
-        col_collapse("tbi_1d", "tbi_1d_l", "hosp_er_age") |>
-        col_collapse("tbi_2", "tbi_2_l", "vehicle_inj") |>
-        col_collapse("tbi_2b", "tbi_2b_l", "vehicle_loc") |>
-        col_collapse("tbi_2c", "tbi_2c_l", "vehicle_mem_daze") |>
-        col_collapse("tbi_2d", "tbi_2d_l", "vehicle_age") |>
-        col_collapse("tbi_3", "tbi_3_l", "fall_hit_inj") |>
-        col_collapse("tbi_3b", "tbi_3b_l", "fall_hit_loc") |>
-        col_collapse("tbi_3c", "tbi_3c_l", "fall_hit_mem_daze") |>
-        col_collapse("tbi_3d", "tbi_3d_l", "fall_hit_age") |>
-        col_collapse("tbi_4", "tbi_4_l", "violent_inj") |>
-        col_collapse("tbi_4b", "tbi_4b_l", "violent_loc") |>
-        col_collapse("tbi_4c", "tbi_4c_l", "violent_mem_daze") |>
-        col_collapse("tbi_4d", "tbi_4d_l", "violent_age") |>
-        col_collapse("tbi_5", "tbi_5_l", "blast_inj") |>
-        col_collapse("tbi_5b", "tbi_5b_l", "blast_loc") |>
-        col_collapse("tbi_5c", "tbi_5c_l", "blast_mem_daze") |>
-        col_collapse("tbi_5d", "tbi_5d_l", "blast_age") |>
-        col_collapse("tbi_6o", "tbi_6o_l", "other_loc_inj") |>
-        col_collapse("tbi_6p", "tbi_6p_l", "other_loc_num") |>
-        col_collapse("tbi_6q", "tbi_6q_l", "other_loc_max_loc_mins") |>
-        col_collapse("tbi_6r", "tbi_6r_l", "other_loc_num_over_30") |>
-        col_collapse("tbi_6s", "tbi_6s_l", "other_loc_min_age") |>
-        col_collapse("tbi_7a", "tbi_7a_l", "multi_inj") |>
-        col_collapse("tbi_7c1", "tbi_7c1_l", "multi_loc") |>
-        col_collapse("tbl_7c2", "tbl_7c2_l", "multi_mem_daze") |>
-        col_collapse("tbi_7e", "tbi_7e_l", "multi_effect_start_age") |>
-        col_collapse("tbi_7f", "tbi_7f_l", "multi_effect_end_age") |>
-        rename_tbi() |>
-        identify_all_tbi() |>
-        identify_mtbi() |>
-        identify_mtbi_times()
+    ph_p_otbi <- detail_mtbi_five(
+        ph_p_otbi,
+        abcd_y_lt,
+        min_mpi = min_mpi,
+        t = t
+    )
     subjects <- ph_p_otbi |>
         dplyr::filter(ph_p_otbi$"mtbi" == 1 &
                       ph_p_otbi$"moderate_or_severe_tbi" == 0 &
@@ -790,6 +744,37 @@ get_mtbi_subjects <- function(abcd_otbi01, min_mpi = -10, t = NULL) {
 #'
 #' @export
 get_uninjured_subjects <- function(abcd_otbi01, abcd_lpohstbi01) {
+    sink("/dev/null")
+    detailed_baseline <- detail_mtbi(abcd_otbi01)
+    detailed_longitudinal <- detail_mtbi(abcd_lpohstbi01)
+    sink()
+    ever_injured_b <- detailed_baseline |>
+        dplyr::filter(detailed_baseline$"mtbi" > 0 |
+                      detailed_baseline$"moderate_or_severe_tbi" > 0) |>
+        dplyr::select("subjectkey")
+    ever_injured_l <- detailed_longitudinal |>
+        dplyr::filter(detailed_longitudinal$"mtbi" > 0 |
+                      detailed_longitudinal$"moderate_or_severe_tbi" > 0) |>
+        dplyr::select("subjectkey")
+    ever_injured <-
+        dplyr::full_join(ever_injured_b, ever_injured_l, by = "subjectkey")
+    uninjured_subjects <-
+        dplyr::anti_join(detailed_baseline, ever_injured, by = "subjectkey") |>
+        dplyr::select("subjectkey")
+    return(uninjured_subjects)
+}
+
+
+#' Extract list of ABCD subjects who have not sustained any head injury
+#'
+#' @param abcd_otbi01 Baseline mtbi dataset
+#' @param abcd_lpohstbi01 Longitudinal mtbi dataset
+#'
+#' @return uninjured_subjects List of uninjured subjects
+#'
+#' @export
+get_uninjured_subjects_five <- function(abcd_otbi01, abcd_lpohstbi01) {
+    # Wrapping within sink function suppresses unnecessary prints
     sink("/dev/null")
     detailed_baseline <- detail_mtbi(abcd_otbi01)
     detailed_longitudinal <- detail_mtbi(abcd_lpohstbi01)
