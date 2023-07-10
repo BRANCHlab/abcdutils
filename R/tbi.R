@@ -651,11 +651,22 @@ detail_mtbi_five <- function(ph_p_otbi,
                              min_mpi = -10,
                              t = NULL) {
     # restrict to specific eventname (if provided)
+    sink("/dev/null")
+    on.exit(sink())
     ph_p_otbi <- filter_timepoint(ph_p_otbi, t = t)
     abcd_y_lt <- filter_timepoint(abcd_y_lt, t = t)
     # integrate age feature into tbi df
-    abcd_y_lt <- dplyr::select(abcd_y_lt, "subjectkey", "interview_age")
-    ph_p_otbi <- dplyr::inner_join(ph_p_otbi, abcd_y_lt, by = "subjectkey")
+    abcd_y_lt <- dplyr::select(
+        abcd_y_lt, "subjectkey", "interview_age", "eventname"
+    )
+    ph_p_otbi <- dplyr::inner_join(
+        ph_p_otbi,
+        abcd_y_lt,
+        by = c(
+            "subjectkey",
+            "eventname"
+        )
+    )
     # ensure all columns that may be numeric are treated as numeric
     ph_p_otbi <- col_to_num_all_possible(ph_p_otbi)
     # sorting by subjectkey
@@ -745,9 +756,9 @@ get_mtbi_subjects <- function(abcd_otbi01, min_mpi = -10, t = NULL) {
 #' @export
 get_uninjured_subjects <- function(abcd_otbi01, abcd_lpohstbi01) {
     sink("/dev/null")
+    on.exit(sink())
     detailed_baseline <- detail_mtbi(abcd_otbi01)
     detailed_longitudinal <- detail_mtbi(abcd_lpohstbi01)
-    sink()
     ever_injured_b <- detailed_baseline |>
         dplyr::filter(detailed_baseline$"mtbi" > 0 |
                       detailed_baseline$"moderate_or_severe_tbi" > 0) |>
@@ -767,30 +778,38 @@ get_uninjured_subjects <- function(abcd_otbi01, abcd_lpohstbi01) {
 
 #' Extract list of ABCD subjects who have not sustained any head injury
 #'
-#' @param abcd_otbi01 Baseline mtbi dataset
-#' @param abcd_lpohstbi01 Longitudinal mtbi dataset
+#' @param ph_p_otbi TBI dataframe
+#' @param abcd_y_lt Dataframe containing age information
+#' @param t Integer representing which timepoint to filter to:
+#'  - 0: baseline
+#'  - 1: 1-year follow-up
+#'  - 2: 2-year follow-up
+#'  - 3: 3-year follow-up
+#'  - 4: 4-year follow-up
 #'
 #' @return uninjured_subjects List of uninjured subjects
 #'
 #' @export
-get_uninjured_subjects_five <- function(abcd_otbi01, abcd_lpohstbi01) {
-    # Wrapping within sink function suppresses unnecessary prints
-    sink("/dev/null")
-    detailed_baseline <- detail_mtbi(abcd_otbi01)
-    detailed_longitudinal <- detail_mtbi(abcd_lpohstbi01)
-    sink()
-    ever_injured_b <- detailed_baseline |>
-        dplyr::filter(detailed_baseline$"mtbi" > 0 |
-                      detailed_baseline$"moderate_or_severe_tbi" > 0) |>
-        dplyr::select("subjectkey")
-    ever_injured_l <- detailed_longitudinal |>
-        dplyr::filter(detailed_longitudinal$"mtbi" > 0 |
-                      detailed_longitudinal$"moderate_or_severe_tbi" > 0) |>
-        dplyr::select("subjectkey")
-    ever_injured <-
-        dplyr::full_join(ever_injured_b, ever_injured_l, by = "subjectkey")
-    uninjured_subjects <-
-        dplyr::anti_join(detailed_baseline, ever_injured, by = "subjectkey") |>
-        dplyr::select("subjectkey")
+get_uninjured_subjects_five <- function(ph_p_otbi, abcd_y_lt, t = NULL) {
+    ph_p_otbi <- detail_mtbi_five(
+        ph_p_otbi,
+        abcd_y_lt,
+        t = t
+    )
+    subjectkey <- ""
+    mtbi <- ""
+    moderate_or_severe_tbi <- ""
+    all_inj <- ""
+    ph_p_otbi <- ph_p_otbi |>
+        dplyr::group_by(subjectkey) |>
+        dplyr::summarize(
+            mtbi_sum = sum(mtbi),
+            mod_sev_sum = sum(moderate_or_severe_tbi)
+        )
+    ph_p_otbi$"all_inj" <- ph_p_otbi$"mtbi_sum" + ph_p_otbi$"mod_sev_sum"
+    print(unique(ph_p_otbi$"all_inj"))
+    uninjured_subjects <- ph_p_otbi |>
+        dplyr::filter(all_inj == 0) |>
+        dplyr::select(subjectkey)
     return(uninjured_subjects)
 }
