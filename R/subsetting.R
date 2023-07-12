@@ -17,7 +17,8 @@ filter_timepoint <- function(abcd_df, t) {
             t == 0 ~ "baseline_year_1_arm_1",
             t == 1 ~ "1_year_follow_up_y_arm_1",
             t == 2 ~ "2_year_follow_up_y_arm_1",
-            t == 3 ~ "3_year_follow_up_y_arm_1")
+            t == 3 ~ "3_year_follow_up_y_arm_1",
+            t == 4 ~ "4_year_follow_up_y_arm_1")
         t_abcd_df <- abcd_df |>
             dplyr::filter(abcd_df$"eventname" == t)
         return(t_abcd_df)
