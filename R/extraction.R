@@ -986,8 +986,8 @@ get_y_gender <- function(gish_y_gi, subjects = NULL, t = t) {
 #' @return mtbi_age Dataframe containing latest_mtbi_age
 #'
 #' @export
-get_mtbi_age <- function(otbi01, subjects = NULL, t = NULL) {
-    mtbi_age <- detail_mtbi(otbi01, subjects, t = t) |>
+get_mtbi_age <- function(ph_p_otbi, abcd_y_lt, subjects = NULL, t = NULL) {
+    mtbi_age <- detail_mtbi(ph_p_otbi, abcd_y_lt, subjects, t = t) |>
         dplyr::select(
             "subjectkey",
             "latest_mtbi_age"
@@ -1330,9 +1330,15 @@ get_cbcl_aggressive <- function(abcd_cbcls01, subjects = NULL, t = NULL,
 #' @return mtbi_mechanism Dataframe containing latest_mtbi_mechanism
 #'
 #' @export
-get_mtbi_mechanism <- function(otbi01, subjects = NULL, t = NULL,
+get_mtbi_mechanism <- function(ph_p_otbi, abcd_y_lt, subjects = NULL, t = NULL,
                                format = "undummied") {
-    mtbi_mechanism <- detail_mtbi(otbi01, subjects, t = t) |>
+    mtbi_mechanism <-
+        detail_mtbi(
+            ph_p_otbi,
+            abcd_y_lt,
+            subjects = subjects,
+            t = t
+        ) |>
         dplyr::select(
             "subjectkey",
             "latest_mtbi_mechanism"
@@ -1348,7 +1354,6 @@ get_mtbi_mechanism <- function(otbi01, subjects = NULL, t = NULL,
 }
 
 
-
 #' Get acute symptom input variable 'latest_mtbi_loc'
 #'
 #' @param otbi01 The baseline TBI dataframe
@@ -1358,8 +1363,14 @@ get_mtbi_mechanism <- function(otbi01, subjects = NULL, t = NULL,
 #' @return mtbi_loc Dataframe containing latest_mtbi_loc
 #'
 #' @export
-get_mtbi_loc <- function(otbi01, subjects = NULL, t = NULL) {
-    mtbi_loc <- detail_mtbi(otbi01, subjects, t = t) |>
+get_mtbi_loc <- function(ph_p_otbi, abcd_y_lt, subjects = NULL, t = NULL) {
+    mtbi_loc <-
+        detail_mtbi(
+            ph_p_otbi,
+            abcd_y_lt,
+            subjects = subjects,
+            t = t
+        ) |>
         dplyr::select(
             "subjectkey",
             "latest_mtbi_loc"
@@ -1369,7 +1380,8 @@ get_mtbi_loc <- function(otbi01, subjects = NULL, t = NULL) {
 
 #' Get LOC data for subjects who exclusively had a latest injury in follow up
 #'
-#' @param abcd_lpohstbi01 longitudinal tbi dataframe
+#' @param ph_p_otbi TBI dataframe
+#' @param abcd_y_lt Dataframe containing age information
 #' @param l_subs subjects who had an mTBI exclusively in a longitudinal tp
 #' @param y1_subs subjects who had an mTBI at year 1
 #' @param y2_subs subjects who had an mTBI at year 2
@@ -1377,10 +1389,10 @@ get_mtbi_loc <- function(otbi01, subjects = NULL, t = NULL) {
 #' @return l_df latest mTBI LOC data for l subjects
 #'
 #' @export
-get_mtbi_loc_l <- function(abcd_lpohstbi01, l_subs, y1_subs, y2_subs) {
+get_mtbi_loc_l <- function(ph_p_otbi, abcd_y_lt, l_subs, y1_subs, y2_subs) {
     # Collect data for 1yfu and 2yfu
-    loc_l_1 <- get_mtbi_loc(abcd_lpohstbi01, l_subs, t = 1)
-    loc_l_2 <- get_mtbi_loc(abcd_lpohstbi01, l_subs, t = 2)
+    loc_l_1 <- get_mtbi_loc(ph_p_otbi, abcd_y_lt, l_subs, t = 1)
+    loc_l_2 <- get_mtbi_loc(ph_p_otbi, abcd_y_lt, l_subs, t = 2)
     colnames(loc_l_1) <- c("subjectkey", "latest_mtbi_loc_1")
     colnames(loc_l_2) <- c("subjectkey", "latest_mtbi_loc_2")
     # Determine which children need data from 2yfu and which need from 1yfu
@@ -1409,8 +1421,14 @@ get_mtbi_loc_l <- function(abcd_lpohstbi01, l_subs, y1_subs, y2_subs) {
 #' @return mtbi_mem_daze Dataframe containing latest_mtbi_mem_daze
 #'
 #' @export
-get_mtbi_mem_daze <- function(otbi01, subjects = NULL, t = NULL) {
-    mtbi_mem_daze <- detail_mtbi(otbi01, subjects, t = t) |>
+get_mtbi_mem_daze <- function(ph_p_otbi, abcd_y_lt, subjects = NULL, t = NULL) {
+    mtbi_mem_daze <-
+        detail_mtbi(
+            ph_p_otbi,
+            abcd_y_lt,
+            subjects = subjects,
+            t = t
+        ) |>
         dplyr::select(
             "subjectkey",
             "latest_mtbi_mem_daze"
@@ -1420,7 +1438,8 @@ get_mtbi_mem_daze <- function(otbi01, subjects = NULL, t = NULL) {
 
 #' Get mem daze data for subjects who exclusively had a latest mtbi post bl
 #'
-#' @param abcd_lpohstbi01 longitudinal tbi dataframe
+#' @param ph_p_otbi TBI dataframe
+#' @param abcd_y_lt Dataframe containing age information
 #' @param l_subs subjects who had an mTBI exclusively in a longitudinal tp
 #' @param y1_subs subjects who had an mTBI at year 1
 #' @param y2_subs subjects who had an mTBI at year 2
@@ -1430,11 +1449,11 @@ get_mtbi_mem_daze <- function(otbi01, subjects = NULL, t = NULL) {
 #' @return l_df latest mTBI mem daze data for l subjects
 #'
 #' @export
-get_mtbi_mem_daze_l <- function(abcd_lpohstbi01, l_subs, y1_subs, y2_subs,
+get_mtbi_mem_daze_l <- function(ph_p_otbi, abcd_y_lt, l_subs, y1_subs, y2_subs,
                                 keep_collect_cols = FALSE) {
     # Collect data for 1yfu and 2yfu
-    mem_daze_l_1 <- get_mtbi_mem_daze(abcd_lpohstbi01, l_subs, t = 1)
-    mem_daze_l_2 <- get_mtbi_mem_daze(abcd_lpohstbi01, l_subs, t = 2)
+    mem_daze_l_1 <- get_mtbi_mem_daze(ph_p_otbi, abcd_y_lt, l_subs, t = 1)
+    mem_daze_l_2 <- get_mtbi_mem_daze(ph_p_otbi, abcd_y_lt, l_subs, t = 2)
     colnames(mem_daze_l_1) <- c("subjectkey", "latest_mtbi_mem_daze_1")
     colnames(mem_daze_l_2) <- c("subjectkey", "latest_mtbi_mem_daze_2")
     # Determine which children need data from 2yfu and which need from 1yfu
@@ -1468,7 +1487,8 @@ get_mtbi_mem_daze_l <- function(abcd_lpohstbi01, l_subs, y1_subs, y2_subs,
 
 #' Get mechanism data for subjects who exclusively had a latest mtbi post bl
 #'
-#' @param abcd_lpohstbi01 longitudinal tbi dataframe
+#' @param ph_p_otbi TBI dataframe
+#' @param abcd_y_lt Dataframe containing age information
 #' @param l_subs subjects who had an mTBI exclusively in a longitudinal tp
 #' @param y1_subs subjects who had an mTBI at year 1
 #' @param y2_subs subjects who had an mTBI at year 2
@@ -1476,10 +1496,14 @@ get_mtbi_mem_daze_l <- function(abcd_lpohstbi01, l_subs, y1_subs, y2_subs,
 #' @return l_df latest mTBI mechanism data for l subjects
 #'
 #' @export
-get_mtbi_mechanism_l <- function(abcd_lpohstbi01, l_subs, y1_subs, y2_subs) {
+get_mtbi_mechanism_l <- function(ph_p_otbi,
+                                 abcd_y_lt,
+                                 l_subs,
+                                 y1_subs,
+                                 y2_subs) {
     # Collect data for 1yfu and 2yfu
-    mechanism_l_1 <- get_mtbi_mechanism(abcd_lpohstbi01, l_subs, t = 1)
-    mechanism_l_2 <- get_mtbi_mechanism(abcd_lpohstbi01, l_subs, t = 2)
+    mechanism_l_1 <- get_mtbi_mechanism(ph_p_otbi, abcd_y_lt, l_subs, t = 1)
+    mechanism_l_2 <- get_mtbi_mechanism(ph_p_otbi, abcd_y_lt, l_subs, t = 2)
     colnames(mechanism_l_1) <- c("subjectkey", "latest_mtbi_mechanism_1")
     colnames(mechanism_l_2) <- c("subjectkey", "latest_mtbi_mechanism_2")
     # Determine which children need data from 2yfu and which need from 1yfu
