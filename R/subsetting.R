@@ -78,7 +78,6 @@ common_subjects <- function(df_list) {
 #' @export
 abcd_import <- function(abcd_df, t = NULL, subjects = NULL) {
     abcd_clean_df <- abcd_df |>
-        remove_dd() |>
         filter_timepoint(t) |>
         filter_subjects(subjects) |>
         col_to_num_all_possible()
