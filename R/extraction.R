@@ -864,7 +864,7 @@ get_interview_age <- function(abcd_df, subjects = NULL, t = NULL) {
 #' @return sex Dataframe containing sex
 #'
 #' @export
-get_sex <- function(abcd_df, subjects = NULL, t = t, format = "dummied") {
+get_sex <- function(gish_p_gi, subjects = NULL, t = t, format = "dummied") {
     options <- c("undummied", "dummied")
     if (!(format %in% options)) {
         print("The 'format argument should be one of the following options:")
@@ -873,16 +873,34 @@ get_sex <- function(abcd_df, subjects = NULL, t = t, format = "dummied") {
         print("See ?get_sex for more information about these options.")
         return(NULL)
     }
-    sex <- abcd_import(abcd_df, subjects, t = t) |>
-        dplyr::select("subjectkey", "sex")
-    if (format == "dummied") {
-        sex <- fastDummies::dummy_cols(
-            .data = sex,
-            select_columns = "sex",
-            remove_first_dummy = TRUE,
-            remove_selected_columns = TRUE)
-        colnames(sex) <- c("subjectkey", "M")
-    }
+    pgi <- abcd_import(gish_p_gi, subjects, t = t) |>
+        dplyr::select(
+            "eventname",
+            "subjectkey",
+            "demo_sex_v2", # what is their assigned sex
+        )
+    sex <- pgi |> dplyr::rename(
+            "sex" = "demo_sex_v2",
+        )
+    sex <- sex |>
+        dplyr::mutate(
+            sex = dplyr::case_when(
+                sex == 1 ~ "M",
+                sex == 2 ~ "F",
+                sex == 3 ~ "IM",
+                sex == 4 ~ "IF",
+                TRUE ~ NA
+            )
+        )
+    # dummy format may not be required
+    #if (format == "dummied") {
+    #    sex <- fastDummies::dummy_cols(
+    #        .data = sex,
+    #        select_columns = "sex",
+    #        remove_first_dummy = TRUE,
+    #        remove_selected_columns = TRUE)
+    #    #colnames(sex) <- c("subjectkey", "M")
+    #}
     return(sex)
 }
 
