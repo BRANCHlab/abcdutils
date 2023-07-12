@@ -601,12 +601,12 @@ get_headaches <- function(mx01, subjects = NULL, t = NULL) {
 #' @return pubertal_status Dataframe containing average pubertal status
 #'
 #' @export
-get_pubertal_status <- function(ssphp01, ssphy01, subjects = NULL, t = NULL) {
-    youth_pubertal_df <- abcd_import(ssphy01, subjects, t = t)
-    parent_pubertal_df <- abcd_import(ssphp01, subjects, t = t)
+get_pubertal_status <- function(ph_p_pds, ph_y_pds, subjects = NULL, t = NULL) {
+    youth_pubertal_df <- abcd_import(ph_y_pds, subjects, t = t)
+    parent_pubertal_df <- abcd_import(ph_p_pds, subjects, t = t)
     # Merge parent and youth dataframes
     puberty_full <- dplyr::inner_join(youth_pubertal_df, parent_pubertal_df,
-        by = c("subjectkey", "sex"))
+        by = "subjectkey")
     # Assign proper column types
     puberty_full$"pds_y_ss_female_category" <-
         as.numeric(puberty_full$"pds_y_ss_female_category")
