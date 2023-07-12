@@ -904,6 +904,79 @@ get_sex <- function(gish_p_gi, subjects = NULL, t = t, format = "dummied") {
     return(sex)
 }
 
+#' Return dataframe containing gender of specified subjects
+#'
+#' @param abcd_df Any ABCD dataframe containing sex
+#' @param subjects Dataframe containing list of required subjects
+#' @param t timepoint for data collection (0: baseline, 1: 1yfu, ... 3: 3yfu)
+#' @param format
+#'     String indicating format to output sex data.
+#'
+#'     * `"dummied"` single binary column `M`. This is the default.
+#'     * `"undummied"` single column `sex` containing factor values `M` and `F`.
+#'
+#' @return sex Dataframe containing sex
+#'
+#' @export
+get_p_gender <- function(gish_p_gi, subjects = NULL, t = t) {
+    pgi <- abcd_import(gish_p_gi, subjects, t = t) |>
+        dplyr::select(
+            "eventname",
+            "subjectkey",
+            "demo_gender_id_v2", # what is their assigned sex
+        )
+    gender <- pgi |> dplyr::rename(
+            "p_gender" = "demo_gender_id_v2",
+        )
+    gender <- gender |>
+        dplyr::mutate(
+            p_gender = dplyr::case_when(
+                p_gender == 1 ~ "M",
+                p_gender == 2 ~ "F",
+                p_gender == 3 ~ "NB",
+                TRUE ~ NA
+            )
+        )
+    return(gender)
+}
+
+#' Return dataframe containing gender of specified subjects
+#'
+#' @param abcd_df Any ABCD dataframe containing sex
+#' @param subjects Dataframe containing list of required subjects
+#' @param t timepoint for data collection (0: baseline, 1: 1yfu, ... 3: 3yfu)
+#' @param format
+#'     String indicating format to output sex data.
+#'
+#'     * `"dummied"` single binary column `M`. This is the default.
+#'     * `"undummied"` single column `sex` containing factor values `M` and `F`.
+#'
+#' @return sex Dataframe containing sex
+#'
+#' @export
+get_y_gender <- function(gish_y_gi, subjects = NULL, t = t) {
+    pgi <- abcd_import(gish_y_gi, subjects, t = t) |>
+        dplyr::select(
+            "eventname",
+            "subjectkey",
+            "kbi_gender", # what is their assigned sex
+        )
+    gender <- pgi |> dplyr::rename(
+            "y_gender" = "kbi_gender",
+        )
+    gender <- gender |>
+        dplyr::mutate(
+            y_gender = dplyr::case_when(
+                y_gender == 1 ~ "M",
+                y_gender == 2 ~ "F",
+                y_gender == 3 ~ "NB",
+                TRUE ~ NA
+            )
+        )
+    return(gender)
+}
+
+
 #' Get acute symptom input variable 'latest_mtbi_age'
 #'
 #' @param otbi01 The baseline TBI dataframe
