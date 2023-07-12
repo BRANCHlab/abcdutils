@@ -744,7 +744,6 @@ get_uninjured_subjects <- function(ph_p_otbi, abcd_y_lt, t = NULL) {
             mod_sev_sum = sum(moderate_or_severe_tbi)
         )
     ph_p_otbi$"all_inj" <- ph_p_otbi$"mtbi_sum" + ph_p_otbi$"mod_sev_sum"
-    print(unique(ph_p_otbi$"all_inj"))
     uninjured_subjects <- ph_p_otbi |>
         dplyr::filter(all_inj == 0) |>
         dplyr::select(subjectkey)
