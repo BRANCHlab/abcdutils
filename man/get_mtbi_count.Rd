@@ -4,10 +4,12 @@
 \alias{get_mtbi_count}
 \title{Get number of mtbis sustained by subject}
 \usage{
-get_mtbi_count(otbi01, subjects = NULL, t = NULL)
+get_mtbi_count(ph_p_otbi, abcd_y_lt, subjects = NULL, t = NULL)
 }
 \arguments{
-\item{otbi01}{The baseline TBI dataframe}
+\item{ph_p_otbi}{TBI dataframe}
+
+\item{abcd_y_lt}{Dataframe containing age information}
 
 \item{subjects}{Dataframe containing list of required subjects}
 

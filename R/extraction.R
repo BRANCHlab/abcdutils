@@ -359,15 +359,15 @@ get_nihtbx_pattern_fc <- function(abcd_tbss01, subjects = NULL, t = NULL) {
 
 #' Extract subcortical volumes
 #'
-#' @param smrip10201 Data file containing subcortical data
+#' @param mri_y_smr_vol_aseg Data file containing subcortical data
 #' @param subjects Dataframe containing list of required subjects
 #' @param t timepoint for data collection (0: baseline, 1: 1yfu, ... 3: 3yfu)
 #'
 #' @return subc_v_df Dataframe of subcortical volumes
 #'
 #' @export
-get_subc_v <- function(smrip10201, subjects = NULL, t = NULL) {
-    smri_raw <- abcd_import(smrip10201, subjects, t = t)
+get_subc_v <- function(mri_y_smr_vol_aseg, subjects = NULL, t = NULL) {
+    smri_raw <- abcd_import(mri_y_smr_vol_aseg, subjects, t = t)
     subc_v_df <- smri_raw |>
         dplyr::select(
             "subjectkey",
@@ -380,15 +380,15 @@ get_subc_v <- function(smrip10201, subjects = NULL, t = NULL) {
 
 #' Extract cortical thicknesses
 #'
-#' @param mrisdp10201 Data file containing cortical data
+#' @param mri_y_smr_thk_dst Data file containing cortical data
 #' @param subjects Dataframe containing list of required subjects
 #' @param t timepoint for data collection (0: baseline, 1: 1yfu, ... 3: 3yfu)
 #'
 #' @return cort_t_df Dataframe of cortical thicknesses
 #'
 #' @export
-get_cort_t <- function(mrisdp10201, subjects = NULL, t = NULL) {
-    cort_raw <- abcd_import(mrisdp10201, subjects, t = t)
+get_cort_t <- function(mri_y_smr_thk_dst, subjects = NULL, t = NULL) {
+    cort_raw <- abcd_import(mri_y_smr_thk_dst, subjects, t = t)
     cort_t_df <- cort_raw |>
         dplyr::select(
             "subjectkey",
@@ -399,15 +399,15 @@ get_cort_t <- function(mrisdp10201, subjects = NULL, t = NULL) {
 
 #' Extract cortical surface areas
 #'
-#' @param mrisdp10201 Data file containing cortical data
+#' @param mri_y_smr_area_dst Data file containing cortical data
 #' @param subjects Dataframe containing list of required subjects
 #' @param t timepoint for data collection (0: baseline, 1: 1yfu, ... 3: 3yfu)
 #'
 #' @return cort_sa_df Dataframe of cortical surface areas
 #'
 #' @export
-get_cort_sa <- function(mrisdp10201, subjects = NULL, t = NULL) {
-    cort_raw <- abcd_import(mrisdp10201, subjects, t = t)
+get_cort_sa <- function(mri_y_smr_area_dst, subjects = NULL, t = NULL) {
+    cort_raw <- abcd_import(mri_y_smr_area_dst, subjects, t = t)
     cort_sa_df <- cort_raw |>
         dplyr::select(
             "subjectkey",
@@ -418,42 +418,39 @@ get_cort_sa <- function(mrisdp10201, subjects = NULL, t = NULL) {
 
 #' Extract white matter neurite densities
 #'
-#' @param drsip201 Data file containing neurite density data
-#' @param subjects Dataframe containing list of required subjects
-#' @param t timepoint for data collection (0: baseline, 1: 1yfu, ... 3: 3yfu)
-#'
-#' @return wmnd_df Dataframe of white matter neurite densities
-#'
-#' @export
-get_wmnd <- function(drsip201, subjects = NULL, t = NULL) {
-    nd_raw <- abcd_import(drsip201, subjects, t = t)
-    wmnd_df <- nd_raw |>
-        dplyr::select(
-            "subjectkey",
-            dplyr::contains("rsirndwm")) |>
-        dplyr::select(-c(
-            "dmri_rsirndwm_cdx_mean",
-            "dmri_rsirndwm_cdx_meanlh",
-            "dmri_rsirndwm_cdx_meanrh"))
-    return(wmnd_df)
-}
-
-
-#' Extract white matter neurite densities
-#'
 #' Extract neurite densities for major white matter tracts (AtlasTrack ROIs) as
 #'  well as peri-cortical/sub-adjacent white matter structures defined relative
 #'  to the Desikan Cortical Parcellation.
 #'
-#' @param drsip201 Data file containing neurite density data
+#' @param mri_y_rsi_rnd_at Data file containing neurite density data
 #' @param subjects Dataframe containing list of required subjects
 #' @param t timepoint for data collection (0: baseline, 1: 1yfu, ... 3: 3yfu)
 #'
 #' @return wmnd_df Dataframe of white matter neurite densities
+
+# LEFT OFF HERE
 #'
 #' @export
-get_all_wmnd <- function(drsip201, subjects = NULL, t = NULL) {
-    nd_raw <- abcdutils::abcd_import(drsip201, subjects, t = t)
+get_all_wmnd <- function(mri_y_rsi_rnd_at,
+                         mri_y_rsi_rnd_wm_dst,
+                         mri_y_rsi_rnd_wm_dsk,
+                         subjects = NULL,
+                         t = NULL) {
+    mri_y_rsi_rnd_at <- abcd_import(
+        mri_y_rsi_rnd_at, subjects, t = t
+    )
+    mri_y_rsi_rnd_wm_dst <- abcd_import(
+        mri_y_rsi_rnd_wm_dst, subjects, t = t
+    )
+    mri_y_rsi_rnd_wm_dsk <- abcd_import(
+        mri_y_rsi_rnd_wm_dsk, subjects, t = t
+    )
+    df_list <- list(
+        mri_y_rsi_rnd_at,
+        mri_y_rsi_rnd_wm_dst,
+        mri_y_rsi_rnd_wm_dsk
+    )
+    nd_raw <- merge_df_list(df_list, join = "full")
     wmnd_df <- nd_raw |>
         dplyr::select(
             "subjectkey",
@@ -474,15 +471,15 @@ get_all_wmnd <- function(drsip201, subjects = NULL, t = NULL) {
 
 #' Extract cortical network correlations
 #'
-#' @param betnet02 Data file containing neurite density data
+#' @param mri_y_rsfmr_cor_gp_gp Data file containing neurite density data
 #' @param subjects Dataframe containing list of required subjects
 #' @param t timepoint for data collection (0: baseline, 1: 1yfu, ... 3: 3yfu)
 #'
 #' @return gord_cor Dataframe of white matter neurite densities
 #'
 #' @export
-get_gord_cor <- function(betnet02, subjects = NULL, t = NULL) {
-    gord_cor_raw <- abcd_import(betnet02, subjects, t = t)
+get_gord_cor <- function(mri_y_rsfmr_cor_gp_gp, subjects = NULL, t = NULL) {
+    gord_cor_raw <- abcd_import(mri_y_rsfmr_cor_gp_gp, subjects, t = t)
     gord_cor <- gord_cor_raw |>
         dplyr::select(
             "subjectkey",
@@ -493,15 +490,15 @@ get_gord_cor <- function(betnet02, subjects = NULL, t = NULL) {
 
 #' Extract subcortical network correlations
 #'
-#' @param mrirscor02 Data file containing neurite density data
+#' @param mri_y_rsfmr_cor_gp_aseg Data file containing neurite density data
 #' @param subjects Dataframe containing list of required subjects
 #' @param t timepoint for data collection (0: baseline, 1: 1yfu, ... 3: 3yfu)
 #'
 #' @return subc_cor Dataframe of white matter neurite densities
 #'
 #' @export
-get_subc_cor <- function(mrirscor02, subjects = NULL, t = NULL) {
-    subc_cor_raw <- abcd_import(mrirscor02, subjects, t = t)
+get_subc_cor <- function(mri_y_rsfmr_cor_gp_aseg, subjects = NULL, t = NULL) {
+    subc_cor_raw <- abcd_import(mri_y_rsfmr_cor_gp_aseg, subjects, t = t)
     subc_cor <- subc_cor_raw |>
         dplyr::select(
             "subjectkey",

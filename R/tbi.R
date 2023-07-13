@@ -339,7 +339,7 @@ original_tbi_names <- function() {
 #' @export
 identify_all_tbi <- function(tbi_df) {
     # Assign column types
-    tbi_df <- abcdutils::col_to_num_all_possible(tbi_df)
+    tbi_df <- col_to_num_all_possible(tbi_df)
     # Generate mtbi and moderate_or_severe_tbi columns
     tbi_df <- tbi_df |> dplyr::mutate(
         mtbi = dplyr::case_when(
@@ -356,9 +356,9 @@ identify_all_tbi <- function(tbi_df) {
             (tbi_df$"other_loc_num" - tbi_df$"other_loc_num_over_30") > 0 ~ 1,
             (tbi_df$"multi_loc" < 2 & tbi_df$"multi_mem_daze" == 1) |
                 tbi_df$"multi_loc" == 1 ~ 1,
-            abcdutils::flex_cond(tbi_df$"num_sport_concussions" > 0) ~ 1,
-            abcdutils::flex_cond(tbi_df$"other_multi_inj" == 1) ~ 0.5,
-            abcdutils::flex_cond(tbi_df$"other_other_multi_inj" == 1) ~ 0.5,
+            flex_cond(tbi_df$"num_sport_concussions" > 0) ~ 1,
+            flex_cond(tbi_df$"other_multi_inj" == 1) ~ 0.5,
+            flex_cond(tbi_df$"other_other_multi_inj" == 1) ~ 0.5,
             TRUE ~ 0
         ),
         moderate_or_severe_tbi = dplyr::case_when(
@@ -369,8 +369,8 @@ identify_all_tbi <- function(tbi_df) {
                 tbi_df$"blast_loc" > 1 |
                 tbi_df$"other_loc_num_over_30" > 0 |
                 tbi_df$"multi_loc" > 1) ~ 1,
-            abcdutils::flex_cond(tbi_df$"other_multi_inj" == 1) ~ 0.5,
-            abcdutils::flex_cond(tbi_df$"other_other_multi_inj" == 1) ~ 0.5,
+            flex_cond(tbi_df$"other_multi_inj" == 1) ~ 0.5,
+            flex_cond(tbi_df$"other_other_multi_inj" == 1) ~ 0.5,
             TRUE ~ 0
         )
     )
