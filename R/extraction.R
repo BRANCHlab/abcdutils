@@ -576,15 +576,15 @@ get_mtbi_count <- function(otbi01, subjects = NULL, t = NULL) {
 
 #' Get subject headache history
 #'
-#' @param mx01 Dataframe containing medical history
+#' @param ph_p_mhx Dataframe containing medical history
 #' @param subjects Dataframe containing list of required subjects
 #' @param t timepoint for data collection (0: baseline, 1: 1yfu, ... 3: 3yfu)
 #'
 #' @return headaches Dataframe containing headache history
 #'
 #' @export
-get_headaches <- function(mx01, subjects = NULL, t = NULL) {
-    headaches <- abcd_import(mx01, subjects, t = t) |>
+get_headaches <- function(ph_p_mhx, subjects = NULL, t = NULL) {
+    headaches <- abcd_import(ph_p_mhx, subjects, t = t) |>
         dplyr::rename("headache" = "medhx_2q") |>
         dplyr::select("subjectkey", "headache")
     return(headaches)
@@ -634,15 +634,15 @@ get_pubertal_status <- function(ph_p_pds, ph_y_pds, subjects = NULL, t = NULL) {
 #'
 #' Low: $0 - $50k, Medium: $50k - $100k, High: > $100k
 #'
-#' @param pdem02 Dataframe containing parent demographic information
+#' @param abcd_p_demo Dataframe containing parent demographic information
 #' @param subjects Dataframe containing list of required subjects
 #' @param t timepoint for data collection (0: baseline, 1: 1yfu, ... 3: 3yfu)
 #'
 #' @return income_df Dataframe containing household incomes
 #'
 #' @export
-get_income <- function(pdem02, subjects = NULL, t = NULL) {
-    parent_demographics <- abcd_import(pdem02, subjects, t = t)
+get_income <- function(abcd_p_demo, subjects = NULL, t = NULL) {
+    parent_demographics <- abcd_import(abcd_p_demo, subjects, t = t)
     parent_demographics$"demo_comb_income_v2" <-
         as.numeric(parent_demographics$"demo_comb_income_v2")
     income_df <- parent_demographics |>
@@ -709,8 +709,7 @@ get_race <- function(pdem02, subjects = NULL, t = t, format = "") {
                "hispanic" = "demo_ethn_v2") |>
     # Select relevant variables
     dplyr::select("subjectkey",
-                  "white":"hispanic",
-                  -"demo_race_notes_v2") |>
+                  "white":"hispanic") |>
     # Assign numeric column types to help with later transformations
     dplyr::mutate(
         dplyr::across(
@@ -803,7 +802,9 @@ get_race <- function(pdem02, subjects = NULL, t = t, format = "") {
                     race_df$"white" == 1 ~ "white",
                     race_df$"black" == 1 ~ "black",
                     race_df$"mixed_or_other" == 1 ~ "mixed_or_other",
-                )) |>
+                    TRUE ~ NA
+                )
+            ) |>
             dplyr::select("subjectkey", "race")
     }
     return(race_df)
