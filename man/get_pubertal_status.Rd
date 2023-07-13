@@ -4,12 +4,12 @@
 \alias{get_pubertal_status}
 \title{Return dataframe containing pubertal status of specified subjects}
 \usage{
-get_pubertal_status(ssphp01, ssphy01, subjects = NULL, t = NULL)
+get_pubertal_status(ph_p_pds, ph_y_pds, subjects = NULL, t = NULL)
 }
 \arguments{
-\item{ssphp01}{Dataframe containing parent pubertal status report}
+\item{ph_p_pds}{Dataframe containing parent pubertal status report}
 
-\item{ssphy01}{Dataframe containing youth pubertal status report}
+\item{ph_y_pds}{Dataframe containing youth pubertal status report}
 
 \item{subjects}{Dataframe containing list of required subjects}
 

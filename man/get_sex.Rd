@@ -4,10 +4,10 @@
 \alias{get_sex}
 \title{Return dataframe containing sex of specified subjects}
 \usage{
-get_sex(abcd_df, subjects = NULL, t = t, format = "dummied")
+get_sex(gish_p_gi, subjects = NULL, t = t, format = "dummied")
 }
 \arguments{
-\item{abcd_df}{Any ABCD dataframe containing sex}
+\item{gish_p_gi}{Parent report of sex and gender dataframe}
 
 \item{subjects}{Dataframe containing list of required subjects}
 

@@ -4,10 +4,18 @@
 \alias{get_mtbi_mechanism}
 \title{Get acute symptom input variable 'latest_mtbi_mechanism'}
 \usage{
-get_mtbi_mechanism(otbi01, subjects = NULL, t = NULL, format = "undummied")
+get_mtbi_mechanism(
+  ph_p_otbi,
+  abcd_y_lt,
+  subjects = NULL,
+  t = NULL,
+  format = "undummied"
+)
 }
 \arguments{
-\item{otbi01}{The baseline TBI dataframe}
+\item{ph_p_otbi}{TBI dataframe}
+
+\item{abcd_y_lt}{Dataframe containing age information}
 
 \item{subjects}{Dataframe containing list of required subjects}
 

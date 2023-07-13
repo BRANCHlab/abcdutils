@@ -593,8 +593,8 @@ get_headaches <- function(mx01, subjects = NULL, t = NULL) {
 
 #' Return dataframe containing pubertal status of specified subjects
 #'
-#' @param ssphp01 Dataframe containing parent pubertal status report
-#' @param ssphy01 Dataframe containing youth pubertal status report
+#' @param ph_p_pds Dataframe containing parent pubertal status report
+#' @param ph_y_pds Dataframe containing youth pubertal status report
 #' @param subjects Dataframe containing list of required subjects
 #' @param t timepoint for data collection (0: baseline, 1: 1yfu, ... 3: 3yfu)
 #'
@@ -852,7 +852,7 @@ get_interview_age <- function(abcd_df, subjects = NULL, t = NULL) {
 
 #' Return dataframe containing sex of specified subjects
 #'
-#' @param abcd_df Any ABCD dataframe containing sex
+#' @param gish_p_gi Parent report of sex and gender dataframe
 #' @param subjects Dataframe containing list of required subjects
 #' @param t timepoint for data collection (0: baseline, 1: 1yfu, ... 3: 3yfu)
 #' @param format
@@ -904,16 +904,11 @@ get_sex <- function(gish_p_gi, subjects = NULL, t = t, format = "dummied") {
     return(sex)
 }
 
-#' Return dataframe containing gender of specified subjects
+#' Return dataframe containing parent-reported genders
 #'
-#' @param abcd_df Any ABCD dataframe containing sex
+#' @param gish_p_gi Parent report of sex and gender dataframe
 #' @param subjects Dataframe containing list of required subjects
 #' @param t timepoint for data collection (0: baseline, 1: 1yfu, ... 3: 3yfu)
-#' @param format
-#'     String indicating format to output sex data.
-#'
-#'     * `"dummied"` single binary column `M`. This is the default.
-#'     * `"undummied"` single column `sex` containing factor values `M` and `F`.
 #'
 #' @return sex Dataframe containing sex
 #'
@@ -940,16 +935,11 @@ get_p_gender <- function(gish_p_gi, subjects = NULL, t = t) {
     return(gender)
 }
 
-#' Return dataframe containing gender of specified subjects
+#' Return dataframe containing youth-reported genders
 #'
-#' @param abcd_df Any ABCD dataframe containing sex
+#' @param gish_y_gi Youth-reported gender dataframe
 #' @param subjects Dataframe containing list of required subjects
 #' @param t timepoint for data collection (0: baseline, 1: 1yfu, ... 3: 3yfu)
-#' @param format
-#'     String indicating format to output sex data.
-#'
-#'     * `"dummied"` single binary column `M`. This is the default.
-#'     * `"undummied"` single column `sex` containing factor values `M` and `F`.
 #'
 #' @return sex Dataframe containing sex
 #'
@@ -979,7 +969,8 @@ get_y_gender <- function(gish_y_gi, subjects = NULL, t = t) {
 
 #' Get acute symptom input variable 'latest_mtbi_age'
 #'
-#' @param otbi01 The baseline TBI dataframe
+#' @param ph_p_otbi TBI dataframe
+#' @param abcd_y_lt Dataframe containing age information
 #' @param subjects Dataframe containing list of required subjects
 #' @param t timepoint for data collection (0: baseline, 1: 1yfu, ... 3: 3yfu)
 #'
@@ -1322,7 +1313,8 @@ get_cbcl_aggressive <- function(abcd_cbcls01, subjects = NULL, t = NULL,
 
 #' Get acute symptom input variable 'latest_mtbi_mechanism'
 #'
-#' @param otbi01 The baseline TBI dataframe
+#' @param ph_p_otbi TBI dataframe
+#' @param abcd_y_lt Dataframe containing age information
 #' @param subjects Dataframe containing list of required subjects
 #' @param t timepoint for data collection (0: baseline, 1: 1yfu, ... 3: 3yfu)
 #' @param format Variable indicating if df is dummied or undummied
@@ -1356,7 +1348,8 @@ get_mtbi_mechanism <- function(ph_p_otbi, abcd_y_lt, subjects = NULL, t = NULL,
 
 #' Get acute symptom input variable 'latest_mtbi_loc'
 #'
-#' @param otbi01 The baseline TBI dataframe
+#' @param ph_p_otbi TBI dataframe
+#' @param abcd_y_lt Dataframe containing age information
 #' @param subjects Dataframe containing list of required subjects
 #' @param t timepoint for data collection (0: baseline, 1: 1yfu, ... 3: 3yfu)
 #'
@@ -1414,7 +1407,8 @@ get_mtbi_loc_l <- function(ph_p_otbi, abcd_y_lt, l_subs, y1_subs, y2_subs) {
 
 #' Get acute symptom input variable 'latest_mtbi_mem_daze'
 #'
-#' @param otbi01 The baseline TBI dataframe
+#' @param ph_p_otbi TBI dataframe
+#' @param abcd_y_lt Dataframe containing age information
 #' @param subjects Dataframe containing list of required subjects
 #' @param t timepoint for data collection (0: baseline, 1: 1yfu, ... 3: 3yfu)
 #'

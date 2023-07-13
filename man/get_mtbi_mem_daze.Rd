@@ -4,10 +4,12 @@
 \alias{get_mtbi_mem_daze}
 \title{Get acute symptom input variable 'latest_mtbi_mem_daze'}
 \usage{
-get_mtbi_mem_daze(otbi01, subjects = NULL, t = NULL)
+get_mtbi_mem_daze(ph_p_otbi, abcd_y_lt, subjects = NULL, t = NULL)
 }
 \arguments{
-\item{otbi01}{The baseline TBI dataframe}
+\item{ph_p_otbi}{TBI dataframe}
+
+\item{abcd_y_lt}{Dataframe containing age information}
 
 \item{subjects}{Dataframe containing list of required subjects}
 

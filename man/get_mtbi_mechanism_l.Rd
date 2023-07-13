@@ -4,10 +4,12 @@
 \alias{get_mtbi_mechanism_l}
 \title{Get mechanism data for subjects who exclusively had a latest mtbi post bl}
 \usage{
-get_mtbi_mechanism_l(abcd_lpohstbi01, l_subs, y1_subs, y2_subs)
+get_mtbi_mechanism_l(ph_p_otbi, abcd_y_lt, l_subs, y1_subs, y2_subs)
 }
 \arguments{
-\item{abcd_lpohstbi01}{longitudinal tbi dataframe}
+\item{ph_p_otbi}{TBI dataframe}
+
+\item{abcd_y_lt}{Dataframe containing age information}
 
 \item{l_subs}{subjects who had an mTBI exclusively in a longitudinal tp}
 
