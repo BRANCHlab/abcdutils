@@ -557,15 +557,16 @@ get_subc_var <- function(mrirstv02, subjects = NULL, t = NULL) {
 
 #' Get number of mtbis sustained by subject
 #'
-#' @param otbi01 The baseline TBI dataframe
+#' @param ph_p_otbi TBI dataframe
+#' @param abcd_y_lt Dataframe containing age information
 #' @param subjects Dataframe containing list of required subjects
 #' @param t timepoint for data collection (0: baseline, 1: 1yfu, ... 3: 3yfu)
 #'
 #' @return mtbi_count Dataframe containing number of previous mTBIs
 #'
 #' @export
-get_mtbi_count <- function(otbi01, subjects = NULL, t = NULL) {
-    mtbi_count <- detail_mtbi(otbi01, subjects, t = t) |>
+get_mtbi_count <- function(ph_p_otbi, abcd_y_lt, subjects = NULL, t = NULL) {
+    mtbi_count <- detail_mtbi(ph_p_otbi, abcd_y_lt, subjects, t = t) |>
         dplyr::select(
             "subjectkey",
             "mtbi_count"
