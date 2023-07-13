@@ -4,10 +4,10 @@
 \alias{get_headaches}
 \title{Get subject headache history}
 \usage{
-get_headaches(mx01, subjects = NULL, t = NULL)
+get_headaches(ph_p_mhx, subjects = NULL, t = NULL)
 }
 \arguments{
-\item{mx01}{Dataframe containing medical history}
+\item{ph_p_mhx}{Dataframe containing medical history}
 
 \item{subjects}{Dataframe containing list of required subjects}
 

@@ -4,10 +4,10 @@
 \alias{get_income}
 \title{Returns combined household incomes split into low, medium, and high groups}
 \usage{
-get_income(pdem02, subjects = NULL, t = NULL)
+get_income(abcd_p_demo, subjects = NULL, t = NULL)
 }
 \arguments{
-\item{pdem02}{Dataframe containing parent demographic information}
+\item{abcd_p_demo}{Dataframe containing parent demographic information}
 
 \item{subjects}{Dataframe containing list of required subjects}
 
