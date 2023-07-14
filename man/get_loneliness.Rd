@@ -4,10 +4,12 @@
 \alias{get_loneliness}
 \title{Extract loneliness}
 \usage{
-get_loneliness(abcd_ysr01, subjects = NULL, t = NULL)
+get_loneliness(mh_y_or, gish_p_gi, subjects = NULL, t = NULL)
 }
 \arguments{
-\item{abcd_ysr01}{ABCD Other Resilience}
+\item{mh_y_or}{ABCD Other Resilience}
+
+\item{gish_p_gi}{Parent report of sex and gender dataframe}
 
 \item{subjects}{Dataframe containing list of required subjects}
 

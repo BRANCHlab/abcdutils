@@ -5,7 +5,7 @@
 \title{Get CBCL attention data}
 \usage{
 get_cbcl_attention(
-  abcd_cbcls01,
+  mh_p_cbcl,
   subjects = NULL,
   t = NULL,
   raw = TRUE,
@@ -14,7 +14,7 @@ get_cbcl_attention(
 )
 }
 \arguments{
-\item{abcd_cbcls01}{NDA cbcl dataframe}
+\item{mh_p_cbcl}{NDA cbcl dataframe}
 
 \item{subjects}{list of subjects to receive data for}
 

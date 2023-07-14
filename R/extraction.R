@@ -1,14 +1,14 @@
 #' Sleep disturbance scale
 #'
-#' @param abcd_sds01 Dataframe containing sleep disturbance scale data
+#' @param ph_p_sds Dataframe containing sleep disturbance scale data
 #' @param subjects list of subjects to receive data for
 #' @param t timepoint for data collection (0: baseline, 1: 1yfu, ... 3: 3yfu)
 #'
 #' @return full_sleep_df Dataframe containing sleep data
 #'
 #' @export
-get_full_sleep_df <- function(abcd_sds01, subjects = NULL, t = NULL) {
-    sds_full <- abcd_import(abcd_sds01, subjects, t = t)
+get_full_sleep_df <- function(ph_p_sds, subjects = NULL, t = NULL) {
+    sds_full <- abcd_import(ph_p_sds, subjects, t = t)
     full_sleep_df <- sds_full |>
         dplyr::select(
             "subjectkey",
@@ -50,9 +50,9 @@ get_full_sleep_df <- function(abcd_sds01, subjects = NULL, t = NULL) {
 
 #' Extract family function
 #'
-#' @param fes02 ABCD Parent Family Environment Scale-Family Conflict Subscale
+#' @param ce_y_fes ABCD Parent Family Environment Scale-Family Conflict Subscale
 #' Modified from PhenX
-#' @param abcd_fes01 ABCD Parent Family Environment Scale-Family Conflict
+#' @param ce_p_fes ABCD Parent Family Environment Scale-Family Conflict
 #' Subscale Modified from PhenX
 #' @param subjects Dataframe containing list of required subjects
 #' @param t timepoint for data collection (0: baseline, 1: 1yfu, ... 3: 3yfu)
@@ -60,9 +60,9 @@ get_full_sleep_df <- function(abcd_sds01, subjects = NULL, t = NULL) {
 #' @return family_function
 #'
 #' @export
-get_family_function <- function(fes02, abcd_fes01, subjects = NULL, t = NULL) {
-    p_family_function  <- abcd_import(fes02, subjects, t = t)
-    y_family_function  <- abcd_import(abcd_fes01, subjects, t = t)
+get_family_function <- function(ce_y_fes, ce_p_fes, subjects = NULL, t = NULL) {
+    p_family_function  <- abcd_import(ce_y_fes, subjects, t = t)
+    y_family_function  <- abcd_import(ce_p_fes, subjects, t = t)
     family_function  <- dplyr::inner_join(
         p_family_function, y_family_function, by = "subjectkey") |>
     dplyr::select(
@@ -114,18 +114,18 @@ get_family_function <- function(fes02, abcd_fes01, subjects = NULL, t = NULL) {
 
 #' Extract prosocial behaviour
 #'
-#' @param psb01 Parent Prosocial Behavior Survey
-#' @param abcd_psb01 Youth Prosocial Behavior Survey
+#' @param ce_p_psb Parent Prosocial Behavior Survey
+#' @param ce_y_psb Youth Prosocial Behavior Survey
 #' @param subjects Dataframe containing list of required subjects
 #' @param t timepoint for data collection (0: baseline, 1: 1yfu, ... 3: 3yfu)
 #'
 #' @return prosocial_behaviour
 #'
 #' @export
-get_prosocial_behaviour <- function(psb01, abcd_psb01, subjects = NULL,
+get_prosocial_behaviour <- function(ce_p_psb, ce_y_psb, subjects = NULL,
                                     t = NULL) {
-    pr_prosocial <- abcd_import(psb01, subjects, t = t)
-    yr_prosocial <- abcd_import(abcd_psb01, subjects, t = t)
+    pr_prosocial <- abcd_import(ce_p_psb, subjects, t = t)
+    yr_prosocial <- abcd_import(ce_y_psb, subjects, t = t)
     prosocial <- dplyr::inner_join(
         pr_prosocial, yr_prosocial, by = "subjectkey")
     prosocial <- prosocial |>
@@ -143,15 +143,27 @@ get_prosocial_behaviour <- function(psb01, abcd_psb01, subjects = NULL,
 
 #' Extract loneliness
 #'
-#' @param abcd_ysr01 ABCD Other Resilience
+#' @param mh_y_or ABCD Other Resilience
+#' @param gish_p_gi Parent report of sex and gender dataframe
 #' @param subjects Dataframe containing list of required subjects
 #' @param t timepoint for data collection (0: baseline, 1: 1yfu, ... 3: 3yfu)
 #'
 #' @return loneliness
 #'
 #' @export
-get_loneliness <- function(abcd_ysr01, subjects = NULL, t = NULL) {
-    loneliness <- abcd_import(abcd_ysr01, subjects, t = t) |>
+get_loneliness <- function(mh_y_or, gish_p_gi, subjects = NULL, t = NULL) {
+    gish_p_gi <- abcd_import(gish_p_gi, subjects, t = t)
+    sex <- get_sex(gish_p_gi, subjects, t = t)
+    loneliness <- abcd_import(mh_y_or, subjects, t = t)
+    loneliness <- dplyr::full_join(
+        loneliness,
+        sex,
+        by = c(
+            "subjectkey",
+            "eventname"
+        )
+    )
+    loneliness <- loneliness |>
         dplyr::select(
             "subjectkey",
             "sex",
@@ -197,15 +209,15 @@ get_loneliness <- function(abcd_ysr01, subjects = NULL, t = NULL) {
 
 #' Extract healthy behaviours: screen time questionnaire
 #'
-#' @param stq01 ABCD Parent Screen Time Survey
+#' @param nt_p_stq ABCD Parent Screen Time Survey
 #' @param subjects Dataframe containing list of required subjects
 #' @param t timepoint for data collection (0: baseline, 1: 1yfu, ... 3: 3yfu)
 #'
 #' @return screen_time
 #'
 #' @export
-get_screen_time <- function(stq01, subjects = NULL, t = NULL) {
-    screen_time <- abcd_import(stq01, subjects, t = t) |>
+get_screen_time <- function(nt_p_stq, subjects = NULL, t = NULL) {
+    screen_time <- abcd_import(nt_p_stq, subjects, t = t) |>
         dplyr::select(
             "subjectkey",
             "screentime1_p_hours",
@@ -213,8 +225,7 @@ get_screen_time <- function(stq01, subjects = NULL, t = NULL) {
             "screentime2_p_hours",
             "screentime2_p_minutes")
     # Convert columns to numeric
-    char_cols <- colnames(screen_time)[2:length(screen_time)]
-    screen_time[char_cols] <- sapply(screen_time[char_cols], as.numeric)
+    col_to_num_all_possible(screen_time)
     # Convert to hours
     screen_time <- screen_time |>
         dplyr::mutate(
@@ -228,7 +239,7 @@ get_screen_time <- function(stq01, subjects = NULL, t = NULL) {
 
 #' Extract healthy behaviours: spots and activities questionnaire
 #'
-#' @param abcd_saiq02 ABCD Parent Sports and Activities Involvement
+#' @param ph_p_saiq ABCD Parent Sports and Activities Involvement
 #' Questionnaire
 #' @param subjects Dataframe containing list of required subjects
 #' @param t timepoint for data collection (0: baseline, 1: 1yfu, ... 3: 3yfu)
@@ -236,8 +247,8 @@ get_screen_time <- function(stq01, subjects = NULL, t = NULL) {
 #' @return activities
 #'
 #' @export
-get_sports_and_activities <- function(abcd_saiq02, subjects = NULL, t = NULL) {
-    sports <- abcd_import(abcd_saiq02, subjects, t = t)
+get_sports_and_activities <- function(ph_p_saiq, subjects = NULL, t = NULL) {
+    sports <- abcd_import(ph_p_saiq, subjects, t = t)
     sports <- sports |> dplyr::select("subjectkey", dplyr::starts_with("sai"))
     sports <- col_to_num(sports, 2:length(sports))
     # Number of activities organized inside of school
@@ -264,7 +275,7 @@ get_sports_and_activities <- function(abcd_saiq02, subjects = NULL, t = NULL) {
 
 #' Extract healthy behaviours: exercise questionnaire
 #'
-#' @param abcd_yrb01 ABCD Youth Youth Risk Behavior Survey Exercise Physical
+#' @param ph_y_yrb ABCD Youth Youth Risk Behavior Survey Exercise Physical
 #' Activity
 #' @param subjects Dataframe containing list of required subjects
 #' @param t timepoint for data collection (0: baseline, 1: 1yfu, ... 3: 3yfu)
@@ -272,8 +283,8 @@ get_sports_and_activities <- function(abcd_saiq02, subjects = NULL, t = NULL) {
 #' @return exercise
 #'
 #' @export
-get_exercise <- function(abcd_yrb01, subjects = NULL, t = NULL) {
-    exercise <- abcd_import(abcd_yrb01, subjects, t = t) |>
+get_exercise <- function(ph_y_yrb, subjects = NULL, t = NULL) {
+    exercise <- abcd_import(ph_y_yrb, subjects, t = t) |>
         dplyr::select("subjectkey", dplyr::ends_with("y"))
     # Taking the scaled average of all physical activity scores
     exercise <- exercise |>
@@ -288,15 +299,15 @@ get_exercise <- function(abcd_yrb01, subjects = NULL, t = NULL) {
 
 #' Extract parent psychopathology
 #'
-#' @param abcd_asrs01 ABCD Parent Adult Self Report Scores Aseba
+#' @param mh_p_asr ABCD Parent Adult Self Report Scores Aseba
 #' @param subjects Dataframe containing list of required subjects
 #' @param t timepoint for data collection (0: baseline, 1: 1yfu, ... 3: 3yfu)
 #'
 #' @return parent_psychopathology
 #'
 #' @export
-get_parent_psychopathology <- function(abcd_asrs01, subjects = NULL, t = NULL) {
-    parent_psychopathology <- abcd_import(abcd_asrs01, subjects, t = t) |>
+get_parent_psychopathology <- function(mh_p_asr, subjects = NULL, t = NULL) {
+    parent_psychopathology <- abcd_import(mh_p_asr, subjects, t = t) |>
         dplyr::select("subjectkey", dplyr::ends_with("r"))
     return(parent_psychopathology)
 }
@@ -423,12 +434,12 @@ get_cort_sa <- function(mri_y_smr_area_dst, subjects = NULL, t = NULL) {
 #'  to the Desikan Cortical Parcellation.
 #'
 #' @param mri_y_rsi_rnd_at Data file containing neurite density data
+#' @param mri_y_rsi_rnd_wm_dst Data file containing neurite density data
+#' @param mri_y_rsi_rnd_wm_dsk Data file containing neurite density data
 #' @param subjects Dataframe containing list of required subjects
 #' @param t timepoint for data collection (0: baseline, 1: 1yfu, ... 3: 3yfu)
 #'
 #' @return wmnd_df Dataframe of white matter neurite densities
-
-# LEFT OFF HERE
 #'
 #' @export
 get_all_wmnd <- function(mri_y_rsi_rnd_at,
@@ -511,15 +522,15 @@ get_subc_cor <- function(mri_y_rsfmr_cor_gp_aseg, subjects = NULL, t = NULL) {
 
 #' Extract cortical temporal variances
 #'
-#' @param mrirstv02 Data file containing neurite density data
+#' @param mri_y_rsfmr_var_gp Data file containing neurite density data
 #' @param subjects Dataframe containing list of required subjects
 #' @param t timepoint for data collection (0: baseline, 1: 1yfu, ... 3: 3yfu)
 #'
 #' @return subc_cor Dataframe of white matter neurite densities
 #'
 #' @export
-get_gord_var <- function(mrirstv02, subjects = NULL, t = NULL) {
-    gord_var_raw <- abcd_import(mrirstv02, subjects, t = t)
+get_gord_var <- function(mri_y_rsfmr_var_gp, subjects = NULL, t = NULL) {
+    gord_var_raw <- abcd_import(mri_y_rsfmr_var_gp, subjects, t = t)
     gord_var <- gord_var_raw |>
         dplyr::select(
             "subjectkey",
@@ -1022,15 +1033,15 @@ get_mtbi_age_l <- function(abcd_lpohstbi01, l_subs, y1_subs, y2_subs) {
 
 #' Get CBCL headache data
 #'
-#' @param abcd_cbcl01 NDA cbcl dataframe
+#' @param mh_p_cbcl NDA cbcl dataframe
 #' @param subjects list of subjects to receive data for
 #' @param t timepoint for data collection (0: baseline, 1: 1yfu, ... 3: 3yfu)
 #'
 #' @return cbcl_headaches headache data
 #'
 #' @export
-get_cbcl_headaches <- function(abcd_cbcl01, subjects = NULL, t = NULL) {
-    cbcl_full <- abcd_import(abcd_cbcl01, subjects, t = t)
+get_cbcl_headaches <- function(mh_p_cbcl, subjects = NULL, t = NULL) {
+    cbcl_full <- abcd_import(mh_p_cbcl, subjects, t = t)
     cbcl_headaches <- cbcl_full |>
         dplyr::select(
             "subjectkey",
@@ -1041,15 +1052,15 @@ get_cbcl_headaches <- function(abcd_cbcl01, subjects = NULL, t = NULL) {
 
 #' Get CBCL nausea data
 #'
-#' @param abcd_cbcl01 NDA cbcl dataframe
+#' @param mh_p_cbcl NDA cbcl dataframe
 #' @param subjects list of subjects to receive data for
 #' @param t timepoint for data collection (0: baseline, 1: 1yfu, ... 3: 3yfu)
 #'
 #' @return cbcl_nausea nausea data
 #'
 #' @export
-get_cbcl_nausea <- function(abcd_cbcl01, subjects = NULL, t = NULL) {
-    cbcl_full <- abcd_import(abcd_cbcl01, subjects, t = t)
+get_cbcl_nausea <- function(mh_p_cbcl, subjects = NULL, t = NULL) {
+    cbcl_full <- abcd_import(mh_p_cbcl, subjects, t = t)
     cbcl_nausea <- cbcl_full |>
         dplyr::select(
             "subjectkey",
@@ -1060,15 +1071,15 @@ get_cbcl_nausea <- function(abcd_cbcl01, subjects = NULL, t = NULL) {
 
 #' Get CBCL vomiting data
 #'
-#' @param abcd_cbcl01 NDA cbcl dataframe
+#' @param mh_p_cbcl NDA cbcl dataframe
 #' @param subjects list of subjects to receive data for
 #' @param t timepoint for data collection (0: baseline, 1: 1yfu, ... 3: 3yfu)
 #'
 #' @return cbcl_vomiting vomiting data
 #'
 #' @export
-get_cbcl_vomiting <- function(abcd_cbcl01, subjects = NULL, t = NULL) {
-    cbcl_full <- abcd_import(abcd_cbcl01, subjects, t = t)
+get_cbcl_vomiting <- function(mh_p_cbcl, subjects = NULL, t = NULL) {
+    cbcl_full <- abcd_import(mh_p_cbcl, subjects, t = t)
     cbcl_vomiting <- cbcl_full |>
         dplyr::select(
             "subjectkey",
@@ -1079,15 +1090,15 @@ get_cbcl_vomiting <- function(abcd_cbcl01, subjects = NULL, t = NULL) {
 
 #' Get CBCL dizzy data
 #'
-#' @param abcd_cbcl01 NDA cbcl dataframe
+#' @param mh_p_cbcl NDA cbcl dataframe
 #' @param subjects list of subjects to receive data for
 #' @param t timepoint for data collection (0: baseline, 1: 1yfu, ... 3: 3yfu)
 #'
 #' @return cbcl_dizzy dizzy data
 #'
 #' @export
-get_cbcl_dizzy <- function(abcd_cbcl01, subjects = NULL, t = NULL) {
-    cbcl_full <- abcd_import(abcd_cbcl01, subjects, t = t)
+get_cbcl_dizzy <- function(mh_p_cbcl, subjects = NULL, t = NULL) {
+    cbcl_full <- abcd_import(mh_p_cbcl, subjects, t = t)
     cbcl_dizzy <- cbcl_full |>
         dplyr::select(
             "subjectkey",
@@ -1098,15 +1109,15 @@ get_cbcl_dizzy <- function(abcd_cbcl01, subjects = NULL, t = NULL) {
 
 #' Get CBCL overtired data
 #'
-#' @param abcd_cbcl01 NDA cbcl dataframe
+#' @param mh_p_cbcl NDA cbcl dataframe
 #' @param subjects list of subjects to receive data for
 #' @param t timepoint for data collection (0: baseline, 1: 1yfu, ... 3: 3yfu)
 #'
 #' @return cbcl_overtired overtired data
 #'
 #' @export
-get_cbcl_overtired <- function(abcd_cbcl01, subjects = NULL, t = NULL) {
-    cbcl_full <- abcd_import(abcd_cbcl01, subjects, t = t)
+get_cbcl_overtired <- function(mh_p_cbcl, subjects = NULL, t = NULL) {
+    cbcl_full <- abcd_import(mh_p_cbcl, subjects, t = t)
     cbcl_overtired <- cbcl_full |>
         dplyr::select(
             "subjectkey",
@@ -1117,15 +1128,15 @@ get_cbcl_overtired <- function(abcd_cbcl01, subjects = NULL, t = NULL) {
 
 #' Get CBCL sleeping_more data
 #'
-#' @param abcd_cbcl01 NDA cbcl dataframe
+#' @param mh_p_cbcl NDA cbcl dataframe
 #' @param subjects list of subjects to receive data for
 #' @param t timepoint for data collection (0: baseline, 1: 1yfu, ... 3: 3yfu)
 #'
 #' @return cbcl_sleeping_more sleeping_more data
 #'
 #' @export
-get_cbcl_sleeping_more <- function(abcd_cbcl01, subjects = NULL, t = NULL) {
-    cbcl_full <- abcd_import(abcd_cbcl01, subjects, t = t)
+get_cbcl_sleeping_more <- function(mh_p_cbcl, subjects = NULL, t = NULL) {
+    cbcl_full <- abcd_import(mh_p_cbcl, subjects, t = t)
     cbcl_sleeping_more <- cbcl_full |>
         dplyr::select(
             "subjectkey",
@@ -1136,15 +1147,15 @@ get_cbcl_sleeping_more <- function(abcd_cbcl01, subjects = NULL, t = NULL) {
 
 #' Get CBCL sleeping_less data
 #'
-#' @param abcd_cbcl01 NDA cbcl dataframe
+#' @param mh_p_cbcl NDA cbcl dataframe
 #' @param subjects list of subjects to receive data for
 #' @param t timepoint for data collection (0: baseline, 1: 1yfu, ... 3: 3yfu)
 #'
 #' @return cbcl_sleeping_less sleeping_less data
 #'
 #' @export
-get_cbcl_sleeping_less <- function(abcd_cbcl01, subjects = NULL, t = NULL) {
-    cbcl_full <- abcd_import(abcd_cbcl01, subjects, t = t)
+get_cbcl_sleeping_less <- function(mh_p_cbcl, subjects = NULL, t = NULL) {
+    cbcl_full <- abcd_import(mh_p_cbcl, subjects, t = t)
     cbcl_sleeping_less <- cbcl_full |>
         dplyr::select(
             "subjectkey",
@@ -1155,7 +1166,7 @@ get_cbcl_sleeping_less <- function(abcd_cbcl01, subjects = NULL, t = NULL) {
 
 #' Get CBCL depression data
 #'
-#' @param abcd_cbcls01 NDA cbcl dataframe
+#' @param mh_p_cbcl NDA cbcl dataframe
 #' @param subjects list of subjects to receive data for
 #' @param t timepoint for data collection (0: baseline, 1: 1yfu, ... 3: 3yfu)
 #' @param raw Logical value indicating if raw or borderline/clinical
@@ -1166,11 +1177,11 @@ get_cbcl_sleeping_less <- function(abcd_cbcl01, subjects = NULL, t = NULL) {
 #' @return cbcl_depress_r depression data
 #'
 #' @export
-get_cbcl_depress <- function(abcd_cbcls01, subjects = NULL, t = NULL,
+get_cbcl_depress <- function(mh_p_cbcl, subjects = NULL, t = NULL,
                              raw = TRUE,
                              depress_thresh_borderline = 5,
                              depress_thresh_clinical = 7) {
-    cbcl_full <- abcd_import(abcd_cbcls01, subjects, t = t)
+    cbcl_full <- abcd_import(mh_p_cbcl, subjects, t = t)
     cbcl_depress_r <- cbcl_full |>
         dplyr::select(
             "subjectkey",
@@ -1195,7 +1206,7 @@ get_cbcl_depress <- function(abcd_cbcls01, subjects = NULL, t = NULL,
 
 #' Get CBCL anxiety data
 #'
-#' @param abcd_cbcls01 NDA cbcl dataframe
+#' @param mh_p_cbcl NDA cbcl dataframe
 #' @param subjects list of subjects to receive data for
 #' @param t timepoint for data collection (0: baseline, 1: 1yfu, ... 3: 3yfu)
 #' @param raw Logical value indicating if raw or borderline/clinical
@@ -1206,11 +1217,11 @@ get_cbcl_depress <- function(abcd_cbcls01, subjects = NULL, t = NULL,
 #' @return cbcl_anxiety_r anxiety data
 #'
 #' @export
-get_cbcl_anxiety <- function(abcd_cbcls01, subjects = NULL, t = NULL,
+get_cbcl_anxiety <- function(mh_p_cbcl, subjects = NULL, t = NULL,
                              raw = TRUE,
                              anxiety_thresh_borderline = 6,
                              anxiety_thresh_clinical = 8) {
-    cbcl_full <- abcd_import(abcd_cbcls01, subjects, t = t)
+    cbcl_full <- abcd_import(mh_p_cbcl, subjects, t = t)
     cbcl_anxiety_r <- cbcl_full |>
         dplyr::select(
             "subjectkey",
@@ -1233,7 +1244,7 @@ get_cbcl_anxiety <- function(abcd_cbcls01, subjects = NULL, t = NULL,
 
 #' Get CBCL attention data
 #'
-#' @param abcd_cbcls01 NDA cbcl dataframe
+#' @param mh_p_cbcl NDA cbcl dataframe
 #' @param subjects list of subjects to receive data for
 #' @param t timepoint for data collection (0: baseline, 1: 1yfu, ... 3: 3yfu)
 #' @param raw Logical value indicating if raw or borderline/clinical
@@ -1244,11 +1255,11 @@ get_cbcl_anxiety <- function(abcd_cbcls01, subjects = NULL, t = NULL,
 #' @return cbcl_attention_r attention data
 #'
 #' @export
-get_cbcl_attention <- function(abcd_cbcls01, subjects = NULL, t = NULL,
+get_cbcl_attention <- function(mh_p_cbcl, subjects = NULL, t = NULL,
                                raw = TRUE,
                                attention_thresh_borderline = 9,
                                attention_thresh_clinical = 12) {
-    cbcl_full <- abcd_import(abcd_cbcls01, subjects, t = t)
+    cbcl_full <- abcd_import(mh_p_cbcl, subjects, t = t)
     cbcl_attention_r <- cbcl_full |>
         dplyr::select(
             "subjectkey",
@@ -1272,7 +1283,7 @@ get_cbcl_attention <- function(abcd_cbcls01, subjects = NULL, t = NULL,
 
 #' Get CBCL aggressive data
 #'
-#' @param abcd_cbcls01 NDA cbcl dataframe
+#' @param mh_p_cbcl NDA cbcl dataframe
 #' @param subjects list of subjects to receive data for
 #' @param t timepoint for data collection (0: baseline, 1: 1yfu, ... 3: 3yfu)
 #' @param raw Logical value indicating if raw or borderline/clinical
@@ -1283,11 +1294,11 @@ get_cbcl_attention <- function(abcd_cbcls01, subjects = NULL, t = NULL,
 #' @return cbcl_aggressive_r aggressive data
 #'
 #' @export
-get_cbcl_aggressive <- function(abcd_cbcls01, subjects = NULL, t = NULL,
+get_cbcl_aggressive <- function(mh_p_cbcl, subjects = NULL, t = NULL,
                                 raw = TRUE,
                                 aggressive_thresh_borderline = 11,
                                 aggressive_thresh_clinical = 15) {
-    cbcl_full <- abcd_import(abcd_cbcls01, subjects, t = t)
+    cbcl_full <- abcd_import(mh_p_cbcl, subjects, t = t)
     cbcl_aggressive_r <- cbcl_full |>
         dplyr::select(
             "subjectkey",
@@ -1300,9 +1311,9 @@ get_cbcl_aggressive <- function(abcd_cbcls01, subjects = NULL, t = NULL,
     } else {
         cbcl_aggressive <- cbcl_aggressive_r |>
             dplyr::mutate(cbcl_aggressive = dplyr::case_when(
-                cbcl_aggressive_r < aggressive_threshold_borderline ~ 0,
-                cbcl_aggressive_r < aggressive_threshold_clinical ~ 1,
-                cbcl_aggressive_r >= aggressive_threshold_clinical ~ 2,
+                cbcl_aggressive_r < aggressive_thresh_borderline ~ 0,
+                cbcl_aggressive_r < aggressive_thresh_clinical ~ 1,
+                cbcl_aggressive_r >= aggressive_thresh_clinical ~ 2,
                 TRUE ~ NA)) |>
             dplyr::select("subjectkey", "cbcl_aggressive")
         return(cbcl_aggressive)

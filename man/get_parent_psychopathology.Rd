@@ -4,10 +4,10 @@
 \alias{get_parent_psychopathology}
 \title{Extract parent psychopathology}
 \usage{
-get_parent_psychopathology(abcd_asrs01, subjects = NULL, t = NULL)
+get_parent_psychopathology(mh_p_asr, subjects = NULL, t = NULL)
 }
 \arguments{
-\item{abcd_asrs01}{ABCD Parent Adult Self Report Scores Aseba}
+\item{mh_p_asr}{ABCD Parent Adult Self Report Scores Aseba}
 
 \item{subjects}{Dataframe containing list of required subjects}
 

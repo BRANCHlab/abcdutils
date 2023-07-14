@@ -4,10 +4,10 @@
 \alias{get_full_sleep_df}
 \title{Sleep disturbance scale}
 \usage{
-get_full_sleep_df(abcd_sds01, subjects = NULL, t = NULL)
+get_full_sleep_df(ph_p_sds, subjects = NULL, t = NULL)
 }
 \arguments{
-\item{abcd_sds01}{Dataframe containing sleep disturbance scale data}
+\item{ph_p_sds}{Dataframe containing sleep disturbance scale data}
 
 \item{subjects}{list of subjects to receive data for}
 

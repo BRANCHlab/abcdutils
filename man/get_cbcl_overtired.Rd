@@ -4,10 +4,10 @@
 \alias{get_cbcl_overtired}
 \title{Get CBCL overtired data}
 \usage{
-get_cbcl_overtired(abcd_cbcl01, subjects = NULL, t = NULL)
+get_cbcl_overtired(mh_p_cbcl, subjects = NULL, t = NULL)
 }
 \arguments{
-\item{abcd_cbcl01}{NDA cbcl dataframe}
+\item{mh_p_cbcl}{NDA cbcl dataframe}
 
 \item{subjects}{list of subjects to receive data for}
 

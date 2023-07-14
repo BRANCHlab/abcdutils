@@ -4,12 +4,12 @@
 \alias{get_prosocial_behaviour}
 \title{Extract prosocial behaviour}
 \usage{
-get_prosocial_behaviour(psb01, abcd_psb01, subjects = NULL, t = NULL)
+get_prosocial_behaviour(ce_p_psb, ce_y_psb, subjects = NULL, t = NULL)
 }
 \arguments{
-\item{psb01}{Parent Prosocial Behavior Survey}
+\item{ce_p_psb}{Parent Prosocial Behavior Survey}
 
-\item{abcd_psb01}{Youth Prosocial Behavior Survey}
+\item{ce_y_psb}{Youth Prosocial Behavior Survey}
 
 \item{subjects}{Dataframe containing list of required subjects}
 

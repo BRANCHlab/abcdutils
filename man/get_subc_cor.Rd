@@ -4,10 +4,10 @@
 \alias{get_subc_cor}
 \title{Extract subcortical network correlations}
 \usage{
-get_subc_cor(mrirscor02, subjects = NULL, t = NULL)
+get_subc_cor(mri_y_rsfmr_cor_gp_aseg, subjects = NULL, t = NULL)
 }
 \arguments{
-\item{mrirscor02}{Data file containing neurite density data}
+\item{mri_y_rsfmr_cor_gp_aseg}{Data file containing neurite density data}
 
 \item{subjects}{Dataframe containing list of required subjects}
 

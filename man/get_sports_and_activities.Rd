@@ -4,10 +4,10 @@
 \alias{get_sports_and_activities}
 \title{Extract healthy behaviours: spots and activities questionnaire}
 \usage{
-get_sports_and_activities(abcd_saiq02, subjects = NULL, t = NULL)
+get_sports_and_activities(ph_p_saiq, subjects = NULL, t = NULL)
 }
 \arguments{
-\item{abcd_saiq02}{ABCD Parent Sports and Activities Involvement
+\item{ph_p_saiq}{ABCD Parent Sports and Activities Involvement
 Questionnaire}
 
 \item{subjects}{Dataframe containing list of required subjects}

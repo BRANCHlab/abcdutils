@@ -4,10 +4,10 @@
 \alias{get_exercise}
 \title{Extract healthy behaviours: exercise questionnaire}
 \usage{
-get_exercise(abcd_yrb01, subjects = NULL, t = NULL)
+get_exercise(ph_y_yrb, subjects = NULL, t = NULL)
 }
 \arguments{
-\item{abcd_yrb01}{ABCD Youth Youth Risk Behavior Survey Exercise Physical
+\item{ph_y_yrb}{ABCD Youth Youth Risk Behavior Survey Exercise Physical
 Activity}
 
 \item{subjects}{Dataframe containing list of required subjects}

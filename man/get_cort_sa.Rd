@@ -4,10 +4,10 @@
 \alias{get_cort_sa}
 \title{Extract cortical surface areas}
 \usage{
-get_cort_sa(mrisdp10201, subjects = NULL, t = NULL)
+get_cort_sa(mri_y_smr_area_dst, subjects = NULL, t = NULL)
 }
 \arguments{
-\item{mrisdp10201}{Data file containing cortical data}
+\item{mri_y_smr_area_dst}{Data file containing cortical data}
 
 \item{subjects}{Dataframe containing list of required subjects}
 

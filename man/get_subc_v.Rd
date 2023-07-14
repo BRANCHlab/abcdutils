@@ -4,10 +4,10 @@
 \alias{get_subc_v}
 \title{Extract subcortical volumes}
 \usage{
-get_subc_v(smrip10201, subjects = NULL, t = NULL)
+get_subc_v(mri_y_smr_vol_aseg, subjects = NULL, t = NULL)
 }
 \arguments{
-\item{smrip10201}{Data file containing subcortical data}
+\item{mri_y_smr_vol_aseg}{Data file containing subcortical data}
 
 \item{subjects}{Dataframe containing list of required subjects}
 

@@ -4,13 +4,13 @@
 \alias{get_family_function}
 \title{Extract family function}
 \usage{
-get_family_function(fes02, abcd_fes01, subjects = NULL, t = NULL)
+get_family_function(ce_y_fes, ce_p_fes, subjects = NULL, t = NULL)
 }
 \arguments{
-\item{fes02}{ABCD Parent Family Environment Scale-Family Conflict Subscale
+\item{ce_y_fes}{ABCD Parent Family Environment Scale-Family Conflict Subscale
 Modified from PhenX}
 
-\item{abcd_fes01}{ABCD Parent Family Environment Scale-Family Conflict
+\item{ce_p_fes}{ABCD Parent Family Environment Scale-Family Conflict
 Subscale Modified from PhenX}
 
 \item{subjects}{Dataframe containing list of required subjects}

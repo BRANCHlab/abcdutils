@@ -4,10 +4,10 @@
 \alias{get_screen_time}
 \title{Extract healthy behaviours: screen time questionnaire}
 \usage{
-get_screen_time(stq01, subjects = NULL, t = NULL)
+get_screen_time(nt_p_stq, subjects = NULL, t = NULL)
 }
 \arguments{
-\item{stq01}{ABCD Parent Screen Time Survey}
+\item{nt_p_stq}{ABCD Parent Screen Time Survey}
 
 \item{subjects}{Dataframe containing list of required subjects}
 

@@ -4,10 +4,10 @@
 \alias{get_gord_var}
 \title{Extract cortical temporal variances}
 \usage{
-get_gord_var(mrirstv02, subjects = NULL, t = NULL)
+get_gord_var(mri_y_rsfmr_var_gp, subjects = NULL, t = NULL)
 }
 \arguments{
-\item{mrirstv02}{Data file containing neurite density data}
+\item{mri_y_rsfmr_var_gp}{Data file containing neurite density data}
 
 \item{subjects}{Dataframe containing list of required subjects}
 

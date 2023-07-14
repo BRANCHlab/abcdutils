@@ -4,10 +4,10 @@
 \alias{get_cort_t}
 \title{Extract cortical thicknesses}
 \usage{
-get_cort_t(mrisdp10201, subjects = NULL, t = NULL)
+get_cort_t(mri_y_smr_thk_dst, subjects = NULL, t = NULL)
 }
 \arguments{
-\item{mrisdp10201}{Data file containing cortical data}
+\item{mri_y_smr_thk_dst}{Data file containing cortical data}
 
 \item{subjects}{Dataframe containing list of required subjects}
 

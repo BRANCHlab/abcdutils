@@ -4,10 +4,10 @@
 \alias{get_gord_cor}
 \title{Extract cortical network correlations}
 \usage{
-get_gord_cor(betnet02, subjects = NULL, t = NULL)
+get_gord_cor(mri_y_rsfmr_cor_gp_gp, subjects = NULL, t = NULL)
 }
 \arguments{
-\item{betnet02}{Data file containing neurite density data}
+\item{mri_y_rsfmr_cor_gp_gp}{Data file containing neurite density data}
 
 \item{subjects}{Dataframe containing list of required subjects}
 
