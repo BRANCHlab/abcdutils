@@ -78,7 +78,8 @@ qc_dmri <- function(abcd_df, mriqcrp10301, t = 0, no_na = FALSE) {
 #'  that do not pass all smri quality control and protocol compliance checks
 #'
 #' @param abcd_df A dataframe containing subjectkeys
-#' @param mriqcrp10301 The `mriqcrp10301` data object
+#' @param mri_y_qc_raw_smr_t1 QC info for T1 sMRI
+#' @param mri_y_qc_raw_smr_t2 QC info for T2 sMRI
 #' @param t The collection period of interest (defaults to baseline: 0)
 #' @param no_na whether observations containing NAs should be removed
 #'
@@ -87,12 +88,22 @@ qc_dmri <- function(abcd_df, mriqcrp10301, t = 0, no_na = FALSE) {
 #' 2. A list of subjectkeys of dropped QC participants
 #'
 #' @export
-qc_smri <- function(abcd_df, mriqcrp10301, t = 0, no_na = FALSE) {
-    mri_qc <- mriqcrp10301 |>
+qc_smri <- function(abcd_df,
+                    mri_y_qc_raw_smr_t1,
+                    mri_y_qc_raw_smr_t2,
+                    t = 0,
+                    no_na = FALSE) {
+    mri_t1_qc <- mri_y_qc_raw_smr_t1 |>
         abcd_import(t = t, subjects = abcd_df[, "subjectkey"]) |>
         dplyr::select("subjectkey",
                       dplyr::contains(c("qc_score", "pc_score")),
                       -dplyr::contains("mid"))
+    mri_t2_qc <- mri_y_qc_raw_smr_t2 |>
+        abcd_import(t = t, subjects = abcd_df[, "subjectkey"]) |>
+        dplyr::select("subjectkey",
+                      dplyr::contains(c("qc_score", "pc_score")),
+                      -dplyr::contains("mid"))
+    mri_qc <- dplyr::inner_join(mri_t1_qc, mri_t2_qc, by = "subjectkey")
     mri_qc <- Filter(function(x) !all(is.na(x)), mri_qc)
     mri_qc <- col_to_num(mri_qc, 2:length(mri_qc))
     mri_qc[is.na(mri_qc)] <- 1

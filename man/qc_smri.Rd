@@ -4,12 +4,20 @@
 \alias{qc_smri}
 \title{smri QC}
 \usage{
-qc_smri(abcd_df, mriqcrp10301, t = 0, no_na = FALSE)
+qc_smri(
+  abcd_df,
+  mri_y_qc_raw_smr_t1,
+  mri_y_qc_raw_smr_t2,
+  t = 0,
+  no_na = FALSE
+)
 }
 \arguments{
 \item{abcd_df}{A dataframe containing subjectkeys}
 
-\item{mriqcrp10301}{The \code{mriqcrp10301} data object}
+\item{mri_y_qc_raw_smr_t1}{QC info for T1 sMRI}
+
+\item{mri_y_qc_raw_smr_t2}{QC info for T2 sMRI}
 
 \item{t}{The collection period of interest (defaults to baseline: 0)}
 
