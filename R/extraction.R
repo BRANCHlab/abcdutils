@@ -1031,6 +1031,55 @@ get_mtbi_age_l <- function(abcd_lpohstbi01, l_subs, y1_subs, y2_subs) {
 }
 
 
+#' Extract CBCL syndrome scale data
+#'
+#' @param mh_p_cbcl Dataframe containing ABCD CBCL data
+#' @param syndrome String indicating which of the 8 CBCL syndrome scales should
+#'  be collected. Options include: "anxdep", "withdep", "somatic", "social",
+#'  "thought", "attention", "rulebreak", and "aggressive"
+#' @param raw Boolean indicating if extracted data should be raw (TRUE) or
+#'  t-scores (FALSE). Defaults to TRUE.
+#' @param subjects list of subjects to receive data for
+#' @param t timepoint for data collection (0: baseline, 1: 1yfu, ... 3: 3yfu)
+#'
+#' @return ss_data Dataframe containing syndrome scale data
+#'
+#' @export
+get_cbcl_syndrome_scale <- function(mh_p_cbcl,
+                                    syndrome,
+                                    raw = TRUE,
+                                    t = NULL,
+                                    subjects = NULL) {
+    # Check that the provided syndrome is present
+    options <- list(
+        "anxdep",
+        "withdep",
+        "somatic",
+        "social",
+        "thought",
+        "attention",
+        "rulebreak",
+        "aggressive"
+    )
+    if (!syndrome %in% options) {
+        stop("Invalid syndrome scale entered. See ?get_cbcl_syndrome_scale.")
+    }
+    # Initial cleaning and filtering of the dataframe
+    mh_p_cbcl <- abcd_import(mh_p_cbcl, subjects = subjects, t = t)
+    if (raw == TRUE) {
+        cbcl_col <- paste0("cbcl_scr_syn_", syndrome, "_r")
+    } else if (raw == FALSE) {
+        cbcl_col <- paste0("cbcl_scr_syn_", syndrome, "_t")
+    }
+    ss_data <- mh_p_cbcl |>
+        dplyr::select(
+            "subjectkey",
+            !!as.symbol(cbcl_col)
+        )
+    return(ss_data)
+}
+
+
 #' Get CBCL headache data
 #'
 #' @param mh_p_cbcl NDA cbcl dataframe
@@ -1049,6 +1098,7 @@ get_cbcl_headaches <- function(mh_p_cbcl, subjects = NULL, t = NULL) {
         dplyr::rename("cbcl_headaches" = "cbcl_q56b_p")
     return(cbcl_headaches)
 }
+
 
 #' Get CBCL nausea data
 #'
