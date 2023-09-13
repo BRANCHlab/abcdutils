@@ -858,7 +858,6 @@ get_sex <- function(gish_p_gi, subjects = NULL, t = t, format = "dummied") {
     }
     pgi <- abcd_import(gish_p_gi, subjects, t = t) |>
         dplyr::select(
-            "eventname",
             "subjectkey",
             "demo_sex_v2", # what is their assigned sex
         )
@@ -899,7 +898,6 @@ get_sex <- function(gish_p_gi, subjects = NULL, t = t, format = "dummied") {
 get_p_gender <- function(gish_p_gi, subjects = NULL, t = t) {
     pgi <- abcd_import(gish_p_gi, subjects, t = t) |>
         dplyr::select(
-            "eventname",
             "subjectkey",
             "demo_gender_id_v2", # what is their assigned sex
         )
@@ -930,7 +928,6 @@ get_p_gender <- function(gish_p_gi, subjects = NULL, t = t) {
 get_y_gender <- function(gish_y_gi, subjects = NULL, t = t) {
     pgi <- abcd_import(gish_y_gi, subjects, t = t) |>
         dplyr::select(
-            "eventname",
             "subjectkey",
             "kbi_gender", # what is their assigned sex
         )
