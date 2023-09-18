@@ -125,6 +125,14 @@ get_prosocial_behaviour <- function(ce_p_psb, ce_y_psb, subjects = NULL,
 #'
 #' @export
 get_loneliness <- function(mh_y_or, gish_p_gi, subjects = NULL, t = NULL) {
+    if (is.null(t)) {
+        stop(
+            paste0(
+                "Specifying a specific timepoint is necessary to avoid",
+                "many-to-many matching problems."
+            )
+        )
+    }
     gish_p_gi <- abcd_import(gish_p_gi, subjects, t = t)
     sex <- get_sex(gish_p_gi, subjects, t = t)
     loneliness <- abcd_import(mh_y_or, subjects, t = t)
@@ -132,8 +140,7 @@ get_loneliness <- function(mh_y_or, gish_p_gi, subjects = NULL, t = NULL) {
         loneliness,
         sex,
         by = c(
-            "subjectkey",
-            "eventname"
+            "subjectkey"
         )
     )
     loneliness <- loneliness |>
@@ -179,6 +186,7 @@ get_loneliness <- function(mh_y_or, gish_p_gi, subjects = NULL, t = NULL) {
             "os_close_friend")
     return(loneliness)
 }
+
 
 #' Extract healthy behaviours: screen time questionnaire
 #'
