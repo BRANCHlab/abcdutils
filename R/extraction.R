@@ -361,11 +361,7 @@ get_nihtbx_pattern_fc <- function(abcd_tbss01, subjects = NULL, t = NULL) {
 get_subc_v <- function(mri_y_smr_vol_aseg, subjects = NULL, t = NULL) {
     smri_raw <- abcd_import(mri_y_smr_vol_aseg, subjects, t = t)
     subc_v_df <- smri_raw |>
-        dplyr::select(
-            "subjectkey",
-            "smri_vol_scs_cbwmatterlh":"smri_vol_scs_vedcrh") |>
-        dplyr::select(
-            -c(dplyr::contains("lesion")))
+        dplyr::select("subjectkey", "smri_vol_scs_wholeb")
     return(subc_v_df)
 }
 
