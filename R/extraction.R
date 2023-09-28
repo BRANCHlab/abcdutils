@@ -368,38 +368,40 @@ get_subc_v <- function(mri_y_smr_vol_aseg, subjects = NULL, t = NULL) {
 
 #' Extract cortical thicknesses
 #'
-#' @param mri_y_smr_thk_dst Data file containing cortical data
+#' @param mri_y_smr_thk_dsk Data file containing cortical data
 #' @param subjects Dataframe containing list of required subjects
 #' @param t timepoint for data collection (0: baseline, 1: 1yfu, ... 3: 3yfu)
 #'
 #' @return cort_t_df Dataframe of cortical thicknesses
 #'
 #' @export
-get_cort_t <- function(mri_y_smr_thk_dst, subjects = NULL, t = NULL) {
-    cort_raw <- abcd_import(mri_y_smr_thk_dst, subjects, t = t)
+get_cort_t <- function(mri_y_smr_thk_dsk, subjects = NULL, t = NULL) {
+    cort_raw <- abcd_import(mri_y_smr_thk_dsk, subjects, t = t)
     cort_t_df <- cort_raw |>
         dplyr::select(
             "subjectkey",
-            "mrisdp_1":"mrisdp_151")
+            "smri_thick_cdk_mean"
+        )
     return(cort_t_df)
 }
 
 
 #' Extract cortical surface areas
 #'
-#' @param mri_y_smr_area_dst Data file containing cortical data
+#' @param mri_y_smr_area_dsk Data file containing cortical data
 #' @param subjects Dataframe containing list of required subjects
 #' @param t timepoint for data collection (0: baseline, 1: 1yfu, ... 3: 3yfu)
 #'
 #' @return cort_sa_df Dataframe of cortical surface areas
 #'
 #' @export
-get_cort_sa <- function(mri_y_smr_area_dst, subjects = NULL, t = NULL) {
-    cort_raw <- abcd_import(mri_y_smr_area_dst, subjects, t = t)
+get_cort_sa <- function(mri_y_smr_area_dsk, subjects = NULL, t = NULL) {
+    cort_raw <- abcd_import(mri_y_smr_area_dsk, subjects, t = t)
     cort_sa_df <- cort_raw |>
         dplyr::select(
             "subjectkey",
-            "mrisdp_303":"mrisdp_453")
+            "smri_area_cdk_total"
+        )
     return(cort_sa_df)
 }
 
@@ -411,7 +413,6 @@ get_cort_sa <- function(mri_y_smr_area_dst, subjects = NULL, t = NULL) {
 #'  to the Desikan Cortical Parcellation.
 #'
 #' @param mri_y_rsi_rnd_at Data file containing neurite density data
-#' @param mri_y_rsi_rnd_wm_dst Data file containing neurite density data
 #' @param mri_y_rsi_rnd_wm_dsk Data file containing neurite density data
 #' @param subjects Dataframe containing list of required subjects
 #' @param t timepoint for data collection (0: baseline, 1: 1yfu, ... 3: 3yfu)
@@ -420,40 +421,17 @@ get_cort_sa <- function(mri_y_smr_area_dst, subjects = NULL, t = NULL) {
 #'
 #' @export
 get_all_wmnd <- function(mri_y_rsi_rnd_at,
-                         mri_y_rsi_rnd_wm_dst,
                          mri_y_rsi_rnd_wm_dsk,
                          subjects = NULL,
                          t = NULL) {
-    mri_y_rsi_rnd_at <- abcd_import(
-        mri_y_rsi_rnd_at, subjects, t = t
-    )
-    mri_y_rsi_rnd_wm_dst <- abcd_import(
-        mri_y_rsi_rnd_wm_dst, subjects, t = t
-    )
-    mri_y_rsi_rnd_wm_dsk <- abcd_import(
-        mri_y_rsi_rnd_wm_dsk, subjects, t = t
-    )
-    df_list <- list(
-        mri_y_rsi_rnd_at,
-        mri_y_rsi_rnd_wm_dst,
-        mri_y_rsi_rnd_wm_dsk
-    )
-    nd_raw <- merge_df_list(df_list, join = "full")
-    wmnd_df <- nd_raw |>
-        dplyr::select(
-            "subjectkey",
-            dplyr::contains(c("rsirnd_fib", "rsirndwm"))) |>
-        dplyr::select(-c( # Not interested in redundant mean ROIs:
-            "dmri_rsirnd_fib_fxcutrh", # Duplicate right fornix without fimbria
-            "dmri_rsirnd_fib_fxcutlh", # Duplicate left fornix without fimbria
-            "dmri_rsirnd_fib_allfib", # All fibers
-            "dmri_rsirnd_fib_afbncrh", # All right hemisphere without CC
-            "dmri_rsirnd_fib_afbnclh", # All left hemisphere without CC
-            "dmri_rsirnd_fib_allfibrh", # All right hemisphere
-            "dmri_rsirnd_fib_allfiblh", # All left hemisphere
-            "dmri_rsirndwm_cdx_mean", # overall mean (peri-cortical wm)
-            "dmri_rsirndwm_cdx_meanlh", # left hemisphere (peri-cortical wm)
-            "dmri_rsirndwm_cdx_meanrh")) # right hemisphere (peri-cortical wm)
+    mri_y_rsi_rnd_at <- mri_y_rsi_rnd_at |>
+        abcd_import(subjects, t = t) |>
+        dplyr::select("subjectkey", "dmri_rsirnd_fib_allfib")
+    mri_y_rsi_rnd_wm_dsk <- mri_y_rsi_rnd_wm_dsk |>
+        abcd_import(subjects, t = t) |>
+        dplyr::select("subjectkey", "dmri_rsirndwm_cdk_mean")
+    df_list <- list(mri_y_rsi_rnd_at, mri_y_rsi_rnd_wm_dsk)
+    wmnd_df <- merge_df_list(df_list, join = "full")
     return(wmnd_df)
 }
 
@@ -467,11 +445,21 @@ get_all_wmnd <- function(mri_y_rsi_rnd_at,
 #'
 #' @export
 get_gord_cor <- function(mri_y_rsfmr_cor_gp_gp, subjects = NULL, t = NULL) {
-    gord_cor_raw <- abcd_import(mri_y_rsfmr_cor_gp_gp, subjects, t = t)
-    gord_cor <- gord_cor_raw |>
-        dplyr::select(
-            "subjectkey",
-            "rsfmri_c_ngd_ad_ngd_ad":"rsfmri_c_ngd_vs_ngd_vs")
+    gord_cor <- abcd_import(mri_y_rsfmr_cor_gp_gp, subjects, t = t)
+    # Store the subjectkeys in the rownames
+    row.names(gord_cor) <- gord_cor$"subjectkey"
+    # Remove the subjectkeys
+    gord_cor <- gord_cor |>
+        dplyr::select(-c("subjectkey", "eventname"))
+    # Dataframe of just rowmeans
+    gord_cor <- data.frame(rowMeans(gord_cor))
+    gord_cor$"subjectkey" <- rownames(gord_cor)
+    colnames(gord_cor) <- c("avg_gord_cor", "subjectkey")
+    rownames(gord_cor) <- NULL
+    gord_cor <- gord_cor |> dplyr::select(
+        "subjectkey",
+        "avg_gord_cor"
+    )
     return(gord_cor)
 }
 
@@ -486,13 +474,21 @@ get_gord_cor <- function(mri_y_rsfmr_cor_gp_gp, subjects = NULL, t = NULL) {
 #'
 #' @export
 get_subc_cor <- function(mri_y_rsfmr_cor_gp_aseg, subjects = NULL, t = NULL) {
-    subc_cor_raw <- abcd_import(mri_y_rsfmr_cor_gp_aseg, subjects, t = t)
-    subc_cor <- subc_cor_raw |>
-        dplyr::select(
-            "subjectkey",
-            dplyr::contains("rsfmri_cor_ngd_")) |>
-        dplyr::select(
-            -dplyr::contains("cor_ngd_scs"))
+    subc_cor <- abcd_import(mri_y_rsfmr_cor_gp_aseg, subjects, t = t)
+    # Store the subjectkeys in the rownames
+    row.names(subc_cor) <- subc_cor$"subjectkey"
+    # Remove the subjectkeys
+    subc_cor <- subc_cor |>
+        dplyr::select(-c("subjectkey", "eventname"))
+    # Dataframe of just rowmeans
+    subc_cor <- data.frame(rowMeans(subc_cor))
+    subc_cor$"subjectkey" <- rownames(subc_cor)
+    colnames(subc_cor) <- c("avg_subc_cor", "subjectkey")
+    rownames(subc_cor) <- NULL
+    subc_cor <- subc_cor |> dplyr::select(
+        "subjectkey",
+        "avg_subc_cor"
+    )
     return(subc_cor)
 }
 

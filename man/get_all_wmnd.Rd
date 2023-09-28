@@ -4,18 +4,10 @@
 \alias{get_all_wmnd}
 \title{Extract white matter neurite densities}
 \usage{
-get_all_wmnd(
-  mri_y_rsi_rnd_at,
-  mri_y_rsi_rnd_wm_dst,
-  mri_y_rsi_rnd_wm_dsk,
-  subjects = NULL,
-  t = NULL
-)
+get_all_wmnd(mri_y_rsi_rnd_at, mri_y_rsi_rnd_wm_dsk, subjects = NULL, t = NULL)
 }
 \arguments{
 \item{mri_y_rsi_rnd_at}{Data file containing neurite density data}
-
-\item{mri_y_rsi_rnd_wm_dst}{Data file containing neurite density data}
 
 \item{mri_y_rsi_rnd_wm_dsk}{Data file containing neurite density data}
 
