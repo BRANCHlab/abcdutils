@@ -289,10 +289,20 @@ get_exercise <- function(ph_y_yrb, subjects = NULL, t = NULL) {
 #' @export
 get_parent_psychopathology <- function(mh_p_asr, subjects = NULL, t = NULL) {
     parent_psychopathology <- abcd_import(mh_p_asr, subjects, t = t) |>
-        dplyr::select("subjectkey", dplyr::ends_with("r"))
+        dplyr::select("subjectkey", dplyr::ends_with("r")) |>
+        dplyr::select(
+            -c(
+                "asr_scr_totprob_r",
+                "asr_scr_internal_r",
+                "asr_scr_external_r",
+                "asr_scr_inattention_r", # same as attention
+                "asr_scr_adhd_r", # same as attention
+                "asr_scr_rulebreak_r", # same as antisocial
+                "asr_scr_somaticpr_r" # same as same as somatic
+            )
+        )
     return(parent_psychopathology)
 }
-
 
 #' Get nihtbx list sorting data
 #'
