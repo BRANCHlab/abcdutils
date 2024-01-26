@@ -791,9 +791,9 @@ get_race <- function(pdem02, subjects = NULL, t = t, format = "") {
         race_df <- race_df |>
             dplyr::mutate(
                 race = dplyr::case_when(
-                    race_df$"white" == 1 ~ "white",
-                    race_df$"black" == 1 ~ "black",
-                    race_df$"mixed_or_other" == 1 ~ "mixed_or_other",
+                    race_df$"white" == 1 ~ 0,
+                    race_df$"black" == 1 ~ 1,
+                    race_df$"mixed_or_other" == 1 ~ 1,
                     TRUE ~ NA
                 )
             ) |>
@@ -857,7 +857,12 @@ get_interview_age <- function(abcd_df, subjects = NULL, t = NULL) {
 #' @return sex Dataframe containing sex
 #'
 #' @export
-get_sex <- function(gish_p_gi, subjects = NULL, t = t, format = "dummied") {
+get_sex <- function(gish_p_gi,
+                    subjects = NULL,
+                    t = t,
+                    format = "dummied",
+                    only_m_f = FALSE,
+                    as_numeric = FALSE) {
     options <- c("undummied", "dummied")
     if (!(format %in% options)) {
         print("The 'format argument should be one of the following options:")
@@ -871,7 +876,8 @@ get_sex <- function(gish_p_gi, subjects = NULL, t = t, format = "dummied") {
             "subjectkey",
             "demo_sex_v2", # what is their assigned sex
         )
-    sex <- pgi |> dplyr::rename(
+    sex <- pgi |>
+        dplyr::rename(
             "sex" = "demo_sex_v2",
         )
     sex <- sex |>
@@ -884,15 +890,25 @@ get_sex <- function(gish_p_gi, subjects = NULL, t = t, format = "dummied") {
                 TRUE ~ NA
             )
         )
-    # dummy format may not be required
-    #if (format == "dummied") {
-    #    sex <- fastDummies::dummy_cols(
-    #        .data = sex,
-    #        select_columns = "sex",
-    #        remove_first_dummy = TRUE,
-    #        remove_selected_columns = TRUE)
-    #    #colnames(sex) <- c("subjectkey", "M")
-    #}
+    if (only_m_f) {
+        sex <- sex |>
+            dplyr::mutate(
+                sex = dplyr::case_when(
+                    sex %in% c("IM", "IF") ~ NA,
+                    TRUE ~ sex
+                )
+            )
+    }
+    if (as_numeric) {
+        sex <- sex |>
+            dplyr::mutate(
+                sex = dplyr::case_when(
+                    sex == "F" ~ 0,
+                    sex == "M" ~ 1,
+                    TRUE ~ NA
+                )
+            )
+    }
     return(sex)
 }
 
