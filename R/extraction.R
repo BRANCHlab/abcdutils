@@ -283,24 +283,45 @@ get_exercise <- function(ph_y_yrb, subjects = NULL, t = NULL) {
 #' @param mh_p_asr ABCD Parent Adult Self Report Scores Aseba
 #' @param subjects Dataframe containing list of required subjects
 #' @param t timepoint for data collection (0: baseline, 1: 1yfu, ... 3: 3yfu)
+#' @param raw Boolean indicating if extracted data should be raw (TRUE) or
+#'  t-scores (FALSE). Defaults to TRUE.
 #'
 #' @return parent_psychopathology
 #'
 #' @export
-get_parent_psychopathology <- function(mh_p_asr, subjects = NULL, t = NULL) {
-    parent_psychopathology <- abcd_import(mh_p_asr, subjects, t = t) |>
-        dplyr::select("subjectkey", dplyr::ends_with("r")) |>
-        dplyr::select(
-            -c(
-                "asr_scr_totprob_r",
-                "asr_scr_internal_r",
-                "asr_scr_external_r",
-                "asr_scr_inattention_r", # same as attention
-                "asr_scr_adhd_r", # same as attention
-                "asr_scr_rulebreak_r", # same as antisocial
-                "asr_scr_somaticpr_r" # same as same as somatic
+get_parent_psychopathology <- function(mh_p_asr,
+                                       subjects = NULL,
+                                       t = NULL,
+                                       raw = TRUE) {
+    if (raw == TRUE) {
+        parent_psychopathology <- abcd_import(mh_p_asr, subjects, t = t) |>
+            dplyr::select("subjectkey", dplyr::ends_with("r")) |>
+            dplyr::select(
+                -c(
+                    "asr_scr_totprob_r",
+                    "asr_scr_internal_r",
+                    "asr_scr_external_r",
+                    "asr_scr_inattention_r", # same as attention
+                    "asr_scr_adhd_r", # same as attention
+                    "asr_scr_rulebreak_r", # same as antisocial
+                    "asr_scr_somaticpr_r" # same as same as somatic
+                )
             )
-        )
+    } else {
+        parent_psychopathology <- abcd_import(mh_p_asr, subjects, t = t) |>
+            dplyr::select("subjectkey", dplyr::ends_with("t")) |>
+            dplyr::select(
+                -c(
+                    "asr_scr_totprob_t",
+                    "asr_scr_internal_t",
+                    "asr_scr_external_t",
+                    "asr_scr_inattention_t", # same as attention
+                    "asr_scr_adhd_t", # same as attention
+                    "asr_scr_rulebreak_t", # same as antisocial
+                    "asr_scr_somaticpr_t" # same as same as somatic
+                )
+            )
+    }
     return(parent_psychopathology)
 }
 
@@ -854,6 +875,8 @@ get_interview_age <- function(abcd_df, subjects = NULL, t = NULL) {
 #'     * `"dummied"` single binary column `M`. This is the default.
 #'     * `"undummied"` single column `sex` containing factor values `M` and `F`.
 #'
+#' @param only_m_f Logical indicating whether to remove non M/F values
+#' @param as_numeric Logical indicating whether to convert M/F to 1/0 values
 #' @return sex Dataframe containing sex
 #'
 #' @export

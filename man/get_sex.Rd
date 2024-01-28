@@ -4,7 +4,14 @@
 \alias{get_sex}
 \title{Return dataframe containing sex of specified subjects}
 \usage{
-get_sex(gish_p_gi, subjects = NULL, t = t, format = "dummied")
+get_sex(
+  gish_p_gi,
+  subjects = NULL,
+  t = t,
+  format = "dummied",
+  only_m_f = FALSE,
+  as_numeric = FALSE
+)
 }
 \arguments{
 \item{gish_p_gi}{Parent report of sex and gender dataframe}
@@ -18,6 +25,10 @@ get_sex(gish_p_gi, subjects = NULL, t = t, format = "dummied")
 \if{html}{\out{<div class="sourceCode">}}\preformatted{* `"dummied"` single binary column `M`. This is the default.
 * `"undummied"` single column `sex` containing factor values `M` and `F`.
 }\if{html}{\out{</div>}}}
+
+\item{only_m_f}{Logical indicating whether to remove non M/F values}
+
+\item{as_numeric}{Logical indicating whether to convert M/F to 1/0 values}
 }
 \value{
 sex Dataframe containing sex
