@@ -4,20 +4,23 @@
 \alias{get_race}
 \title{Returns race information}
 \usage{
-get_race(pdem02, subjects = NULL, t = t, format = "")
+get_race(abcd_p_demo, subjects = NULL, t = t, dummy = FALSE)
 }
 \arguments{
-\item{pdem02}{Dataframe containing parent demographic information}
+\item{abcd_p_demo}{Dataframe containing parent demographic information}
 
 \item{subjects}{Dataframe containing list of required subjects}
 
 \item{t}{timepoint for data collection (0: baseline, 1: 1yfu, ... 3: 3yfu)}
 
-\item{format}{String indicating format to output race data}
+\item{dummy}{String indicating format to output race data}
 }
 \value{
 race_df Dataframe containing subject race
 }
 \description{
-Returns race information
+Returns race data categorized by the ABCD Study based on the NIH Minimum
+Reporting guidelines and the US Census Bureau's OMB standards.
+If dummy = FALSE, five categorical variables for different race groups
+are provided. Otherwise, a single categorical variable is returned.
 }

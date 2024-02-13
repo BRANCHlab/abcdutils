@@ -4,7 +4,7 @@
 \alias{get_interview_age}
 \title{Return dataframe containing interview age of specified subjects}
 \usage{
-get_interview_age(abcd_df, subjects = NULL, t = NULL)
+get_interview_age(abcd_df, subjects = NULL, t = NULL, as_years = TRUE)
 }
 \arguments{
 \item{abcd_df}{Any ABCD dataframe containing interview age}
@@ -12,6 +12,8 @@ get_interview_age(abcd_df, subjects = NULL, t = NULL)
 \item{subjects}{Dataframe containing list of required subjects}
 
 \item{t}{timepoint for data collection (0: baseline, 1: 1yfu, ... 3: 3yfu)}
+
+\item{as_years}{Logical indicating whether to convert age to years}
 }
 \value{
 interview_age Dataframe containing interview age

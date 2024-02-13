@@ -4,7 +4,7 @@
 \alias{get_mtbi_age}
 \title{Get acute symptom input variable 'latest_mtbi_age'}
 \usage{
-get_mtbi_age(ph_p_otbi, abcd_y_lt, subjects = NULL, t = NULL)
+get_mtbi_age(ph_p_otbi, abcd_y_lt, subjects = NULL, t = NULL, as_years = TRUE)
 }
 \arguments{
 \item{ph_p_otbi}{TBI dataframe}
@@ -14,6 +14,8 @@ get_mtbi_age(ph_p_otbi, abcd_y_lt, subjects = NULL, t = NULL)
 \item{subjects}{Dataframe containing list of required subjects}
 
 \item{t}{timepoint for data collection (0: baseline, 1: 1yfu, ... 3: 3yfu)}
+
+\item{as_years}{Logical indicating whether to convert age to years}
 }
 \value{
 mtbi_age Dataframe containing latest_mtbi_age

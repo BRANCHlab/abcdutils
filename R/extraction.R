@@ -678,147 +678,77 @@ get_income <- function(abcd_p_demo, subjects = NULL, t = NULL) {
 
 #' Returns race information
 #'
-#' @param pdem02 Dataframe containing parent demographic information
+#' Returns race data categorized by the ABCD Study based on the NIH Minimum
+#' Reporting guidelines and the US Census Bureau's OMB standards.
+#' If dummy = FALSE, five categorical variables for different race groups
+#' are provided. Otherwise, a single categorical variable is returned.
+#'
+#' @param abcd_p_demo Dataframe containing parent demographic information
 #' @param subjects Dataframe containing list of required subjects
 #' @param t timepoint for data collection (0: baseline, 1: 1yfu, ... 3: 3yfu)
-#' @param format String indicating format to output race data
+#' @param dummy String indicating format to output race data
 #'
 #' @return race_df Dataframe containing subject race
 #'
 #' @export
-get_race <- function(pdem02, subjects = NULL, t = t, format = "") {
-    options <- c("condensed_dummied",
-                 "condensed_undummied",
-                 "expanded_dummied")
-    if (!(format %in% options)) {
-        print("The 'format argument should be one of the following options:")
-        print("[1] 'condensed_dummied'")
-        print("[2] 'condensed_undummied'")
-        print("[3] 'expanded_dummied'")
-        print("See ?get_race for more information about these options.")
-        return(NULL)
-    }
-    parent_demographics <- abcd_import(pdem02, subjects, t = t)
-    # Rename columns
-    race_df <- parent_demographics |>
-        dplyr::rename("white" = "demo_race_a_p___10",
-               "black" = "demo_race_a_p___11",
-               "native_american" = "demo_race_a_p___12",
-               "native_alaskan" = "demo_race_a_p___13",
-               "native_hawaiian" = "demo_race_a_p___14",
-               "guamanian" = "demo_race_a_p___15",
-               "samoan" = "demo_race_a_p___16",
-               "other_pacific_islander" = "demo_race_a_p___17",
-               "asian" = "demo_race_a_p___18",
-               "chinese" = "demo_race_a_p___19",
-               "filipino" = "demo_race_a_p___20",
-               "japanese" = "demo_race_a_p___21",
-               "korean" = "demo_race_a_p___22",
-               "vietnamese" = "demo_race_a_p___23",
-               "other_asian" = "demo_race_a_p___24",
-               "other" = "demo_race_a_p___25",
-               "refuse_to_answer" = "demo_race_a_p___77",
-               "dont_know" = "demo_race_a_p___99",
-               "hispanic" = "demo_ethn_v2") |>
-    # Select relevant variables
-    dplyr::select("subjectkey",
-                  "white":"hispanic") |>
-    # Assign numeric column types to help with later transformations
-    dplyr::mutate(
-        dplyr::across(
-            "white":"hispanic", as.numeric))
-    # Fix the hispanic category
-    race_df <- race_df |>
-        dplyr::mutate(hispanic = dplyr::case_when(race_df$"hispanic" == 1 ~ 1,
-                                    TRUE ~ 0)) |>
-    # Based on known frequencies of races among subject list, pool groups
-    dplyr::mutate(asian_other_pi = pmax(
-        race_df$"asian",
-        race_df$"filipino",
-        race_df$"korean",
-        race_df$"other_asian",
-        race_df$"chinese",
-        race_df$"japanese",
-        race_df$"vietnamese",
-        race_df$"other_pacific_islander",
-        race_df$"samoan",
-        race_df$"guamanian",
-        race_df$"native_hawaiian",
-        race_df$"native_alaskan"),
-    na = pmax(
-        race_df$"dont_know",
-        race_df$"refuse_to_answer")) |>
-    dplyr::select("subjectkey",
-           "asian_other_pi",
-           "native_american",
-           "other",
-           "na",
-           "white",
-           "black",
-           "hispanic")
-    # three columns of white, black, mixed/other
-    if (format == "condensed_dummied" || format == "condensed_undummied") {
-        # Assign mixed race for those in multiple categories
-        race_df <- race_df |>
-            dplyr::mutate(mixed = dplyr::case_when(
-                race_df$"white" +
-                race_df$"black" +
-                race_df$"asian_other_pi" +
-                race_df$"native_american" +
-                race_df$"other" +
-                race_df$"hispanic" > 1 ~ 1,
-                TRUE ~ 0
-                ))
-        # Remove original race category for those who are mixed
+get_race <- function(abcd_p_demo, subjects = NULL, t = t, dummy = FALSE) {
+    race_df <- abcd_p_demo |>
+        abcd_import(subjects = subjects, t = t) |>
+        dplyr::select(
+            "subjectkey",
+            "race_ethnicity",
+        )
+    colnames(race_df) <- c("subjectkey", "race")
+    if (dummy) {
         race_df <- race_df |>
             dplyr::mutate(
-                black = dplyr::case_when(
-                    race_df$"black" == 1 &
-                        race_df$"mixed" == 0 ~ 1,
-                    TRUE ~ 0),
                 white = dplyr::case_when(
-                    race_df$"white" == 1 &
-                        race_df$"mixed" == 0 ~ 1,
-                    TRUE ~ 0),
-                asian_other_pi = dplyr::case_when(
-                    race_df$"asian_other_pi" == 1 &
-                        race_df$"mixed" == 0 ~ 1,
-                    TRUE ~ 0),
+                    is.na(race_df$"race") ~ NA_real_,
+                    race_df$"race" == 1 ~ 1,
+                    TRUE ~ 0
+                ),
+                black = dplyr::case_when(
+                    is.na(race_df$"race") ~ NA_real_,
+                    race_df$"race" == 2 ~ 1,
+                    TRUE ~ 0
+                ),
                 hispanic = dplyr::case_when(
-                    race_df$"hispanic" == 1 &
-                        race_df$"mixed" == 0 ~ 1,
-                    TRUE ~ 0),
-                native_american = dplyr::case_when(
-                    race_df$"native_american" == 1 &
-                        race_df$"mixed" == 0 ~ 1,
-                    TRUE ~ 0))
-        # Pool together mixed / other race. As only a very small number of
-        # asian & hispanic subjects are non-mixed, pool them in as well.
+                    is.na(race_df$"race") ~ NA_real_,
+                    race_df$"race" == 3 ~ 1,
+                    TRUE ~ 0
+                ),
+                asian = dplyr::case_when(
+                    is.na(race_df$"race") ~ NA_real_,
+                    race_df$"race" == 4 ~ 1,
+                    TRUE ~ 0
+                ),
+                other = dplyr::case_when(
+                    is.na(race_df$"race") ~ NA_real_,
+                    race_df$"race" == 5 ~ 1,
+                    TRUE ~ 0
+                ),
+            )
         race_df <- race_df |>
-            dplyr::mutate(
-                mixed_or_other = dplyr::case_when(
-                    race_df$"asian_other_pi" == 1 ~ 1,
-                    race_df$"hispanic" == 1 ~ 1,
-                    race_df$"mixed" == 1 ~ 1,
-                    race_df$"other" == 1 ~ 1,
-                    TRUE ~ 0)) |>
-            dplyr::select("subjectkey",
-                          "white",
-                          "black",
-                          "mixed_or_other")
-    }
-    if (format == "condensed_undummied") {
-        # Undummy the dataframe
+            dplyr::select(
+                "subjectkey",
+                "white",
+                "black",
+                "hispanic",
+                "asian",
+                "other"
+            )
+    } else {
         race_df <- race_df |>
             dplyr::mutate(
                 race = dplyr::case_when(
-                    race_df$"white" == 1 ~ 0,
-                    race_df$"black" == 1 ~ 1,
-                    race_df$"mixed_or_other" == 1 ~ 1,
-                    TRUE ~ NA
+                    race_df$"race" == 1 ~ "white",
+                    race_df$"race" == 2 ~ "black",
+                    race_df$"race" == 3 ~ "hispanic",
+                    race_df$"race" == 4 ~ "asian",
+                    race_df$"race" == 5 ~ "other",
+                    TRUE ~ NA_character_
                 )
-            ) |>
-            dplyr::select("subjectkey", "race")
+            )
     }
     return(race_df)
 }
@@ -854,13 +784,22 @@ format_race <- function(race_df, format) {
 #' @param abcd_df Any ABCD dataframe containing interview age
 #' @param subjects Dataframe containing list of required subjects
 #' @param t timepoint for data collection (0: baseline, 1: 1yfu, ... 3: 3yfu)
+#' @param as_years Logical indicating whether to convert age to years
 #'
 #' @return interview_age Dataframe containing interview age
 #'
 #' @export
-get_interview_age <- function(abcd_df, subjects = NULL, t = NULL) {
+get_interview_age <- function(abcd_df,
+                              subjects = NULL,
+                              t = NULL,
+                              as_years = TRUE) {
     interview_age <- abcd_import(abcd_df, subjects, t = t) |>
         dplyr::select("subjectkey", "interview_age")
+    if (as_years == TRUE) {
+        interview_age$"interview_age" <- round(
+            interview_age$"interview_age" / 12
+        )
+    }
     return(interview_age)
 }
 
@@ -1002,16 +941,26 @@ get_y_gender <- function(gish_y_gi, subjects = NULL, t = t) {
 #' @param abcd_y_lt Dataframe containing age information
 #' @param subjects Dataframe containing list of required subjects
 #' @param t timepoint for data collection (0: baseline, 1: 1yfu, ... 3: 3yfu)
+#' @param as_years Logical indicating whether to convert age to years
 #'
 #' @return mtbi_age Dataframe containing latest_mtbi_age
 #'
 #' @export
-get_mtbi_age <- function(ph_p_otbi, abcd_y_lt, subjects = NULL, t = NULL) {
+get_mtbi_age <- function(ph_p_otbi,
+                         abcd_y_lt,
+                         subjects = NULL,
+                         t = NULL,
+                         as_years = TRUE) {
     mtbi_age <- detail_mtbi(ph_p_otbi, abcd_y_lt, subjects, t = t) |>
         dplyr::select(
             "subjectkey",
             "latest_mtbi_age"
         )
+    if (as_years) {
+        mtbi_age$"latest_mtbi_age" <- round(
+            mtbi_age$"latest_mtbi_age" / 12
+        )
+    }
     return(mtbi_age)
 }
 
