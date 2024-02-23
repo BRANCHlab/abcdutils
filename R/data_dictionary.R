@@ -30,7 +30,7 @@ abcd_dd <- function(short_name) {
 #' @param search_string The string to be searched
 #'
 #' @export
-search_dd <- function(search_string) {
+search_dd_web <- function(search_string) {
     if (class(search_string)[1] != "character") {
         search_string <- deparse(substitute(short_name))
     }
@@ -39,4 +39,43 @@ search_dd <- function(search_string) {
         "?q=query=data-structure ~and~ searchTerm=", search_string,
         " ~and~ resultsView=table-view")
     utils::browseURL(url)
+}
+
+#' Search through a local data dictionary csv file (5.0)
+#'
+#' @param dict The data dictionary as a data.frame
+#' @param search_string Parameter to search for
+#' @param fields A string or vector of strings indicating column names to use
+#' for the search. Options are
+#' - "table_name" The name of the 5.0 release file containing the data.
+#' - "var_name" The name of the variable as it appears in the raw data.
+#' - "var_label" What the variable is.
+#' - "notes" Typically this contains more details on what certain values mean.
+#' - "condition" Some data was only collected conditionally on responses to
+#' other variables. This column indicates what those conditions are.
+#' - "table_name_nda" The file that this info was stored in pre-5.0 releases
+#'
+#' @return RETURN
+#'
+#' @export
+search_dd <- function(dict, search_string, fields = NULL) {
+    if (is.null(fields)) {
+        dict_to_search <- dict
+    } else {
+        dict_to_search <- dict[, colnames(dict) %in% fields]
+    }
+    matching_rows <- apply(
+        dict_to_search,
+        1,
+        function(row) {
+            any(
+                grepl(
+                    search_string,
+                    row,
+                    ignore.case = TRUE
+                )
+            )
+        }
+    )
+    return(dict[matching_rows, , drop = FALSE])
 }
