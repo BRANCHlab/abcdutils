@@ -2,13 +2,30 @@
 % Please edit documentation in R/data_dictionary.R
 \name{search_dd}
 \alias{search_dd}
-\title{Search the abcd data dictionary}
+\title{Search through a local data dictionary csv file (5.0)}
 \usage{
-search_dd(search_string)
+search_dd(dict, search_string, fields = NULL)
 }
 \arguments{
-\item{search_string}{The string to be searched}
+\item{dict}{The data dictionary as a data.frame}
+
+\item{search_string}{Parameter to search for}
+
+\item{fields}{A string or vector of strings indicating column names to use
+for the search. Options are
+\itemize{
+\item "table_name" The name of the 5.0 release file containing the data.
+\item "var_name" The name of the variable as it appears in the raw data.
+\item "var_label" What the variable is.
+\item "notes" Typically this contains more details on what certain values mean.
+\item "condition" Some data was only collected conditionally on responses to
+other variables. This column indicates what those conditions are.
+\item "table_name_nda" The file that this info was stored in pre-5.0 releases
+}}
+}
+\value{
+RETURN
 }
 \description{
-Search the abcd data dictionary
+Search through a local data dictionary csv file (5.0)
 }
