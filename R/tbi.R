@@ -317,7 +317,9 @@ original_tbi_names <- function() {
             "typical effects?",
             "start age of effects?",
             "end age of effects?"))
-    return(df)
+    options(width = 110)
+    print(df)
+    options(width = 80)
 }
 
 
