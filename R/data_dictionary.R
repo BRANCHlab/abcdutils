@@ -49,11 +49,11 @@ search_dd_web <- function(search_string) {
 #'
 #' @export
 search_dd <- function(search_string, fields = NULL) {
-    abcd_dict <- abcdutils::abcd_dict
+    abcd_dict <- data.frame(abcdutils::abcd_dict)
     if (is.null(fields)) {
         dict_to_search <- abcd_dict
     } else {
-        dict_to_search <- abcd_dict[, colnames(abcd_dict) %in% fields]
+        dict_to_search <- abcd_dict[, c(colnames(abcd_dict) %in% fields), drop = FALSE]
     }
     matching_rows <- apply(
         dict_to_search,
