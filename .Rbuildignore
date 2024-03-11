@@ -2,3 +2,4 @@
 ^README\.Rmd$
 build.R
 build_no_dep.R
+^data-raw$

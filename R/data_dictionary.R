@@ -12,16 +12,9 @@ remove_dd <- function(abcd_df) {
 
 #' Open data dictionary link
 #'
-#' @param short_name The short name of the abcd data object
-#'
 #' @export
-abcd_dd <- function(short_name) {
-    if (class(short_name)[1] != "character") {
-        short_name <- deparse(substitute(short_name))
-    }
-    url <- paste0(
-        "https://nda.nih.gov/data_structure.html?short_name=",
-        short_name)
+open_dict <- function() {
+    url <- paste0("https://data-dict.abcdstudy.org/?")
     utils::browseURL(url)
 }
 
