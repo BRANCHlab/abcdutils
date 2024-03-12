@@ -4,7 +4,13 @@
 \alias{get_prosocial_behaviour}
 \title{Extract prosocial behaviour}
 \usage{
-get_prosocial_behaviour(ce_p_psb, ce_y_psb, subjects = NULL, t = NULL)
+get_prosocial_behaviour(
+  ce_p_psb,
+  ce_y_psb,
+  subjects = NULL,
+  no_zero = FALSE,
+  t = NULL
+)
 }
 \arguments{
 \item{ce_p_psb}{Parent Prosocial Behavior Survey}
@@ -12,6 +18,8 @@ get_prosocial_behaviour(ce_p_psb, ce_y_psb, subjects = NULL, t = NULL)
 \item{ce_y_psb}{Youth Prosocial Behavior Survey}
 
 \item{subjects}{Dataframe containing list of required subjects}
+
+\item{no_zero}{Boolean indicating if zero values should be replaced with 1}
 
 \item{t}{timepoint for data collection (0: baseline, 1: 1yfu, ... 3: 3yfu)}
 }

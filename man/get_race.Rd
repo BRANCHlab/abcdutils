@@ -4,7 +4,13 @@
 \alias{get_race}
 \title{Returns race information}
 \usage{
-get_race(abcd_p_demo, subjects = NULL, t = t, dummy = FALSE)
+get_race(
+  abcd_p_demo,
+  subjects = NULL,
+  t = t,
+  dummy = FALSE,
+  asian_as_other = FALSE
+)
 }
 \arguments{
 \item{abcd_p_demo}{Dataframe containing parent demographic information}
@@ -14,6 +20,8 @@ get_race(abcd_p_demo, subjects = NULL, t = t, dummy = FALSE)
 \item{t}{timepoint for data collection (0: baseline, 1: 1yfu, ... 3: 3yfu)}
 
 \item{dummy}{String indicating format to output race data}
+
+\item{asian_as_other}{If TRUE, Asian category is included in "other".}
 }
 \value{
 race_df Dataframe containing subject race

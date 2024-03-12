@@ -4,7 +4,13 @@
 \alias{get_loneliness}
 \title{Extract loneliness}
 \usage{
-get_loneliness(mh_y_or, gish_p_gi, subjects = NULL, t = NULL)
+get_loneliness(
+  mh_y_or,
+  gish_p_gi,
+  subjects = NULL,
+  discretize = FALSE,
+  t = NULL
+)
 }
 \arguments{
 \item{mh_y_or}{ABCD Other Resilience}
@@ -12,6 +18,9 @@ get_loneliness(mh_y_or, gish_p_gi, subjects = NULL, t = NULL)
 \item{gish_p_gi}{Parent report of sex and gender dataframe}
 
 \item{subjects}{Dataframe containing list of required subjects}
+
+\item{discretize}{Boolean indicating if the loneliness measures should be
+discretized into quartiles}
 
 \item{t}{timepoint for data collection (0: baseline, 1: 1yfu, ... 3: 3yfu)}
 }

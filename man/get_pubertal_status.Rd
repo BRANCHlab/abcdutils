@@ -4,7 +4,13 @@
 \alias{get_pubertal_status}
 \title{Return dataframe containing pubertal status of specified subjects}
 \usage{
-get_pubertal_status(ph_p_pds, ph_y_pds, subjects = NULL, t = NULL)
+get_pubertal_status(
+  ph_p_pds,
+  ph_y_pds,
+  subjects = NULL,
+  max_value = NULL,
+  t = NULL
+)
 }
 \arguments{
 \item{ph_p_pds}{Dataframe containing parent pubertal status report}
@@ -12,6 +18,8 @@ get_pubertal_status(ph_p_pds, ph_y_pds, subjects = NULL, t = NULL)
 \item{ph_y_pds}{Dataframe containing youth pubertal status report}
 
 \item{subjects}{Dataframe containing list of required subjects}
+
+\item{max_value}{Maximum value for pubertal status}
 
 \item{t}{timepoint for data collection (0: baseline, 1: 1yfu, ... 3: 3yfu)}
 }

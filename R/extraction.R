@@ -91,11 +91,15 @@ get_family_function <- function(ce_y_fes, ce_p_fes, subjects = NULL, t = NULL) {
 #' @param ce_y_psb Youth Prosocial Behavior Survey
 #' @param subjects Dataframe containing list of required subjects
 #' @param t timepoint for data collection (0: baseline, 1: 1yfu, ... 3: 3yfu)
+#' @param no_zero Boolean indicating if zero values should be replaced with 1
 #'
 #' @return prosocial_behaviour
 #'
 #' @export
-get_prosocial_behaviour <- function(ce_p_psb, ce_y_psb, subjects = NULL,
+get_prosocial_behaviour <- function(ce_p_psb,
+                                    ce_y_psb,
+                                    subjects = NULL,
+                                    no_zero = FALSE,
                                     t = NULL) {
     pr_prosocial <- abcd_import(ce_p_psb, subjects, t = t)
     yr_prosocial <- abcd_import(ce_y_psb, subjects, t = t)
@@ -107,10 +111,36 @@ get_prosocial_behaviour <- function(ce_p_psb, ce_y_psb, subjects = NULL,
     prosocial <- col_to_num(prosocial, 2:length(prosocial))
     prosocial <- prosocial |>
         dplyr::mutate(
-            "q1" = prosocial$"prosocial_q1_y" + prosocial$"prosocial_q1_p",
-            "q2" = prosocial$"prosocial_q2_y" + prosocial$"prosocial_q2_p",
-            "q3" = prosocial$"prosocial_q3_y" + prosocial$"prosocial_q3_p") |>
-        dplyr::select("subjectkey", dplyr::starts_with("q"))
+            "considerate" = prosocial$"prosocial_q1_y" +
+                prosocial$"prosocial_q1_p",
+            "helps_hurt" = prosocial$"prosocial_q2_y" +
+                prosocial$"prosocial_q2_p",
+            "helpful" = prosocial$"prosocial_q3_y" +
+                prosocial$"prosocial_q3_p"
+        ) |>
+        dplyr::select(
+            "subjectkey",
+            "considerate",
+            "helps_hurt",
+            "helpful"
+        )
+    if (no_zero) {
+        prosocial <- prosocial |>
+            dplyr::mutate(
+                considerate = dplyr::case_when(
+                    considerate == 0 ~ 1,
+                    TRUE ~ considerate
+                ),
+                helps_hurt = dplyr::case_when(
+                    helps_hurt == 0 ~ 1,
+                    TRUE ~ helps_hurt
+                ),
+                helpful = dplyr::case_when(
+                    helpful == 0 ~ 1,
+                    TRUE ~ helpful
+                )
+            )
+    }
     return(prosocial)
 }
 
@@ -120,11 +150,17 @@ get_prosocial_behaviour <- function(ce_p_psb, ce_y_psb, subjects = NULL,
 #' @param gish_p_gi Parent report of sex and gender dataframe
 #' @param subjects Dataframe containing list of required subjects
 #' @param t timepoint for data collection (0: baseline, 1: 1yfu, ... 3: 3yfu)
+#' @param discretize Boolean indicating if the loneliness measures should be
+#' discretized into quartiles
 #'
 #' @return loneliness
 #'
 #' @export
-get_loneliness <- function(mh_y_or, gish_p_gi, subjects = NULL, t = NULL) {
+get_loneliness <- function(mh_y_or,
+                           gish_p_gi,
+                           subjects = NULL,
+                           discretize = FALSE,
+                           t = NULL) {
     if (is.null(t)) {
         stop(
             paste0(
@@ -162,28 +198,74 @@ get_loneliness <- function(mh_y_or, gish_p_gi, subjects = NULL, t = NULL) {
                 loneliness$"sex" == "M" ~
                     as.numeric(loneliness$"friend_boy"),
                 loneliness$"sex" == "F" ~
-                    as.numeric(loneliness$"friend_girl")),
+                    as.numeric(loneliness$"friend_girl")
+            ),
             "os_friend" = dplyr::case_when(
                 loneliness$"sex" == "M" ~
                     as.numeric(loneliness$"friend_girl"),
                 loneliness$"sex" == "F" ~
-                    as.numeric(loneliness$"friend_boy")),
+                    as.numeric(loneliness$"friend_boy")
+            ),
             "ss_close_friend" = dplyr::case_when(
                 loneliness$"sex" == "M" ~
                     as.numeric(loneliness$"close_friend_boy"),
                 loneliness$"sex" == "F" ~
-                    as.numeric(loneliness$"close_friend_girl")),
+                    as.numeric(loneliness$"close_friend_girl")
+            ),
             "os_close_friend" = dplyr::case_when(
                 loneliness$"sex" == "M" ~
                     as.numeric(loneliness$"close_friend_girl"),
                 loneliness$"sex" == "F" ~
-                    as.numeric(loneliness$"close_friend_boy"))) |>
+                    as.numeric(loneliness$"close_friend_boy")
+            )
+        ) |>
         dplyr::select(
             "subjectkey",
             "ss_friend",
             "os_friend",
             "ss_close_friend",
-            "os_close_friend")
+            "os_close_friend"
+        )
+    if (discretize) {
+        # Based on the quantiles of these measures on all baseline subjects.
+        # This can be re-obtained by running `get_loneliness` at bl without
+        # specifying any subjects.
+        ss_qs <- c(6, 10, 18)
+        os_qs <- c(1, 3, 6)
+        ss_close_qs <- c(2, 3, 5)
+        os_close_qs <- c(0, 1, 2)
+        loneliness <- loneliness |>
+            dplyr::mutate(
+                ss_friend = dplyr::case_when(
+                    ss_friend <= ss_qs[1] ~ 1,
+                    ss_friend <= ss_qs[2] ~ 2,
+                    ss_friend <= ss_qs[3] ~ 3,
+                    ss_friend > ss_qs[3] ~ 4,
+                    TRUE ~ NA
+                ),
+                os_friend = dplyr::case_when(
+                    os_friend <= os_qs[1] ~ 1,
+                    os_friend <= os_qs[2] ~ 2,
+                    os_friend <= os_qs[3] ~ 3,
+                    os_friend > os_qs[3] ~ 4,
+                    TRUE ~ NA
+                ),
+                ss_close_friend = dplyr::case_when(
+                    ss_close_friend <= ss_close_qs[1] ~ 1,
+                    ss_close_friend <= ss_close_qs[2] ~ 2,
+                    ss_close_friend <= ss_close_qs[3] ~ 3,
+                    ss_close_friend > ss_close_qs[3] ~ 4,
+                    TRUE ~ NA
+                ),
+                os_close_friend = dplyr::case_when(
+                    os_close_friend <= os_close_qs[1] ~ 1,
+                    os_close_friend <= os_close_qs[2] ~ 2,
+                    os_close_friend <= os_close_qs[3] ~ 3,
+                    os_close_friend > os_close_qs[3] ~ 4,
+                    TRUE ~ NA
+                )
+            )
+    }
     return(loneliness)
 }
 
@@ -573,17 +655,36 @@ get_subc_var <- function(mrirstv02, subjects = NULL, t = NULL) {
 #' @param abcd_y_lt Dataframe containing age information
 #' @param subjects Dataframe containing list of required subjects
 #' @param t timepoint for data collection (0: baseline, 1: 1yfu, ... 3: 3yfu)
+#' @param cutoff Maximum number of mtbis to be reported
 #'
 #' @return mtbi_count Dataframe containing number of previous mTBIs
 #'
 #' @export
-get_mtbi_count <- function(ph_p_otbi, abcd_y_lt, subjects = NULL, t = NULL) {
-    mtbi_count <- detail_mtbi(ph_p_otbi, abcd_y_lt, subjects, t = t) |>
+get_mtbi_count <- function(ph_p_otbi,
+                           abcd_y_lt,
+                           subjects = NULL,
+                           cutoff = NULL,
+                           t = NULL) {
+    mtbi_count_df <- ph_p_otbi |>
+        detail_mtbi(
+            abcd_y_lt,
+            subjects,
+            t = t
+        ) |>
         dplyr::select(
             "subjectkey",
             "mtbi_count"
         )
-    return(mtbi_count)
+    if (!is.null(cutoff)) {
+        mtbi_count_df <- mtbi_count_df |>
+            dplyr::mutate(
+                mtbi_count = dplyr::case_when(
+                    mtbi_count > cutoff ~ cutoff,
+                    TRUE ~ mtbi_count
+                )
+            )
+    }
+    return(mtbi_count_df)
 }
 
 
@@ -610,11 +711,16 @@ get_headaches <- function(ph_p_mhx, subjects = NULL, t = NULL) {
 #' @param ph_y_pds Dataframe containing youth pubertal status report
 #' @param subjects Dataframe containing list of required subjects
 #' @param t timepoint for data collection (0: baseline, 1: 1yfu, ... 3: 3yfu)
+#' @param max_value Maximum value for pubertal status
 #'
 #' @return pubertal_status Dataframe containing average pubertal status
 #'
 #' @export
-get_pubertal_status <- function(ph_p_pds, ph_y_pds, subjects = NULL, t = NULL) {
+get_pubertal_status <- function(ph_p_pds,
+                                ph_y_pds,
+                                subjects = NULL,
+                                max_value = NULL,
+                                t = NULL) {
     youth_pubertal_df <- abcd_import(ph_y_pds, subjects, t = t)
     parent_pubertal_df <- abcd_import(ph_p_pds, subjects, t = t)
     # Merge parent and youth dataframes
@@ -636,11 +742,20 @@ get_pubertal_status <- function(ph_p_pds, ph_y_pds, subjects = NULL, t = NULL) {
           "pds_y_ss_male_category",
           "pds_p_ss_male_category")], na.rm = TRUE)
     # Select relevant variables
-    pubertal_status <- puberty_full |>
+    pubertal_status_df <- puberty_full |>
         dplyr::select(
             "subjectkey",
             "pubertal_status")
-    return(pubertal_status)
+    if (!is.null(max_value)) {
+        pubertal_status_df <- pubertal_status_df |>
+            dplyr::mutate(
+                pubertal_status = dplyr::case_when(
+                    pubertal_status > max_value ~ max_value,
+                    TRUE ~ pubertal_status
+                )
+            )
+    }
+    return(pubertal_status_df)
 }
 
 #' Returns combined household incomes split into low, medium, and high groups
@@ -687,11 +802,16 @@ get_income <- function(abcd_p_demo, subjects = NULL, t = NULL) {
 #' @param subjects Dataframe containing list of required subjects
 #' @param t timepoint for data collection (0: baseline, 1: 1yfu, ... 3: 3yfu)
 #' @param dummy String indicating format to output race data
+#' @param asian_as_other If TRUE, Asian category is included in "other".
 #'
 #' @return race_df Dataframe containing subject race
 #'
 #' @export
-get_race <- function(abcd_p_demo, subjects = NULL, t = t, dummy = FALSE) {
+get_race <- function(abcd_p_demo,
+                     subjects = NULL,
+                     t = t,
+                     dummy = FALSE,
+                     asian_as_other = FALSE) {
     race_df <- abcd_p_demo |>
         abcd_import(subjects = subjects, t = t) |>
         dplyr::select(
@@ -700,55 +820,104 @@ get_race <- function(abcd_p_demo, subjects = NULL, t = t, dummy = FALSE) {
         )
     colnames(race_df) <- c("subjectkey", "race")
     if (dummy) {
-        race_df <- race_df |>
-            dplyr::mutate(
-                white = dplyr::case_when(
-                    is.na(race_df$"race") ~ NA_real_,
-                    race_df$"race" == 1 ~ 1,
-                    TRUE ~ 0
-                ),
-                black = dplyr::case_when(
-                    is.na(race_df$"race") ~ NA_real_,
-                    race_df$"race" == 2 ~ 1,
-                    TRUE ~ 0
-                ),
-                hispanic = dplyr::case_when(
-                    is.na(race_df$"race") ~ NA_real_,
-                    race_df$"race" == 3 ~ 1,
-                    TRUE ~ 0
-                ),
-                asian = dplyr::case_when(
-                    is.na(race_df$"race") ~ NA_real_,
-                    race_df$"race" == 4 ~ 1,
-                    TRUE ~ 0
-                ),
-                other = dplyr::case_when(
-                    is.na(race_df$"race") ~ NA_real_,
-                    race_df$"race" == 5 ~ 1,
-                    TRUE ~ 0
-                ),
-            )
-        race_df <- race_df |>
-            dplyr::select(
-                "subjectkey",
-                "white",
-                "black",
-                "hispanic",
-                "asian",
-                "other"
-            )
-    } else {
-        race_df <- race_df |>
-            dplyr::mutate(
-                race = dplyr::case_when(
-                    race_df$"race" == 1 ~ "white",
-                    race_df$"race" == 2 ~ "black",
-                    race_df$"race" == 3 ~ "hispanic",
-                    race_df$"race" == 4 ~ "asian",
-                    race_df$"race" == 5 ~ "other",
-                    TRUE ~ NA_character_
+        if (asian_as_other) {
+            race_df <- race_df |>
+                dplyr::mutate(
+                    white = dplyr::case_when(
+                        is.na(race_df$"race") ~ NA_real_,
+                        race_df$"race" == 1 ~ 1,
+                        TRUE ~ 0
+                    ),
+                    black = dplyr::case_when(
+                        is.na(race_df$"race") ~ NA_real_,
+                        race_df$"race" == 2 ~ 1,
+                        TRUE ~ 0
+                    ),
+                    hispanic = dplyr::case_when(
+                        is.na(race_df$"race") ~ NA_real_,
+                        race_df$"race" == 3 ~ 1,
+                        TRUE ~ 0
+                    ),
+                    other = dplyr::case_when(
+                        is.na(race_df$"race") ~ NA_real_,
+                        race_df$"race" == 4 ~ 1,
+                        race_df$"race" == 5 ~ 1,
+                        TRUE ~ 0
+                    ),
                 )
-            )
+            race_df <- race_df |>
+                dplyr::select(
+                    "subjectkey",
+                    "white",
+                    "black",
+                    "hispanic",
+                    "other"
+                )
+        } else {
+            race_df <- race_df |>
+                dplyr::mutate(
+                    white = dplyr::case_when(
+                        is.na(race_df$"race") ~ NA_real_,
+                        race_df$"race" == 1 ~ 1,
+                        TRUE ~ 0
+                    ),
+                    black = dplyr::case_when(
+                        is.na(race_df$"race") ~ NA_real_,
+                        race_df$"race" == 2 ~ 1,
+                        TRUE ~ 0
+                    ),
+                    hispanic = dplyr::case_when(
+                        is.na(race_df$"race") ~ NA_real_,
+                        race_df$"race" == 3 ~ 1,
+                        TRUE ~ 0
+                    ),
+                    asian = dplyr::case_when(
+                        is.na(race_df$"race") ~ NA_real_,
+                        race_df$"race" == 4 ~ 1,
+                        TRUE ~ 0
+                    ),
+                    other = dplyr::case_when(
+                        is.na(race_df$"race") ~ NA_real_,
+                        race_df$"race" == 5 ~ 1,
+                        TRUE ~ 0
+                    ),
+                )
+            race_df <- race_df |>
+                dplyr::select(
+                    "subjectkey",
+                    "white",
+                    "black",
+                    "hispanic",
+                    "asian",
+                    "other"
+                )
+        }
+    } else {
+        if (asian_as_other) {
+            race_df <- race_df |>
+                dplyr::mutate(
+                    race = dplyr::case_when(
+                        race_df$"race" == 1 ~ "white",
+                        race_df$"race" == 2 ~ "black",
+                        race_df$"race" == 3 ~ "hispanic",
+                        race_df$"race" == 4 ~ "other",
+                        race_df$"race" == 5 ~ "other",
+                        TRUE ~ NA_character_
+                    )
+                )
+        } else {
+            race_df <- race_df |>
+                dplyr::mutate(
+                    race = dplyr::case_when(
+                        race_df$"race" == 1 ~ "white",
+                        race_df$"race" == 2 ~ "black",
+                        race_df$"race" == 3 ~ "hispanic",
+                        race_df$"race" == 4 ~ "asian",
+                        race_df$"race" == 5 ~ "other",
+                        TRUE ~ NA_character_
+                    )
+                )
+        }
     }
     return(race_df)
 }
