@@ -341,7 +341,7 @@ original_tbi_names <- function() {
 #' @export
 identify_all_tbi <- function(tbi_df) {
     # Assign column types
-    tbi_df <- col_to_num_all_possible(tbi_df)
+    tbi_df <- numcol_to_numeric(tbi_df)
     # Generate mtbi and moderate_or_severe_tbi columns
     tbi_df <- tbi_df |> dplyr::mutate(
         mtbi = dplyr::case_when(
@@ -665,7 +665,7 @@ detail_mtbi <- function(ph_p_otbi,
         )
     )
     # ensure all columns that may be numeric are treated as numeric
-    ph_p_otbi <- col_to_num_all_possible(ph_p_otbi)
+    ph_p_otbi <- numcol_to_numeric(ph_p_otbi)
     # sorting by subjectkey
     ph_p_otbi <- dplyr::arrange(ph_p_otbi, ph_p_otbi$"subjectkey")
     # renaming ambiguous columns
