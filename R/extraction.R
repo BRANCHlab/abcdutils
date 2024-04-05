@@ -1538,8 +1538,11 @@ get_mtbi_mechanism <- function(ph_p_otbi,
         print("Fomat must either be 'dummied' or 'undummied'.")
         return(NULL)
     } else if (format == "dummied") {
-        mtbi_mechanism <- mtbi_mechanism |>
-            dummy(cols = "latest_mtbi_mechanism")
+        mtbi_mechanism <- fastDummies::dummy_cols(
+            .data = mtbi_mechanism,
+            select_columns = "latest_mtbi_mechanism",
+            remove_selected_columns = TRUE
+        )
     }
     return(mtbi_mechanism)
 }
