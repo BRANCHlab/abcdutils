@@ -1,14 +1,9 @@
-
 #' Subset dataframe to a collection event
 #'
-#' @param abcd_df An ABCD dataframe containing a data dictionary
-#' @param t Integer representing which timepoint to filter to:
-#'  - 0: baseline
-#'  - 1: 1-year follow-up
-#'  - 2: 2-year follow-up
-#'  - 3: 3-year follow-up
+#' @param abcd_df An ABCD dataframe.
 #'
-#' @return timepoint_abcd_df Baseline data only
+#' @param t Integer representing which follow-up year to filter to. Defaults
+#' to 0 (baseline).
 #'
 #' @export
 filter_timepoint <- function(abcd_df, t) {
@@ -30,57 +25,40 @@ filter_timepoint <- function(abcd_df, t) {
 
 #' Subset a dataframe to a given subject list
 #'
-#' @param abcd_df An ABCD dataframe
-#' @param subjects Dataframe containing list of required subjects
+#' @param abcd_df An ABCD dataframe.
 #'
-#' @return filtered_df The subsetted dataframe
+#' @param subject_list Dataframe containing list of required subjects.
+#'
+#' @return subject_filtered_df The dataframe filtered by subjects.
 #'
 #' @export
-filter_subjects <- function(abcd_df, subjects = NULL) {
-    if (is.null(subjects)) {
+filter_subjects <- function(abcd_df, subject_list = NULL) {
+    if (is.null(subject_list)) {
         return(abcd_df)
     } else {
-        filtered_df <- dplyr::inner_join(abcd_df, subjects, by = "subjectkey")
-        return(filtered_df)
+        keep_subs <- abcd_df$"subjectkey" %in% subject_list
+        subject_filtered_df <- abcd_df[keep_subs, ]
+        return(subject_filtered_df)
     }
 }
 
-
-#' Get common subjects
-#'
-#' @description
-#' Extract subjects common across a list of dataframes
-#'
-#' @param df_list List of dataframes
-#'
-#' @return common_subs Subjects common across list of dataframes
-#'
-#' @export
-common_subjects <- function(df_list) {
-    shared_df <- merge_df_list(df_list)
-    common_subs <- shared_df$subjectkey
-    return(common_subs)
-}
-
-
-#' Subset a raw ABCD dataframe by time and subjects
+#' Filter dataframe by time and subjectkey, then sort by subjectkey
 #'
 #' @param abcd_df A raw ABCD dataframe
-#' @param t Integer representing which timepoint to filter to:
-#'  - 0: baseline
-#'  - 1: 1-year follow-up
-#'  - 2: 2-year follow-up
-#'  - 3: 3-year follow-up
+#'
+#' @param t Integer representing which follow-up year to filter to. Defaults
+#' to 0 (baseline).
+#'
 #' @param subjects Dataframe containing list of required subjects
 #'
 #' @return abcd_clean_df The subsetted dataframe
 #'
 #' @export
-abcd_import <- function(abcd_df, t = NULL, subjects = NULL) {
+time_subject_filter_sort <- function(abcd_df, t = NULL, subject_list = NULL) {
     abcd_clean_df <- abcd_df |>
         filter_timepoint(t) |>
-        filter_subjects(subjects) |>
-        col_to_num_all_possible()
+        filter_subjects(subject_list) |>
+        numcol_to_numeric()
     abcd_clean_df <- abcd_clean_df |>
         dplyr::arrange(abcd_clean_df$"subjectkey")
     return(abcd_clean_df)
