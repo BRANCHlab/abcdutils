@@ -117,3 +117,52 @@ qc_smri <- function(abcd_df,
     if (no_na) abcd_df_qc <- stats::na.omit(abcd_df_qc)
     return(abcd_df_qc)
 }
+
+#' Remove subjects that do not pass T1w sMRI quality control
+#'
+#' @param subject_list A vector of subjectkeys to examine. If NULL, will check
+#' all subjects.
+#'
+#' @param mri_y_qc_raw_smr_t1 Dataframe with QC info for T1w sMRI
+#'
+#' @param t Follow-up year of data the imaging. Defaults to 0 (baseline).
+#'
+#' @return smri_qc_list a list of:
+#' 1. Subjects that passed QC
+#' 2. Subjects that failed according to at least 1 rater
+#' 3. Subjects that failed due to missing QC data
+#'
+#' @export
+smri_t1_qc <- function(mri_y_qc_raw_smr_t1,
+                       subject_list = NULL,
+                       t = 0) {
+    # Filter to specified time / subjects and sort by subjectkey
+    mri_t1_qc <- mri_y_qc_raw_smr_t1 |>
+        abcd_import(t = t, subjects = subject_list)
+    return(mri_t1_qc)
+    #mri_t1_qc <- mri_t1_qc |>
+    #    dplyr::select("subjectkey",
+    #                  dplyr::contains(c("qc_score", "pc_score")),
+    #                  -dplyr::contains("mid"))
+    #    dplyr::select("subjectkey",
+    #                  dplyr::contains(c("qc_score", "pc_score")),
+    #                  -dplyr::contains("mid"))
+    mri_t2_qc <- mri_y_qc_raw_smr_t2 |>
+        abcd_import(t = t, subjects = abcd_df[, "subjectkey"]) |>
+        dplyr::select("subjectkey",
+                      dplyr::contains(c("qc_score", "pc_score")),
+                      -dplyr::contains("mid"))
+    mri_qc <- dplyr::inner_join(mri_t1_qc, mri_t2_qc, by = "subjectkey")
+    mri_qc <- Filter(function(x) !all(is.na(x)), mri_qc)
+    mri_qc <- col_to_num(mri_qc, 2:length(mri_qc))
+    mri_qc[is.na(mri_qc)] <- 1
+    smri_qc <- mri_qc |>
+        dplyr::select("subjectkey", dplyr::contains(c("t1", "t2")))
+    smri_qc$min_qc <- do.call(pmin, smri_qc[, 2:length(smri_qc)])
+    failed_qc <- smri_qc$"subjectkey"[smri_qc$"min_qc" == 0]
+    print(paste0(length(failed_qc), " subjects failed smri QC"))
+    passing_qc <- which(smri_qc$"min_qc" == 1)
+    abcd_df_qc <- abcd_df[passing_qc, ]
+    if (no_na) abcd_df_qc <- stats::na.omit(abcd_df_qc)
+    return(abcd_df_qc)
+}
