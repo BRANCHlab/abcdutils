@@ -288,7 +288,7 @@ get_screen_time <- function(nt_p_stq, subjects = NULL, t = NULL) {
             "screentime2_p_hours",
             "screentime2_p_minutes")
     # Convert columns to numeric
-    col_to_num_all_possible(screen_time)
+    screen_time <- numcol_to_numeric(screen_time)
     # Convert to hours
     screen_time <- screen_time |>
         dplyr::mutate(
