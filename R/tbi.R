@@ -627,13 +627,9 @@ identify_latest_mtbi_mem_daze <- function(tbi_df) {
 #'
 #' @param ph_p_otbi TBI dataframe
 #' @param abcd_y_lt Dataframe containing age information
-#' @param subjects Dataframe containing list of required subjects
+#' @param subjects Vector of subjects to extract data for.
 #' @param min_mpi The minimum time-since-last-mtbi to be selected
-#' @param t Integer representing which timepoint to filter to:
-#'  - 0: baseline
-#'  - 1: 1-year follow-up
-#'  - 2: 2-year follow-up
-#'  - 3: 3-year follow-up
+#' @param t timepoint of data collection (0: baseline, 1: 1yfu, ...)
 #'
 #' @return subjects Dataframe containing list of required subjects
 #'
@@ -687,11 +683,7 @@ detail_mtbi <- function(ph_p_otbi,
 #' @param ph_p_otbi TBI dataframe
 #' @param abcd_y_lt Dataframe containing age information
 #' @param min_mpi The minimum time-since-last-mtbi to be selected
-#' @param t Integer representing which timepoint to filter to:
-#'  - 0: baseline
-#'  - 1: 1-year follow-up
-#'  - 2: 2-year follow-up
-#'  - 3: 3-year follow-up
+#' @param t timepoint of data collection (0: baseline, 1: 1yfu, ...)
 #'
 #' @return subjects Dataframe containing list of required subjects
 #'
@@ -719,12 +711,7 @@ get_mtbi_subjects <- function(ph_p_otbi,
 #'
 #' @param ph_p_otbi TBI dataframe
 #' @param abcd_y_lt Dataframe containing age information
-#' @param t Integer representing which timepoint to filter to:
-#'  - 0: baseline
-#'  - 1: 1-year follow-up
-#'  - 2: 2-year follow-up
-#'  - 3: 3-year follow-up
-#'  - 4: 4-year follow-up
+#' @param t timepoint of data collection (0: baseline, 1: 1yfu, ...)
 #'
 #' @return uninjured_subjects List of uninjured subjects
 #'

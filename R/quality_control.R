@@ -6,7 +6,7 @@
 #'
 #' @param abcd_df A dataframe containing subjectkeys
 #' @param mriqcrp10301 The `mriqcrp10301` data object
-#' @param t The collection period of interest (defaults to baseline: 0)
+#' @param t timepoint of data collection (0: baseline, 1: 1yfu, ...)
 #' @param no_na whether observations containing NAs should be removed
 #'
 #' @return rsfmri_qc_list a list of:
@@ -43,7 +43,7 @@ qc_rsfmri <- function(abcd_df, mriqcrp10301, t = 0, no_na = FALSE) {
 #'
 #' @param abcd_df A dataframe containing subjectkeys
 #' @param mriqcrp10301 The `mriqcrp10301` data object
-#' @param t The collection period of interest (defaults to baseline: 0)
+#' @param t timepoint for data collection (0: baseline, 1: 1yfu, ...)
 #' @param no_na whether observations containing NAs should be removed
 #'
 #' @return dmri_qc_list a list of:
@@ -80,7 +80,7 @@ qc_dmri <- function(abcd_df, mriqcrp10301, t = 0, no_na = FALSE) {
 #' @param abcd_df A dataframe containing subjectkeys
 #' @param mri_y_qc_raw_smr_t1 QC info for T1 sMRI
 #' @param mri_y_qc_raw_smr_t2 QC info for T2 sMRI
-#' @param t The collection period of interest (defaults to baseline: 0)
+#' @param t timepoint for data collection (0: baseline, 1: 1yfu, ...)
 #' @param no_na whether observations containing NAs should be removed
 #'
 #' @return smri_qc_list a list of:
@@ -120,12 +120,11 @@ qc_smri <- function(abcd_df,
 
 #' Remove subjects that do not pass T1w sMRI quality control
 #'
-#' @param subject_list A vector of subjectkeys to examine. If NULL, will check
-#' all subjects.
+#' @param subjects Vector of subjects to filter to.
 #'
 #' @param mri_y_qc_raw_smr_t1 Dataframe with QC info for T1w sMRI
 #'
-#' @param t Follow-up year of data the imaging. Defaults to 0 (baseline).
+#' @param t timepoint of data collection (0: baseline, 1: 1yfu, ...)
 #'
 #' @return smri_qc_list a list of:
 #' 1. Subjects that passed QC
@@ -134,11 +133,11 @@ qc_smri <- function(abcd_df,
 #'
 #' @export
 smri_t1_qc <- function(mri_y_qc_raw_smr_t1,
-                       subject_list = NULL,
+                       subjects = NULL,
                        t = 0) {
     # Filter to specified time / subjects and sort by subjectkey
     mri_t1_qc <- mri_y_qc_raw_smr_t1 |>
-        time_subject_filter_sort(t = t, subjects = subject_list)
+        time_subject_filter_sort(t = t, subjects = subjects)
     return(mri_t1_qc)
     #mri_t1_qc <- mri_t1_qc |>
     #    dplyr::select("subjectkey",

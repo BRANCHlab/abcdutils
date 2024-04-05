@@ -2,8 +2,7 @@
 #'
 #' @param abcd_df An ABCD dataframe.
 #'
-#' @param t Integer representing which follow-up year to filter to. Defaults
-#' to 0 (baseline).
+#' @param t timepoint of data collection (0: baseline, 1: 1yfu, ...)
 #'
 #' @export
 filter_timepoint <- function(abcd_df, t) {
@@ -27,14 +26,14 @@ filter_timepoint <- function(abcd_df, t) {
 #'
 #' @param abcd_df An ABCD dataframe.
 #'
-#' @param subject_list Dataframe containing list of required subjects.
+#' @param subjects Vector of subjects to filter to.
 #'
 #' @export
-filter_subjects <- function(abcd_df, subject_list = NULL) {
-    if (is.null(subject_list)) {
+filter_subjects <- function(abcd_df, subjects = NULL) {
+    if (is.null(subjects)) {
         return(abcd_df)
     } else {
-        keep_subs <- abcd_df$"subjectkey" %in% subject_list
+        keep_subs <- abcd_df$"subjectkey" %in% subjects
         subject_filtered_df <- abcd_df[keep_subs, ]
         return(subject_filtered_df)
     }
@@ -44,16 +43,15 @@ filter_subjects <- function(abcd_df, subject_list = NULL) {
 #'
 #' @param abcd_df A raw ABCD dataframe.
 #'
-#' @param t Integer representing follow-up year to filter to. Defaults to 0
-#' (baseline).
+#' @param t timepoint of data collection (0: baseline, 1: 1yfu, ...)
 #'
-#' @param subject_list List of subjects to filter to.
+#' @param subjects Vector of subjects to filter to.
 #'
 #' @export
-time_subject_filter_sort <- function(abcd_df, t = NULL, subject_list = NULL) {
+time_subject_filter_sort <- function(abcd_df, t = NULL, subjects = NULL) {
     abcd_filtered_df <- abcd_df |>
         filter_timepoint(t) |>
-        filter_subjects(subject_list) |>
+        filter_subjects(subjects) |>
         numcol_to_numeric()
     abcd_filtered_and_sorted_df <- abcd_filtered_df |>
         dplyr::arrange(abcd_filtered_df$"subjectkey")
