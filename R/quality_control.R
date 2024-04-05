@@ -16,7 +16,7 @@
 #' @export
 qc_rsfmri <- function(abcd_df, mriqcrp10301, t = 0, no_na = FALSE) {
     mri_qc <- mriqcrp10301 |>
-        abcd_import(t = t, subjects = abcd_df[, "subjectkey"]) |>
+        time_subject_filter_sort(t = t, subjects = abcd_df[, "subjectkey"]) |>
         dplyr::select("subjectkey",
                       dplyr::contains(c("qc_score", "pc_score")),
                       -dplyr::contains("mid"))
@@ -53,7 +53,7 @@ qc_rsfmri <- function(abcd_df, mriqcrp10301, t = 0, no_na = FALSE) {
 #' @export
 qc_dmri <- function(abcd_df, mriqcrp10301, t = 0, no_na = FALSE) {
     mri_qc <- mriqcrp10301 |>
-        abcd_import(t = t, subjects = abcd_df[, "subjectkey"]) |>
+        time_subject_filter_sort(t = t, subjects = abcd_df[, "subjectkey"]) |>
         dplyr::select("subjectkey",
                       dplyr::contains(c("qc_score", "pc_score")),
                       -dplyr::contains("mid"))
@@ -94,12 +94,12 @@ qc_smri <- function(abcd_df,
                     t = 0,
                     no_na = FALSE) {
     mri_t1_qc <- mri_y_qc_raw_smr_t1 |>
-        abcd_import(t = t, subjects = abcd_df[, "subjectkey"]) |>
+        time_subject_filter_sort(t = t, subjects = abcd_df[, "subjectkey"]) |>
         dplyr::select("subjectkey",
                       dplyr::contains(c("qc_score", "pc_score")),
                       -dplyr::contains("mid"))
     mri_t2_qc <- mri_y_qc_raw_smr_t2 |>
-        abcd_import(t = t, subjects = abcd_df[, "subjectkey"]) |>
+        time_subject_filter_sort(t = t, subjects = abcd_df[, "subjectkey"]) |>
         dplyr::select("subjectkey",
                       dplyr::contains(c("qc_score", "pc_score")),
                       -dplyr::contains("mid"))
@@ -138,7 +138,7 @@ smri_t1_qc <- function(mri_y_qc_raw_smr_t1,
                        t = 0) {
     # Filter to specified time / subjects and sort by subjectkey
     mri_t1_qc <- mri_y_qc_raw_smr_t1 |>
-        abcd_import(t = t, subjects = subject_list)
+        time_subject_filter_sort(t = t, subjects = subject_list)
     return(mri_t1_qc)
     #mri_t1_qc <- mri_t1_qc |>
     #    dplyr::select("subjectkey",
@@ -148,7 +148,7 @@ smri_t1_qc <- function(mri_y_qc_raw_smr_t1,
     #                  dplyr::contains(c("qc_score", "pc_score")),
     #                  -dplyr::contains("mid"))
     mri_t2_qc <- mri_y_qc_raw_smr_t2 |>
-        abcd_import(t = t, subjects = abcd_df[, "subjectkey"]) |>
+        time_subject_filter_sort(t = t, subjects = abcd_df[, "subjectkey"]) |>
         dplyr::select("subjectkey",
                       dplyr::contains(c("qc_score", "pc_score")),
                       -dplyr::contains("mid"))
