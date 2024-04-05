@@ -1519,15 +1519,17 @@ get_cbcl_aggressive <- function(mh_p_cbcl, subjects = NULL, t = NULL,
 #' @return mtbi_mechanism Dataframe containing latest_mtbi_mechanism
 #'
 #' @export
-get_mtbi_mechanism <- function(ph_p_otbi, abcd_y_lt, subjects = NULL, t = NULL,
+get_mtbi_mechanism <- function(ph_p_otbi,
+                               abcd_y_lt,
+                               subjects = NULL,
+                               t = NULL,
                                format = "undummied") {
-    mtbi_mechanism <-
-        detail_mtbi(
-            ph_p_otbi,
-            abcd_y_lt,
-            subjects = subjects,
-            t = t
-        ) |>
+    mtbi_mechanism <- detail_mtbi(
+        ph_p_otbi,
+        abcd_y_lt,
+        subjects = subjects,
+        t = t
+    ) |>
         dplyr::select(
             "subjectkey",
             "latest_mtbi_mechanism"
