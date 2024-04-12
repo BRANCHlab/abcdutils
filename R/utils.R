@@ -68,6 +68,7 @@ char_to_fac <- function(df) {
 #'
 #' @export
 train_test_assign <- function(train_frac, subjects) {
+    # To-do: split the format of this into vector form
     train_thresh <- 2147483647 * train_frac
     train <-
         subjects[abs(digest::digest2int(subjects, seed = 42)) < train_thresh]
@@ -129,7 +130,7 @@ merge_df_list <- function(df_list, join = "inner") {
 #'  this function returns FALSE instead. Otherwise, evaluates the expression
 #'  normally.
 #'
-#' @param x a conditional statement
+#' @param x a conditional expression
 #'
 #' @export
 flex_cond <- function(x) {
@@ -141,26 +142,14 @@ flex_cond <- function(x) {
         }
     },
     warning = function(cond) {
-            return(FALSE)
+        return(FALSE)
     },
     error = function(cond) {
         return(FALSE)
     })
 }
 
-#' All equal function without attributes
-#'
-#' Check if two objects are equal, not considering their attributes
-#'
-#' @param x object 1
-#' @param y object 2
-#'
-#' @export
-ae <- function(x, y) {
-    return(all.equal(x, y, check.attributes = FALSE))
-}
-
-#' Collapse two columns
+#' Collapse two complementary columns
 #'
 #' When two columns contain complementary information (i.e., when one column has
 #'  a value, the other must always be NA), replace both columns with a single
@@ -170,8 +159,6 @@ ae <- function(x, y) {
 #' @param c1 string name of first column
 #' @param c2 string name of second column
 #' @param new_col string name of collapsed column
-#'
-#' @return RETURN
 #'
 #' @export
 col_collapse <- function(df, c1, c2, new_col) {

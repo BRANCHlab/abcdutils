@@ -9,10 +9,8 @@ filter_timepoint <- function(abcd_df, t) {
     if (!is.null(t)) {
         t <- dplyr::case_when(
             t == 0 ~ "baseline_year_1_arm_1",
-            t == 1 ~ "1_year_follow_up_y_arm_1",
-            t == 2 ~ "2_year_follow_up_y_arm_1",
-            t == 3 ~ "3_year_follow_up_y_arm_1",
-            t == 4 ~ "4_year_follow_up_y_arm_1")
+            TRUE ~ paste0(t, "_year_follow_up_y_arm_1")
+        )
         t_abcd_df <- abcd_df |>
             dplyr::filter(abcd_df$"eventname" == t)
         return(t_abcd_df)
@@ -34,8 +32,8 @@ filter_subjects <- function(abcd_df, subjects = NULL) {
         return(abcd_df)
     } else {
         keep_subs <- abcd_df$"subjectkey" %in% subjects
-        subject_filtered_df <- abcd_df[keep_subs, ]
-        return(subject_filtered_df)
+        filtered_df <- abcd_df[keep_subs, ]
+        return(filtered_df)
     }
 }
 
