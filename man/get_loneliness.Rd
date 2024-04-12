@@ -17,12 +17,12 @@ get_loneliness(
 
 \item{gish_p_gi}{Parent report of sex and gender dataframe}
 
-\item{subjects}{Dataframe containing list of required subjects}
+\item{subjects}{Vector of subjects to extract data for.}
 
 \item{discretize}{Boolean indicating if the loneliness measures should be
 discretized into quartiles}
 
-\item{t}{timepoint for data collection (0: baseline, 1: 1yfu, ... 3: 3yfu)}
+\item{t}{timepoint of data collection (0: baseline, 1: 1yfu, ...)}
 }
 \value{
 loneliness

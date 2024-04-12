@@ -9,9 +9,9 @@ get_nihtbx_pattern_fc(abcd_tbss01, subjects = NULL, t = NULL)
 \arguments{
 \item{abcd_tbss01}{NDA nihtbx dataframe}
 
-\item{subjects}{list of subjects to receive data for}
+\item{subjects}{Vector of subjects to extract data for.}
 
-\item{t}{timepoint for data collection (0: baseline, 1: 1yfu, ... 3: 3yfu)}
+\item{t}{timepoint of data collection (0: baseline, 1: 1yfu, ...)}
 }
 \value{
 nihtbx_pattern_fc pattern data

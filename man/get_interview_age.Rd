@@ -9,9 +9,9 @@ get_interview_age(abcd_df, subjects = NULL, t = NULL, as_years = TRUE)
 \arguments{
 \item{abcd_df}{Any ABCD dataframe containing interview age}
 
-\item{subjects}{Dataframe containing list of required subjects}
+\item{subjects}{Vector of subjects to extract data for.}
 
-\item{t}{timepoint for data collection (0: baseline, 1: 1yfu, ... 3: 3yfu)}
+\item{t}{timepoint of data collection (0: baseline, 1: 1yfu, ...)}
 
 \item{as_years}{Logical indicating whether to convert age to years}
 }

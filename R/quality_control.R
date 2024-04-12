@@ -120,11 +120,17 @@ qc_smri <- function(abcd_df,
 
 #' Remove subjects that do not pass T1w sMRI quality control
 #'
-#' @param subjects Vector of subjects to filter to.
-#'
-#' @param mri_y_qc_raw_smr_t1 Dataframe with QC info for T1w sMRI
+#' @param mri_y_qc_raw_smr Dataframe with QC info for T1w or T2w sMRI.
 #'
 #' @param t timepoint of data collection (0: baseline, 1: 1yfu, ...)
+#'
+#' @param subjects Vector of subjects to filter to.
+#'
+#' @param pass_method "nofail" Assigns a pass if no rater gave a 0. "onepass"
+#' Assigns a pass if at least one rater gave a 1. Default is "nofail".
+#'
+#' @param missing_is_fail If TRUE (default), subjects with missing QC data are
+#' considered to have failed QC.
 #'
 #' @return smri_qc_list a list of:
 #' 1. Subjects that passed QC
@@ -132,36 +138,33 @@ qc_smri <- function(abcd_df,
 #' 3. Subjects that failed due to missing QC data
 #'
 #' @export
-smri_t1_qc <- function(mri_y_qc_raw_smr_t1,
-                       subjects = NULL,
-                       t = 0) {
-    # Filter to specified time / subjects and sort by subjectkey
-    mri_t1_qc <- mri_y_qc_raw_smr_t1 |>
-        time_subject_filter_sort(t = t, subjects = subjects)
-    return(mri_t1_qc)
-    #mri_t1_qc <- mri_t1_qc |>
-    #    dplyr::select("subjectkey",
-    #                  dplyr::contains(c("qc_score", "pc_score")),
-    #                  -dplyr::contains("mid"))
-    #    dplyr::select("subjectkey",
-    #                  dplyr::contains(c("qc_score", "pc_score")),
-    #                  -dplyr::contains("mid"))
-    mri_t2_qc <- mri_y_qc_raw_smr_t2 |>
-        time_subject_filter_sort(t = t, subjects = abcd_df[, "subjectkey"]) |>
-        dplyr::select("subjectkey",
-                      dplyr::contains(c("qc_score", "pc_score")),
-                      -dplyr::contains("mid"))
-    mri_qc <- dplyr::inner_join(mri_t1_qc, mri_t2_qc, by = "subjectkey")
-    mri_qc <- Filter(function(x) !all(is.na(x)), mri_qc)
-    mri_qc <- col_to_num(mri_qc, 2:length(mri_qc))
-    mri_qc[is.na(mri_qc)] <- 1
-    smri_qc <- mri_qc |>
-        dplyr::select("subjectkey", dplyr::contains(c("t1", "t2")))
-    smri_qc$min_qc <- do.call(pmin, smri_qc[, 2:length(smri_qc)])
-    failed_qc <- smri_qc$"subjectkey"[smri_qc$"min_qc" == 0]
-    print(paste0(length(failed_qc), " subjects failed smri QC"))
-    passing_qc <- which(smri_qc$"min_qc" == 1)
-    abcd_df_qc <- abcd_df[passing_qc, ]
-    if (no_na) abcd_df_qc <- stats::na.omit(abcd_df_qc)
-    return(abcd_df_qc)
+smri_qc <- function(mri_y_qc_raw_smr,
+                    t,
+                    subjects = NULL,
+                    pass_method = "nofail") {
+    # Ensure every column is numeric
+    mri_qc <- numcol_to_numeric(mri_y_qc_raw_smr)
+    # Filter to specified time / subjects, then select only QC columns
+    mri_qc <- mri_y_qc_raw_smr |>
+        filter_subjects(subjects = subjects) |>
+        filter_timepoint(t = t) |>
+        dplyr::select(
+            "subjectkey",
+            dplyr::contains("qc_score")
+        )
+    # Number of missing values across all QC columns
+    missing_qc <- rowSums(is.na(mri_qc[, -1]))
+    # Subjects who fail due to missing QC data
+    missing_qc_subs <- mri_qc$"subjectkey"[missing_qc == 3]
+    # Remaining subjects
+    mri_qc <- mri_qc$"subjectkey"[missing_qc < 3]
+    return(mri_qc)
+    return(mri_qc)
+    #smri_qc$min_qc <- do.call(pmin, smri_qc[, 2:length(smri_qc)])
+    #failed_qc <- smri_qc$"subjectkey"[smri_qc$"min_qc" == 0]
+    #print(paste0(length(failed_qc), " subjects failed smri QC"))
+    #passing_qc <- which(smri_qc$"min_qc" == 1)
+    #abcd_df_qc <- abcd_df[passing_qc, ]
+    #if (no_na) abcd_df_qc <- stats::na.omit(abcd_df_qc)
+    #return(abcd_df_qc)
 }

@@ -11,7 +11,7 @@ qc_dmri(abcd_df, mriqcrp10301, t = 0, no_na = FALSE)
 
 \item{mriqcrp10301}{The \code{mriqcrp10301} data object}
 
-\item{t}{The collection period of interest (defaults to baseline: 0)}
+\item{t}{timepoint for data collection (0: baseline, 1: 1yfu, ...)}
 
 \item{no_na}{whether observations containing NAs should be removed}
 }

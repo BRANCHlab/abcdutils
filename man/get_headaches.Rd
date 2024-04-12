@@ -9,9 +9,9 @@ get_headaches(ph_p_mhx, subjects = NULL, t = NULL)
 \arguments{
 \item{ph_p_mhx}{Dataframe containing medical history}
 
-\item{subjects}{Dataframe containing list of required subjects}
+\item{subjects}{Vector of subjects to extract data for.}
 
-\item{t}{timepoint for data collection (0: baseline, 1: 1yfu, ... 3: 3yfu)}
+\item{t}{timepoint of data collection (0: baseline, 1: 1yfu, ...)}
 }
 \value{
 headaches Dataframe containing headache history

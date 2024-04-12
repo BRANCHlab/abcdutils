@@ -11,9 +11,9 @@ get_mtbi_age(ph_p_otbi, abcd_y_lt, subjects = NULL, t = NULL, as_years = TRUE)
 
 \item{abcd_y_lt}{Dataframe containing age information}
 
-\item{subjects}{Dataframe containing list of required subjects}
+\item{subjects}{Vector of subjects to extract data for.}
 
-\item{t}{timepoint for data collection (0: baseline, 1: 1yfu, ... 3: 3yfu)}
+\item{t}{timepoint of data collection (0: baseline, 1: 1yfu, ...)}
 
 \item{as_years}{Logical indicating whether to convert age to years}
 }

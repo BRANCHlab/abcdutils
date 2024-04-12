@@ -9,9 +9,9 @@ get_cbcl_overtired(mh_p_cbcl, subjects = NULL, t = NULL)
 \arguments{
 \item{mh_p_cbcl}{NDA cbcl dataframe}
 
-\item{subjects}{list of subjects to receive data for}
+\item{subjects}{Vector of subjects to extract data for.}
 
-\item{t}{timepoint for data collection (0: baseline, 1: 1yfu, ... 3: 3yfu)}
+\item{t}{timepoint of data collection (0: baseline, 1: 1yfu, ...)}
 }
 \value{
 cbcl_overtired overtired data

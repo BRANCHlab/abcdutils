@@ -17,11 +17,11 @@ get_prosocial_behaviour(
 
 \item{ce_y_psb}{Youth Prosocial Behavior Survey}
 
-\item{subjects}{Dataframe containing list of required subjects}
+\item{subjects}{Vector of subjects to extract data for.}
 
 \item{no_zero}{Boolean indicating if zero values should be replaced with 1}
 
-\item{t}{timepoint for data collection (0: baseline, 1: 1yfu, ... 3: 3yfu)}
+\item{t}{timepoint of data collection (0: baseline, 1: 1yfu, ...)}
 }
 \value{
 prosocial_behaviour

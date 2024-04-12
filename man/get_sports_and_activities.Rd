@@ -10,9 +10,9 @@ get_sports_and_activities(ph_p_saiq, subjects = NULL, t = NULL)
 \item{ph_p_saiq}{ABCD Parent Sports and Activities Involvement
 Questionnaire}
 
-\item{subjects}{Dataframe containing list of required subjects}
+\item{subjects}{Vector of subjects to extract data for.}
 
-\item{t}{timepoint for data collection (0: baseline, 1: 1yfu, ... 3: 3yfu)}
+\item{t}{timepoint of data collection (0: baseline, 1: 1yfu, ...)}
 }
 \value{
 activities

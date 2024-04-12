@@ -9,9 +9,9 @@ get_parent_psychopathology(mh_p_asr, subjects = NULL, t = NULL, raw = TRUE)
 \arguments{
 \item{mh_p_asr}{ABCD Parent Adult Self Report Scores Aseba}
 
-\item{subjects}{Dataframe containing list of required subjects}
+\item{subjects}{Vector of subjects to extract data for.}
 
-\item{t}{timepoint for data collection (0: baseline, 1: 1yfu, ... 3: 3yfu)}
+\item{t}{timepoint of data collection (0: baseline, 1: 1yfu, ...)}
 
 \item{raw}{Boolean indicating if extracted data should be raw (TRUE) or
 t-scores (FALSE). Defaults to TRUE.}

@@ -9,9 +9,9 @@ get_cort_t(mri_y_smr_thk_dsk, subjects = NULL, t = NULL)
 \arguments{
 \item{mri_y_smr_thk_dsk}{Data file containing cortical data}
 
-\item{subjects}{Dataframe containing list of required subjects}
+\item{subjects}{Vector of subjects to extract data for.}
 
-\item{t}{timepoint for data collection (0: baseline, 1: 1yfu, ... 3: 3yfu)}
+\item{t}{timepoint of data collection (0: baseline, 1: 1yfu, ...)}
 }
 \value{
 cort_t_df Dataframe of cortical thicknesses

@@ -11,9 +11,9 @@ get_all_wmnd(mri_y_rsi_rnd_at, mri_y_rsi_rnd_wm_dsk, subjects = NULL, t = NULL)
 
 \item{mri_y_rsi_rnd_wm_dsk}{Data file containing neurite density data}
 
-\item{subjects}{Dataframe containing list of required subjects}
+\item{subjects}{Vector of subjects to extract data for.}
 
-\item{t}{timepoint for data collection (0: baseline, 1: 1yfu, ... 3: 3yfu)}
+\item{t}{timepoint of data collection (0: baseline, 1: 1yfu, ...)}
 }
 \value{
 wmnd_df Dataframe of white matter neurite densities

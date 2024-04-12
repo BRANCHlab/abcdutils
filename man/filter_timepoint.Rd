@@ -7,18 +7,9 @@
 filter_timepoint(abcd_df, t)
 }
 \arguments{
-\item{abcd_df}{An ABCD dataframe containing a data dictionary}
+\item{abcd_df}{An ABCD dataframe.}
 
-\item{t}{Integer representing which timepoint to filter to:
-\itemize{
-\item 0: baseline
-\item 1: 1-year follow-up
-\item 2: 2-year follow-up
-\item 3: 3-year follow-up
-}}
-}
-\value{
-timepoint_abcd_df Baseline data only
+\item{t}{timepoint of data collection (0: baseline, 1: 1yfu, ...)}
 }
 \description{
 Subset dataframe to a collection event

@@ -17,11 +17,11 @@ get_pubertal_status(
 
 \item{ph_y_pds}{Dataframe containing youth pubertal status report}
 
-\item{subjects}{Dataframe containing list of required subjects}
+\item{subjects}{Vector of subjects to extract data for.}
 
 \item{max_value}{Maximum value for pubertal status}
 
-\item{t}{timepoint for data collection (0: baseline, 1: 1yfu, ... 3: 3yfu)}
+\item{t}{timepoint of data collection (0: baseline, 1: 1yfu, ...)}
 }
 \value{
 pubertal_status Dataframe containing average pubertal status

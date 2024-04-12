@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{col_collapse}
 \alias{col_collapse}
-\title{Collapse two columns}
+\title{Collapse two complementary columns}
 \usage{
 col_collapse(df, c1, c2, new_col)
 }
@@ -14,9 +14,6 @@ col_collapse(df, c1, c2, new_col)
 \item{c2}{string name of second column}
 
 \item{new_col}{string name of collapsed column}
-}
-\value{
-RETURN
 }
 \description{
 When two columns contain complementary information (i.e., when one column has

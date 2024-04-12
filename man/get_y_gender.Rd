@@ -9,9 +9,9 @@ get_y_gender(gish_y_gi, subjects = NULL, t = t)
 \arguments{
 \item{gish_y_gi}{Youth-reported gender dataframe}
 
-\item{subjects}{Dataframe containing list of required subjects}
+\item{subjects}{Vector of subjects to extract data for.}
 
-\item{t}{timepoint for data collection (0: baseline, 1: 1yfu, ... 3: 3yfu)}
+\item{t}{timepoint of data collection (0: baseline, 1: 1yfu, ...)}
 }
 \value{
 sex Dataframe containing sex

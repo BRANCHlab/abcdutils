@@ -2,7 +2,7 @@
 % Please edit documentation in R/tbi.R
 \name{rename_tbi}
 \alias{rename_tbi}
-\title{Rename ambiguous columns in otbi01 file.}
+\title{Rename non-descriptive columns in ABCD's TBI file.}
 \usage{
 rename_tbi(tbi_df)
 }

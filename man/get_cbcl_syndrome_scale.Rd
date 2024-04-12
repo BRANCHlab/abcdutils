@@ -22,9 +22,9 @@ be collected. Options include: "anxdep", "withdep", "somatic", "social",
 \item{raw}{Boolean indicating if extracted data should be raw (TRUE) or
 t-scores (FALSE). Defaults to TRUE.}
 
-\item{t}{timepoint for data collection (0: baseline, 1: 1yfu, ... 3: 3yfu)}
+\item{t}{timepoint of data collection (0: baseline, 1: 1yfu, ...)}
 
-\item{subjects}{list of subjects to receive data for}
+\item{subjects}{Vector of subjects to extract data for.}
 }
 \value{
 ss_data Dataframe containing syndrome scale data

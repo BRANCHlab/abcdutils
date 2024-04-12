@@ -19,7 +19,7 @@ qc_smri(
 
 \item{mri_y_qc_raw_smr_t2}{QC info for T2 sMRI}
 
-\item{t}{The collection period of interest (defaults to baseline: 0)}
+\item{t}{timepoint for data collection (0: baseline, 1: 1yfu, ...)}
 
 \item{no_na}{whether observations containing NAs should be removed}
 }

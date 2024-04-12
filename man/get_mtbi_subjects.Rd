@@ -13,13 +13,7 @@ get_mtbi_subjects(ph_p_otbi, abcd_y_lt, min_mpi = -10, t = NULL)
 
 \item{min_mpi}{The minimum time-since-last-mtbi to be selected}
 
-\item{t}{Integer representing which timepoint to filter to:
-\itemize{
-\item 0: baseline
-\item 1: 1-year follow-up
-\item 2: 2-year follow-up
-\item 3: 3-year follow-up
-}}
+\item{t}{timepoint of data collection (0: baseline, 1: 1yfu, ...)}
 }
 \value{
 subjects Dataframe containing list of required subjects

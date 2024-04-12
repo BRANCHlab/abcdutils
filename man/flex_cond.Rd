@@ -7,7 +7,7 @@
 flex_cond(x)
 }
 \arguments{
-\item{x}{a conditional statement}
+\item{x}{a conditional expression}
 }
 \description{
 If a conditional statement would have returns an error or 0-length vector,

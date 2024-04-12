@@ -9,9 +9,9 @@ get_income(abcd_p_demo, subjects = NULL, t = NULL)
 \arguments{
 \item{abcd_p_demo}{Dataframe containing parent demographic information}
 
-\item{subjects}{Dataframe containing list of required subjects}
+\item{subjects}{Vector of subjects to extract data for.}
 
-\item{t}{timepoint for data collection (0: baseline, 1: 1yfu, ... 3: 3yfu)}
+\item{t}{timepoint of data collection (0: baseline, 1: 1yfu, ...)}
 }
 \value{
 income_df Dataframe containing household incomes

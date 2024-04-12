@@ -7,12 +7,9 @@
 filter_subjects(abcd_df, subjects = NULL)
 }
 \arguments{
-\item{abcd_df}{An ABCD dataframe}
+\item{abcd_df}{An ABCD dataframe.}
 
-\item{subjects}{Dataframe containing list of required subjects}
-}
-\value{
-filtered_df The subsetted dataframe
+\item{subjects}{Vector of subjects to filter to.}
 }
 \description{
 Subset a dataframe to a given subject list

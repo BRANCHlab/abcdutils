@@ -1,4 +1,4 @@
-#' Rename ambiguous columns in otbi01 file.
+#' Rename non-descriptive columns in ABCD's TBI file.
 #'
 #' Renames column names of ABCD's Ohio TBI Screen data to meaningful names
 #' that are easier to work with.
