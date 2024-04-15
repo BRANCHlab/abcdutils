@@ -9,128 +9,9 @@
 #'
 #' @return renamed_tbi A modified form of tbi_df with clearer column names
 #' @export
-#'
-#' @examples
-#' # Mock abcd_otbi01.txt
-#' ph_p_otbi <- data.frame(matrix(NA, nrow = 2, ncol = 107))
-#'
-#' colnames(ph_p_otbi) <- c(
-#'     "subjectkey",
-#'     "eventname",
-#'     "tbi_select_language___1",
-#'     "tbi_1",
-#'     "tbi_1b",
-#'     "tbi_1c",
-#'     "tbi_1d",
-#'     "tbi_2",
-#'     "tbi_2b",
-#'     "tbi_2c",
-#'     "tbi_2d",
-#'     "tbi_3",
-#'     "tbi_3b",
-#'     "tbi_3c",
-#'     "tbi_3d",
-#'     "tbi_4",
-#'     "tbi_4b",
-#'     "tbi_4c",
-#'     "tbi_4d",
-#'     "tbi_5",
-#'     "tbi_5b",
-#'     "tbi_5c",
-#'     "tbi_5d",
-#'     "tbi_6o",
-#'     "tbi_6p",
-#'     "tbi_6q",
-#'     "tbi_6r",
-#'     "tbi_6s",
-#'     "tbi_7a",
-#'     "tbi_7c1",
-#'     "tbl_7c2",
-#'     "tbi_7e",
-#'     "tbi_7f",
-#'     "tbi_7g",
-#'     "tbi_7i",
-#'     "tbi_7k",
-#'     "tbi_7l",
-#'     "tbi_8g",
-#'     "tbi_8i",
-#'     "tbi_8k",
-#'     "tbi_8l",
-#'     "tbi_ss_ntbiloc",
-#'     "tbi_ss_ntbiloc_nm",
-#'     "tbi_ss_ntbiloc30",
-#'     "tbi_ss_ntbiloc30_nm",
-#'     "tbi_ss_nmrpi",
-#'     "tbi_ss_nmrpi_nm",
-#'     "tbi_ss_agefirst",
-#'     "tbi_ss_agefirst_nm",
-#'     "tbi_ss_before15",
-#'     "tbi_ss_worst1",
-#'     "tbi_ss_worst1b",
-#'     "tbi_ss_worst2",
-#'     "tbi_ss_worst3",
-#'     "tbi_ss_worst4",
-#'     "tbi_ss_worst5",
-#'     "tbi_ss_worst_overall",
-#'     "tbi_l_select_language___1",
-#'     "tbi_1_l",
-#'     "tbi_1b_l",
-#'     "tbi_1c_l",
-#'     "tbi_1d_l",
-#'     "tbi_2_l",
-#'     "tbi_2b_l",
-#'     "tbi_2c_l",
-#'     "tbi_2d_l",
-#'     "tbi_3_l",
-#'     "tbi_3b_l",
-#'     "tbi_3c_l",
-#'     "tbi_3d_l",
-#'     "tbi_4_l",
-#'     "tbi_4b_l",
-#'     "tbi_4c_l",
-#'     "tbi_4d_l",
-#'     "tbi_5_l",
-#'     "tbi_5b_l",
-#'     "tbi_5c_l",
-#'     "tbi_5d_l",
-#'     "tbi_6o_l",
-#'     "tbi_6p_l",
-#'     "tbi_6q_l",
-#'     "tbi_6r_l",
-#'     "tbi_6s_l",
-#'     "tbi_7a_l",
-#'     "tbi_7c1_l",
-#'     "tbl_7c2_l",
-#'     "tbi_7e_l",
-#'     "tbi_7f_l",
-#'     "tbi_8",
-#'     "tbi_ss_ntbiloc_l",
-#'     "tbi_ss_ntbiloc_nm_l",
-#'     "tbi_ss_ntbiloc30_l",
-#'     "tbi_ss_ntbiloc30_nm_l",
-#'     "tbi_ss_nmrpi_l",
-#'     "tbi_ss_nmrpi_nm_l",
-#'     "tbi_ss_agefirst_l",
-#'     "tbi_ss_agefirst_nm_l",
-#'     "tbi_ss_worst_overall_l",
-#'     "tbi_ss_before15_nm_l",
-#'     "tbi_ss_worst1_l",
-#'     "tbi_ss_worst1b_l",
-#'     "tbi_ss_worst2_l",
-#'     "tbi_ss_worst3_l",
-#'     "tbi_ss_worst4_l",
-#'     "tbi_ss_worst5_l",
-#'     "tbi_ss_agefirst_nt_l",
-#'     "tbi_ss_before15_l"
-#' )
-#'
-#' ph_p_otbi_renamed <- rename_tbi(ph_p_otbi)
-#'
-#' ph_p_otbi_renamed
 rename_tbi <- function(tbi_df) {
     if (!is.data.frame(tbi_df)) {
-        rlang::abort("Object is not a dataframe.",
-            class = "non_df")
+        rlang::abort("Object is not a dataframe.", class = "non_df")
     }
     renamed_tbi <- tbi_df |>
         col_collapse("tbi_1", "tbi_1_l", "hosp_er_inj") |>
@@ -176,15 +57,14 @@ rename_tbi <- function(tbi_df) {
                 grepl("tbi_8i", .) ~ "other_other_multi_effect_type",
                 grepl("tbi_8k", .) ~ "other_other_multi_effect_start_age",
                 grepl("tbi_8l", .) ~ "other_other_multi_effect_end_age",
-                TRUE ~ .)
+                TRUE ~ .
             )
+        )
     if (identical(renamed_tbi, tbi_df)) {
-        rlang::warn("No changes were made to the object.",
-            class = "no_effect")
+        rlang::warn("No changes were made to the object.", class = "no_effect")
     }
     return(renamed_tbi)
 }
-
 
 #' Return conversion table of original and new otbi names
 #'
@@ -232,7 +112,8 @@ original_tbi_names <- function() {
             "other_other_multi_inj",
             "other_other_multi_effect_type",
             "other_other_multi_effect_start_age",
-            "other_other_multi_effect_end_age"),
+            "other_other_multi_effect_end_age"
+        ),
         old_name = c(
             "tbi_1",
             "tbi_1b",
@@ -274,7 +155,8 @@ original_tbi_names <- function() {
             "tbi_8g",
             "tbi_8i",
             "tbi_8k",
-            "tbi_8l"),
+            "tbi_8l"
+        ),
         description = c(
             "ever hospitalized/ER for head/neck injury?",
             "if LOC, how long?",
@@ -316,7 +198,9 @@ original_tbi_names <- function() {
             "another period of multiple inj?",
             "typical effects?",
             "start age of effects?",
-            "end age of effects?"))
+            "end age of effects?"
+        )
+    )
     options(width = 110)
     print(df)
     options(width = 80)
@@ -390,39 +274,32 @@ identify_all_tbi <- function(tbi_df) {
 identify_mtbi <- function(tbi_df) {
     df_mtbi <- tbi_df |> dplyr::mutate(
         hosp_er_mtbi = dplyr::case_when(
-            (
-                tbi_df$"hosp_er_loc" < 2 &
-                    tbi_df$"hosp_er_mem_daze" == 1) |
+            (tbi_df$"hosp_er_loc" < 2 & tbi_df$"hosp_er_mem_daze" == 1) |
                 tbi_df$"hosp_er_loc" == 1 ~ 1,
             TRUE ~ 0
         ),
         vehicle_mtbi = dplyr::case_when(
-            (
-                tbi_df$"vehicle_loc" < 2 & tbi_df$"vehicle_mem_daze" == 1) |
+            (tbi_df$"vehicle_loc" < 2 & tbi_df$"vehicle_mem_daze" == 1) |
                 tbi_df$"vehicle_loc" == 1 ~ 1,
             TRUE ~ 0
         ),
         fall_hit_mtbi = dplyr::case_when(
-            (
-                tbi_df$"fall_hit_loc" < 2 & tbi_df$"fall_hit_mem_daze" == 1) |
+            (tbi_df$"fall_hit_loc" < 2 & tbi_df$"fall_hit_mem_daze" == 1) |
                 tbi_df$"fall_hit_loc" == 1 ~ 1,
             TRUE ~ 0
         ),
         violent_mtbi = dplyr::case_when(
-            (
-                tbi_df$"violent_loc" < 2 & tbi_df$"violent_mem_daze" == 1) |
+            (tbi_df$"violent_loc" < 2 & tbi_df$"violent_mem_daze" == 1) |
                 tbi_df$"violent_loc" == 1 ~ 1,
             TRUE ~ 0
         ),
         blast_mtbi = dplyr::case_when(
-            (
-                tbi_df$"blast_loc" < 2 & tbi_df$"blast_mem_daze" == 1) |
+            (tbi_df$"blast_loc" < 2 & tbi_df$"blast_mem_daze" == 1) |
                 blast_loc == 1 ~ 1,
             TRUE ~ 0
         ),
         other_loc_mtbi_num = dplyr::case_when(
-            (
-                tbi_df$"other_loc_num" - tbi_df$"other_loc_num_over_30") > 0 ~
+            (tbi_df$"other_loc_num" - tbi_df$"other_loc_num_over_30") > 0 ~
                 tbi_df$"other_loc_num" - tbi_df$"other_loc_num_over_30",
             TRUE ~ 0
         ),
@@ -431,8 +308,7 @@ identify_mtbi <- function(tbi_df) {
             TRUE ~ 0
         ),
         multi_mtbi = dplyr::case_when(
-            (
-                tbi_df$"multi_loc" < 2 & tbi_df$"multi_mem_daze" == 1) |
+            (tbi_df$"multi_loc" < 2 & tbi_df$"multi_mem_daze" == 1) |
                 tbi_df$"multi_loc" == 1 ~ 1,
             TRUE ~ 0
         )
@@ -699,9 +575,11 @@ get_mtbi_subjects <- function(ph_p_otbi,
         t = t
     )
     subjects <- ph_p_otbi |>
-        dplyr::filter(ph_p_otbi$"mtbi" == 1 &
-                      ph_p_otbi$"moderate_or_severe_tbi" == 0 &
-                      ph_p_otbi$"latest_mtbi_mpi" >= min_mpi) |>
+        dplyr::filter(
+            ph_p_otbi$"mtbi" == 1 &
+                ph_p_otbi$"moderate_or_severe_tbi" == 0 &
+                ph_p_otbi$"latest_mtbi_mpi" >= min_mpi
+        ) |>
         dplyr::select("subjectkey")
     return(subjects)
 }

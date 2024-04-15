@@ -1,124 +1,4 @@
-#' rsfMRI QC
-#'
-#' @description
-#' Given a raw MRI QC file and a dataframe containing subjects, removes subjects
-#'  that do not pass all rsfMRI quality control and protocol compliance checks
-#'
-#' @param abcd_df A dataframe containing subjectkeys
-#' @param mriqcrp10301 The `mriqcrp10301` data object
-#' @param t timepoint of data collection (0: baseline, 1: 1yfu, ...)
-#' @param no_na whether observations containing NAs should be removed
-#'
-#' @return rsfmri_qc_list a list of:
-#' 1. The original dataframe with failing QC participants dropped
-#' 2. A list of subjectkeys of dropped QC participants
-#'
-#' @export
-qc_rsfmri <- function(abcd_df, mriqcrp10301, t = 0, no_na = FALSE) {
-    mri_qc <- mriqcrp10301 |>
-        time_subject_filter_sort(t = t, subjects = abcd_df[, "subjectkey"]) |>
-        dplyr::select("subjectkey",
-                      dplyr::contains(c("qc_score", "pc_score")),
-                      -dplyr::contains("mid"))
-    mri_qc <- Filter(function(x) !all(is.na(x)), mri_qc)
-    mri_qc <- col_to_num(mri_qc, 2:length(mri_qc))
-    mri_qc[is.na(mri_qc)] <- 1
-    rsfmri_qc <- mri_qc |>
-        dplyr::select("subjectkey", dplyr::contains("rsfmri"))
-    rsfmri_qc$min_qc <- do.call(pmin, rsfmri_qc[, 2:length(rsfmri_qc)])
-    failed_qc <- rsfmri_qc$"subjectkey"[rsfmri_qc$"min_qc" == 0]
-    print(paste0(length(failed_qc), " subjects failed rsFMRI QC"))
-    passing_qc <- which(rsfmri_qc$"min_qc" == 1)
-    abcd_df_qc <- abcd_df[passing_qc, ]
-    if (no_na) abcd_df_qc <- stats::na.omit(abcd_df_qc)
-    return(abcd_df_qc)
-}
-
-
-#' dmri QC
-#'
-#' @description
-#' Given a raw MRI QC file and a dataframe containing subjects, removes subjects
-#'  that do not pass all dmri quality control and protocol compliance checks
-#'
-#' @param abcd_df A dataframe containing subjectkeys
-#' @param mriqcrp10301 The `mriqcrp10301` data object
-#' @param t timepoint for data collection (0: baseline, 1: 1yfu, ...)
-#' @param no_na whether observations containing NAs should be removed
-#'
-#' @return dmri_qc_list a list of:
-#' 1. The original dataframe with failing QC participants dropped
-#' 2. A list of subjectkeys of dropped QC participants
-#'
-#' @export
-qc_dmri <- function(abcd_df, mriqcrp10301, t = 0, no_na = FALSE) {
-    mri_qc <- mriqcrp10301 |>
-        time_subject_filter_sort(t = t, subjects = abcd_df[, "subjectkey"]) |>
-        dplyr::select("subjectkey",
-                      dplyr::contains(c("qc_score", "pc_score")),
-                      -dplyr::contains("mid"))
-    mri_qc <- Filter(function(x) !all(is.na(x)), mri_qc)
-    mri_qc <- col_to_num(mri_qc, 2:length(mri_qc))
-    mri_qc[is.na(mri_qc)] <- 1
-    dmri_qc <- mri_qc |>
-        dplyr::select("subjectkey", dplyr::contains("dmri"))
-    dmri_qc$min_qc <- do.call(pmin, dmri_qc[, 2:length(dmri_qc)])
-    failed_qc <- dmri_qc$"subjectkey"[dmri_qc$"min_qc" == 0]
-    print(paste0(length(failed_qc), " subjects failed dmri QC"))
-    passing_qc <- which(dmri_qc$"min_qc" == 1)
-    abcd_df_qc <- abcd_df[passing_qc, ]
-    if (no_na) abcd_df_qc <- stats::na.omit(abcd_df_qc)
-    return(abcd_df_qc)
-}
-
-#' smri QC
-#'
-#' @description
-#' Given a raw MRI QC file and a dataframe containing subjects, removes subjects
-#'  that do not pass all smri quality control and protocol compliance checks
-#'
-#' @param abcd_df A dataframe containing subjectkeys
-#' @param mri_y_qc_raw_smr_t1 QC info for T1 sMRI
-#' @param mri_y_qc_raw_smr_t2 QC info for T2 sMRI
-#' @param t timepoint for data collection (0: baseline, 1: 1yfu, ...)
-#' @param no_na whether observations containing NAs should be removed
-#'
-#' @return smri_qc_list a list of:
-#' 1. The original dataframe with failing QC participants dropped
-#' 2. A list of subjectkeys of dropped QC participants
-#'
-#' @export
-qc_smri <- function(abcd_df,
-                    mri_y_qc_raw_smr_t1,
-                    mri_y_qc_raw_smr_t2,
-                    t = 0,
-                    no_na = FALSE) {
-    mri_t1_qc <- mri_y_qc_raw_smr_t1 |>
-        time_subject_filter_sort(t = t, subjects = abcd_df[, "subjectkey"]) |>
-        dplyr::select("subjectkey",
-                      dplyr::contains(c("qc_score", "pc_score")),
-                      -dplyr::contains("mid"))
-    mri_t2_qc <- mri_y_qc_raw_smr_t2 |>
-        time_subject_filter_sort(t = t, subjects = abcd_df[, "subjectkey"]) |>
-        dplyr::select("subjectkey",
-                      dplyr::contains(c("qc_score", "pc_score")),
-                      -dplyr::contains("mid"))
-    mri_qc <- dplyr::inner_join(mri_t1_qc, mri_t2_qc, by = "subjectkey")
-    mri_qc <- Filter(function(x) !all(is.na(x)), mri_qc)
-    mri_qc <- col_to_num(mri_qc, 2:length(mri_qc))
-    mri_qc[is.na(mri_qc)] <- 1
-    smri_qc <- mri_qc |>
-        dplyr::select("subjectkey", dplyr::contains(c("t1", "t2")))
-    smri_qc$min_qc <- do.call(pmin, smri_qc[, 2:length(smri_qc)])
-    failed_qc <- smri_qc$"subjectkey"[smri_qc$"min_qc" == 0]
-    print(paste0(length(failed_qc), " subjects failed smri QC"))
-    passing_qc <- which(smri_qc$"min_qc" == 1)
-    abcd_df_qc <- abcd_df[passing_qc, ]
-    if (no_na) abcd_df_qc <- stats::na.omit(abcd_df_qc)
-    return(abcd_df_qc)
-}
-
-#' Remove subjects that do not pass T1w sMRI quality control
+#' Extract quality control and protocol compliance information for sMRI
 #'
 #' @param mri_y_qc_raw_smr Dataframe with QC info for T1w or T2w sMRI.
 #'
@@ -126,45 +6,207 @@ qc_smri <- function(abcd_df,
 #'
 #' @param subjects Vector of subjects to filter to.
 #'
-#' @param pass_method "nofail" Assigns a pass if no rater gave a 0. "onepass"
-#' Assigns a pass if at least one rater gave a 1. Default is "nofail".
+#' @param metric Either "qc" (default) for quality control or "pc" for protocol
+#' compliance.
 #'
-#' @param missing_is_fail If TRUE (default), subjects with missing QC data are
-#' considered to have failed QC.
-#'
-#' @return smri_qc_list a list of:
-#' 1. Subjects that passed QC
+#' @return qc_results, a list of:
+#' 1. Subjects that passed QC (failed by none)
 #' 2. Subjects that failed according to at least 1 rater
-#' 3. Subjects that failed due to missing QC data
+#' 3. Subjects that were missing all QC data
 #'
 #' @export
-smri_qc <- function(mri_y_qc_raw_smr,
+qc_smri <- function(mri_y_qc_raw_smr,
                     t,
                     subjects = NULL,
-                    pass_method = "nofail") {
+                    metric = "qc") {
     # Ensure every column is numeric
     mri_qc <- numcol_to_numeric(mri_y_qc_raw_smr)
+    ###########################################################################
     # Filter to specified time / subjects, then select only QC columns
+    ###########################################################################
     mri_qc <- mri_y_qc_raw_smr |>
         filter_subjects(subjects = subjects) |>
-        filter_timepoint(t = t) |>
-        dplyr::select(
-            "subjectkey",
-            dplyr::contains("qc_score")
-        )
+        filter_timepoint(t = t)
+    if (metric == "qc") {
+        mri_qc <- mri_qc |>
+            dplyr::select(
+                "subjectkey",
+                dplyr::contains("qc_score"),
+                -dplyr::contains("fm_qc") # field map columns
+            )
+    } else if (metric == "pc") {
+        mri_qc <- mri_qc |>
+            dplyr::select(
+                "subjectkey",
+                dplyr::contains("pc_score"),
+                -dplyr::contains("fm_pc") # field map columns
+            )
+    }
+    ###########################################################################
+    # Missing QC values
+    ###########################################################################
     # Number of missing values across all QC columns
     missing_qc <- rowSums(is.na(mri_qc[, -1]))
     # Subjects who fail due to missing QC data
     missing_qc_subs <- mri_qc$"subjectkey"[missing_qc == 3]
     # Remaining subjects
-    mri_qc <- mri_qc$"subjectkey"[missing_qc < 3]
-    return(mri_qc)
-    return(mri_qc)
-    #smri_qc$min_qc <- do.call(pmin, smri_qc[, 2:length(smri_qc)])
-    #failed_qc <- smri_qc$"subjectkey"[smri_qc$"min_qc" == 0]
-    #print(paste0(length(failed_qc), " subjects failed smri QC"))
-    #passing_qc <- which(smri_qc$"min_qc" == 1)
-    #abcd_df_qc <- abcd_df[passing_qc, ]
-    #if (no_na) abcd_df_qc <- stats::na.omit(abcd_df_qc)
-    #return(abcd_df_qc)
+    mri_qc <- mri_qc[missing_qc < 3, ]
+    ###########################################################################
+    # Any QC fail
+    ###########################################################################
+    mri_qc[is.na(mri_qc)] <- 1
+    min_qc <- do.call(pmin, mri_qc[, -1])
+    fail_qc_subs <- mri_qc$"subjectkey"[min_qc == 0]
+    pass_qc_subs <- mri_qc$"subjectkey"[min_qc == 1]
+    ###########################################################################
+    # Formatting results
+    ###########################################################################
+    qc_results <- list(
+        "pass" = pass_qc_subs,
+        "fail" = fail_qc_subs,
+        "missing" = missing_qc_subs
+    )
+    return(qc_results)
+}
+
+#' Extract quality control and protocol compliance information for dMRI
+#'
+#' @param mri_y_qc_raw_dmr Dataframe with QC info for dMRI.
+#'
+#' @param t timepoint of data collection (0: baseline, 1: 1yfu, ...)
+#'
+#' @param subjects Vector of subjects to filter to.
+#'
+#' @param metric Either "qc" (default) for quality control or "pc" for protocol
+#' compliance.
+#'
+#' @return qc_results, a list of:
+#' 1. Subjects that passed QC (failed by none)
+#' 2. Subjects that failed according to at least 1 rater
+#' 3. Subjects that were missing all QC data
+#'
+#' @export
+qc_dmri <- function(mri_y_qc_raw_dmr,
+                    t = 0,
+                    subjects = NULL,
+                    metric = "qc") {
+    # Ensure every column is numeric
+    mri_qc <- numcol_to_numeric(mri_y_qc_raw_dmr)
+    ###########################################################################
+    # Filter to specified time / subjects, then select only QC columns
+    ###########################################################################
+    mri_qc <- mri_y_qc_raw_dmr |>
+        filter_subjects(subjects = subjects) |>
+        filter_timepoint(t = t)
+    if (metric == "qc") {
+        mri_qc <- mri_qc |>
+            dplyr::select(
+                "subjectkey",
+                dplyr::contains("qc_score"),
+                -dplyr::contains("fm_qc") # field map columns
+            )
+    } else if (metric == "pc") {
+        mri_qc <- mri_qc |>
+            dplyr::select(
+                "subjectkey",
+                dplyr::contains("pc_score"),
+                -dplyr::contains("fm_pc") # field map columns
+            )
+    }
+    ###########################################################################
+    # Missing QC values
+    ###########################################################################
+    # Number of missing values across all QC columns
+    missing_qc <- rowSums(is.na(mri_qc[, -1]))
+    # Subjects who fail due to missing QC data
+    missing_qc_subs <- mri_qc$"subjectkey"[missing_qc == 6]
+    # Remaining subjects
+    mri_qc <- mri_qc[missing_qc < 6, ]
+    ###########################################################################
+    # Any QC fail
+    ###########################################################################
+    mri_qc[is.na(mri_qc)] <- 1
+    min_qc <- do.call(pmin, mri_qc[, -1])
+    fail_qc_subs <- mri_qc$"subjectkey"[min_qc == 0]
+    pass_qc_subs <- mri_qc$"subjectkey"[min_qc == 1]
+    ###########################################################################
+    # Formatting results
+    ###########################################################################
+    qc_results <- list(
+        "pass" = pass_qc_subs,
+        "fail" = fail_qc_subs,
+        "missing" = missing_qc_subs
+    )
+    return(qc_results)
+}
+
+#' Extract quality control and protocol compliance information for rs-fMRI
+#'
+#' @param mri_y_qc_raw_rsfmr Dataframe with QC info for rs-fMRI.
+#'
+#' @param t timepoint of data collection (0: baseline, 1: 1yfu, ...)
+#'
+#' @param subjects Vector of subjects to filter to.
+#'
+#' @param metric Either "qc" (default) for quality control or "pc" for protocol
+#' compliance.
+#'
+#' @return qc_results, a list of:
+#' 1. Subjects that passed QC (failed by none)
+#' 2. Subjects that failed according to at least 1 rater
+#' 3. Subjects that were missing all QC data
+#'
+#' @export
+qc_rsfmri <- function(mri_y_qc_raw_rsfmr,
+                      t = 0,
+                      subjects = NULL,
+                      metric = "qc") {
+    # Ensure every column is numeric
+    mri_qc <- numcol_to_numeric(mri_y_qc_raw_rsfmr)
+    ###########################################################################
+    # Filter to specified time / subjects, then select only QC columns
+    ###########################################################################
+    mri_qc <- mri_y_qc_raw_rsfmr |>
+        filter_subjects(subjects = subjects) |>
+        filter_timepoint(t = t)
+    if (metric == "qc") {
+        mri_qc <- mri_qc |>
+            dplyr::select(
+                "subjectkey",
+                dplyr::contains("qc_score"),
+                -dplyr::contains("fm_qc") # field map columns
+            )
+    } else if (metric == "pc") {
+        mri_qc <- mri_qc |>
+            dplyr::select(
+                "subjectkey",
+                dplyr::contains("pc_score"),
+                -dplyr::contains("fm_pc") # field map columns
+            )
+    }
+    ###########################################################################
+    # Missing QC values
+    ###########################################################################
+    # Number of missing values across all QC columns
+    missing_qc <- rowSums(is.na(mri_qc[, -1]))
+    # Subjects who fail due to missing QC data
+    missing_qc_subs <- mri_qc$"subjectkey"[missing_qc == 12]
+    # Remaining subjects
+    mri_qc <- mri_qc[missing_qc < 12, ]
+    ###########################################################################
+    # Any QC fail
+    ###########################################################################
+    mri_qc[is.na(mri_qc)] <- 1
+    min_qc <- do.call(pmin, mri_qc[, -1])
+    fail_qc_subs <- mri_qc$"subjectkey"[min_qc == 0]
+    pass_qc_subs <- mri_qc$"subjectkey"[min_qc == 1]
+    ###########################################################################
+    # Formatting results
+    ###########################################################################
+    qc_results <- list(
+        "pass" = pass_qc_subs,
+        "fail" = fail_qc_subs,
+        "missing" = missing_qc_subs
+    )
+    return(qc_results)
 }
