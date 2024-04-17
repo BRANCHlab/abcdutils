@@ -176,3 +176,14 @@ col_collapse <- function(df, c1, c2, new_col) {
     colnames(df)[new_col_pos] <- new_col
     return(df)
 }
+
+#' Sort a dataframe by subjectkey
+#'
+#' @param abcd_df A dataframe with a subjectkey column.
+#'
+#' @export
+sort_subjects <- function(abcd_df) {
+    sorted_df <- abcd_df |>
+        dplyr::arrange(abcd_df$"subjectkey")
+    return(sorted_df)
+}

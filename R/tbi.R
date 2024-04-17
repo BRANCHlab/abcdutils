@@ -206,7 +206,6 @@ original_tbi_names <- function() {
     options(width = 80)
 }
 
-
 #' Adds columns to tbi_df showing if a child has had an mTBI or moderate+ TBI
 #'
 #' Calculates whether or not child had an mTBI using the following definition:
@@ -265,7 +264,6 @@ identify_all_tbi <- function(tbi_df) {
     return(tbi_df)
 }
 
-
 #' Generate columns indicating which injury types were mTBIs
 #'
 #' @param tbi_df A TBI dataframe
@@ -317,7 +315,6 @@ identify_mtbi <- function(tbi_df) {
     )
     return(df_mtbi)
 }
-
 
 #' Identify time since and age at each mTBI / most recent mTBI
 #'
@@ -401,7 +398,6 @@ identify_mtbi_times <- function(tbi_df) {
     dft2$latest_mtbi_age <- mtbi_ages_max
     return(dft2)
 }
-
 
 #' Add columns to a TBI dataframe indicating mechanism of the latest mTBI
 #'
@@ -555,7 +551,6 @@ detail_mtbi <- function(ph_p_otbi,
     return(ph_p_otbi)
 }
 
-
 #' Extract mTBI subjects with a minimum time-since-last-mtbi threshold
 #'
 #' @param ph_p_otbi TBI dataframe
@@ -585,7 +580,6 @@ get_mtbi_subjects <- function(ph_p_otbi,
         dplyr::select("subjectkey")
     return(subjects)
 }
-
 
 #' Extract list of ABCD subjects who have not sustained any head injury
 #'
