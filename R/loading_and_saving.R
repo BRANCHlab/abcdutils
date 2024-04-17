@@ -56,3 +56,14 @@ path_maker <- function(path) {
     }
     return(path_fn)
 }
+
+#' Import subjectkey csv as a vector
+#'
+#' @param path Path to .csv file containing subjectkey column
+#'
+#' @export
+read_subjects <- function(path) {
+    subject_df <- readr::read_csv(path)
+    subjects <- subject_df$"subjectkey"
+    return(subjects)
+}

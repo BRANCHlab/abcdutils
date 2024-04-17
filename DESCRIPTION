@@ -17,7 +17,9 @@ Imports:
     dplyr,
     fastDummies,
     purrr,
+    readr,
     rlang,
+    tibble,
     utils,
     visdat
 Remotes:

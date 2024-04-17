@@ -4,7 +4,7 @@
 \alias{detail_mtbi}
 \title{Extract mTBI subjects with a minimum time-since-last-mtbi threshold}
 \usage{
-detail_mtbi(ph_p_otbi, abcd_y_lt, subjects = NULL, min_mpi = -10, t = NULL)
+detail_mtbi(ph_p_otbi, abcd_y_lt, subjects = NULL, t = 0)
 }
 \arguments{
 \item{ph_p_otbi}{TBI dataframe}
@@ -12,8 +12,6 @@ detail_mtbi(ph_p_otbi, abcd_y_lt, subjects = NULL, min_mpi = -10, t = NULL)
 \item{abcd_y_lt}{Dataframe containing age information}
 
 \item{subjects}{Vector of subjects to extract data for.}
-
-\item{min_mpi}{The minimum time-since-last-mtbi to be selected}
 
 \item{t}{timepoint of data collection (0: baseline, 1: 1yfu, ...)}
 }

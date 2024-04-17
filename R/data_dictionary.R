@@ -41,5 +41,6 @@ search_dd <- function(search_string, fields = NULL) {
             )
         }
     )
-    return(abcd_dict[matching_rows, , drop = FALSE])
+    clean_dict <- tibble::tibble(abcd_dict[matching_rows, , drop = FALSE])
+    return(clean_dict)
 }

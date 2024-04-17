@@ -326,20 +326,13 @@ identify_mtbi <- function(tbi_df) {
 identify_mtbi_times <- function(tbi_df) {
     # Scale injury ages to match interview ages if necessary
     if (mean(tbi_df$"hosp_er_age", na.rm = TRUE) < 20) {
-        tbi_df$"blast_age" <-
-            tbi_df$"blast_age" * 12
-        tbi_df$"hosp_er_age" <-
-            tbi_df$"hosp_er_age" * 12
-        tbi_df$"vehicle_age" <-
-            tbi_df$"vehicle_age" * 12
-        tbi_df$"fall_hit_age" <-
-            tbi_df$"fall_hit_age" * 12
-        tbi_df$"violent_age" <-
-            tbi_df$"violent_age" * 12
-        tbi_df$"other_loc_min_age" <-
-            tbi_df$"other_loc_min_age" * 12
-        tbi_df$"multi_effect_end_age" <-
-            tbi_df$"multi_effect_end_age" * 12
+        tbi_df$"blast_age" <- tbi_df$"blast_age" * 12
+        tbi_df$"hosp_er_age" <- tbi_df$"hosp_er_age" * 12
+        tbi_df$"vehicle_age" <- tbi_df$"vehicle_age" * 12
+        tbi_df$"fall_hit_age" <- tbi_df$"fall_hit_age" * 12
+        tbi_df$"violent_age" <- tbi_df$"violent_age" * 12
+        tbi_df$"other_loc_min_age" <- tbi_df$"other_loc_min_age" * 12
+        tbi_df$"multi_effect_end_age" <- tbi_df$"multi_effect_end_age" * 12
     }
     # Time since each type of mTBI
     dft <- tbi_df |> dplyr::mutate(
@@ -393,7 +386,8 @@ identify_mtbi_times <- function(tbi_df) {
         (dft2$"blast_age" * dft2$"blast_mtbi"),
         # The only mTBI variable that has count info beyond the binary 0/1
         (dft2$"other_loc_min_age" * dft2$"other_loc_mtbi"),
-        (dft2$"multi_effect_end_age" * dft2$"multi_mtbi"))
+        (dft2$"multi_effect_end_age" * dft2$"multi_mtbi")
+    )
     mtbi_ages_max <- do.call(pmax, c(mtbi_ages, na.rm = TRUE))
     dft2$latest_mtbi_age <- mtbi_ages_max
     return(dft2)
@@ -430,14 +424,17 @@ identify_latest_mtbi_mechanism <- function(tbi_df) {
 identify_num_mtbi <- function(tbi_df) {
     # Generate column for best guess of number of mTBIs sustained
     df_num_mtbi <- tbi_df |>
-        dplyr::mutate(mtbi_count = (
-            tbi_df$"hosp_er_mtbi" +
-                tbi_df$"vehicle_mtbi" +
-                tbi_df$"fall_hit_mtbi" +
-                tbi_df$"violent_mtbi" +
-                tbi_df$"blast_mtbi" +
-                tbi_df$"other_loc_mtbi_num" +
-                tbi_df$"multi_mtbi"))
+        dplyr::mutate(
+            mtbi_count = (
+                tbi_df$"hosp_er_mtbi" +
+                    tbi_df$"vehicle_mtbi" +
+                    tbi_df$"fall_hit_mtbi" +
+                    tbi_df$"violent_mtbi" +
+                    tbi_df$"blast_mtbi" +
+                    tbi_df$"other_loc_mtbi_num" +
+                    tbi_df$"multi_mtbi"
+            )
+        )
     return(df_num_mtbi)
 }
 
@@ -502,7 +499,6 @@ identify_latest_mtbi_mem_daze <- function(tbi_df) {
 #' @param ph_p_otbi TBI dataframe
 #' @param abcd_y_lt Dataframe containing age information
 #' @param subjects Vector of subjects to extract data for.
-#' @param min_mpi The minimum time-since-last-mtbi to be selected
 #' @param t timepoint of data collection (0: baseline, 1: 1yfu, ...)
 #'
 #' @return subjects Dataframe containing list of required subjects
@@ -511,44 +507,99 @@ identify_latest_mtbi_mem_daze <- function(tbi_df) {
 detail_mtbi <- function(ph_p_otbi,
                         abcd_y_lt,
                         subjects = NULL,
-                        min_mpi = -10,
-                        t = NULL) {
-    # restrict to specific eventname (if provided)
-    sink("/dev/null")
-    on.exit(sink())
-    ph_p_otbi <- ph_p_otbi |>
+                        t = 0) {
+    ph_p_otbi_filtered <- ph_p_otbi |>
         filter_timepoint(t) |>
         filter_subjects(subjects)
-    abcd_y_lt <- abcd_y_lt |>
+    ###########################################################################
+    # Integrate age information
+    ###########################################################################
+    abcd_y_lt_filtered <- abcd_y_lt |>
         filter_timepoint(t) |>
-        filter_subjects(subjects)
-    # integrate age feature into tbi df
-    abcd_y_lt <- dplyr::select(
-        abcd_y_lt, "subjectkey", "interview_age", "eventname"
-    )
-    ph_p_otbi <- dplyr::inner_join(
-        ph_p_otbi,
-        abcd_y_lt,
+        filter_subjects(subjects) |>
+        dplyr::select("subjectkey", "interview_age", "eventname")
+    tbi_df <- dplyr::inner_join(
+        ph_p_otbi_filtered,
+        abcd_y_lt_filtered,
         by = c(
             "subjectkey",
             "eventname"
         )
     )
-    # ensure all columns that may be numeric are treated as numeric
-    ph_p_otbi <- numcol_to_numeric(ph_p_otbi)
-    # sorting by subjectkey
-    ph_p_otbi <- dplyr::arrange(ph_p_otbi, ph_p_otbi$"subjectkey")
-    # renaming ambiguous columns
-    ph_p_otbi <- ph_p_otbi |>
-        rename_tbi() |>
-        identify_all_tbi() |>
-        identify_mtbi() |>
-        identify_mtbi_times() |>
-        identify_latest_mtbi_mechanism() |>
-        identify_num_mtbi() |>
-        identify_latest_mtbi_loc() |>
-        identify_latest_mtbi_mem_daze()
-    return(ph_p_otbi)
+    ###########################################################################
+    # Ensure all columns that may be numeric are treated as numeric
+    ###########################################################################
+    tbi_df <- numcol_to_numeric(tbi_df)
+    ###########################################################################
+    # Sorting by subjectkey
+    ###########################################################################
+    tbi_df <- dplyr::arrange(tbi_df, tbi_df$"subjectkey")
+    ###########################################################################
+    # Renaming ambiguous columns
+    ###########################################################################
+    renamed_tbi <- rename_tbi(tbi_df)
+    identified_tbi <- identify_all_tbi(renamed_tbi)
+    identified_mtbi <- identify_mtbi(identified_tbi)
+    identified_mtbi_times <- identify_mtbi_times(identified_mtbi)
+    identified_mech <- identify_latest_mtbi_mechanism(identified_mtbi_times)
+    identified_num_mtbi <- identify_num_mtbi(identified_mech)
+    identified_latest_loc <- identify_latest_mtbi_loc(identified_num_mtbi)
+    detailed_mtbi <- identify_latest_mtbi_mem_daze(identified_latest_loc)
+    ###########################################################################
+    # Checking for impossible age values
+    ###########################################################################
+    if (t > 0) {
+        zero_age <- detailed_mtbi$"latest_mtbi_age" == 0
+        detailed_mtbi$"latest_mtbi_age"[zero_age] <- NA
+    }
+    if (t > 0) {
+        previous_t_age <- abcd_y_lt |>
+            filter_timepoint(t - 1) |>
+            filter_subjects(subjects) |>
+            dplyr::select("subjectkey", "interview_age")
+        current_t_age <- abcd_y_lt_filtered |>
+            dplyr::select(-"eventname")
+        current_tbi_times <- detailed_mtbi |>
+            dplyr::select("subjectkey", "latest_mtbi_age")
+        colnames(previous_t_age) <- c("subjectkey", "last_years_age")
+        colnames(current_t_age) <- c("subjectkey", "current_age")
+        colnames(current_tbi_times) <- c("subjectkey", "mtbi_lower_bound")
+        age_gap_df <- dplyr::full_join(
+            current_tbi_times,
+            previous_t_age,
+            by = "subjectkey"
+        )
+        age_gap_df <- dplyr::full_join(
+            age_gap_df,
+            current_t_age,
+            by = "subjectkey"
+        )
+        age_gap_df$"mtbi_upper_bound" <- age_gap_df$"mtbi_lower_bound" + 11
+        age_gap_df <- age_gap_df |>
+            dplyr::mutate(
+                plausible_age = dplyr::case_when(
+                    current_age >= mtbi_lower_bound &
+                        last_years_age <= mtbi_upper_bound ~ TRUE,
+                    current_age < mtbi_lower_bound |
+                        last_years_age > mtbi_upper_bound ~ FALSE
+                )
+            )
+        impossible_age_ind <- which(age_gap_df$"plausible_age" == FALSE)
+        impossible_ages <- age_gap_df[impossible_age_ind, ]
+        impossible_age_subs <- impossible_ages$"subjectkey"
+        if (nrow(impossible_ages) > 0) {
+            warning(
+                "The following subjects were flagged as having reported",
+                " impossible ages: ",
+                paste(impossible_age_subs, collapse = ", ")
+            )
+            detailed_mtbi <- detailed_mtbi |>
+                dplyr::filter(
+                    !(detailed_mtbi$"subjectkey" %in% impossible_age_subs)
+                )
+        }
+    }
+    return(detailed_mtbi)
 }
 
 #' Extract mTBI subjects with a minimum time-since-last-mtbi threshold
@@ -568,7 +619,6 @@ get_mtbi_subjects <- function(ph_p_otbi,
     ph_p_otbi <- detail_mtbi(
         ph_p_otbi,
         abcd_y_lt,
-        min_mpi = min_mpi,
         t = t
     )
     subjects <- ph_p_otbi |>
