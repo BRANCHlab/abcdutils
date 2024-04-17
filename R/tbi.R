@@ -248,13 +248,15 @@ identify_all_tbi <- function(tbi_df) {
             TRUE ~ 0
         ),
         moderate_or_severe_tbi = dplyr::case_when(
-            (tbi_df$"hosp_er_loc" > 1 |
-                tbi_df$"vehicle_loc" > 1 |
-                tbi_df$"fall_hit_loc" > 1 |
-                tbi_df$"violent_loc" > 1 |
-                tbi_df$"blast_loc" > 1 |
-                tbi_df$"other_loc_num_over_30" > 0 |
-                tbi_df$"multi_loc" > 1) ~ 1,
+            (
+                tbi_df$"hosp_er_loc" > 1 |
+                    tbi_df$"vehicle_loc" > 1 |
+                    tbi_df$"fall_hit_loc" > 1 |
+                    tbi_df$"violent_loc" > 1 |
+                    tbi_df$"blast_loc" > 1 |
+                    tbi_df$"other_loc_num_over_30" > 0 |
+                    tbi_df$"multi_loc" > 1
+            ) ~ 1,
             flex_cond(tbi_df$"other_multi_inj" == 1) ~ 0.5,
             flex_cond(tbi_df$"other_other_multi_inj" == 1) ~ 0.5,
             TRUE ~ 0

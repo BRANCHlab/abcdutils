@@ -2,27 +2,28 @@
 % Please edit documentation in R/quality_control.R
 \name{qc_rsfmri}
 \alias{qc_rsfmri}
-\title{rsfMRI QC}
+\title{Extract quality control and protocol compliance information for rs-fMRI}
 \usage{
-qc_rsfmri(abcd_df, mriqcrp10301, t = 0, no_na = FALSE)
+qc_rsfmri(mri_y_qc_raw_rsfmr, t = 0, subjects = NULL, metric = "qc")
 }
 \arguments{
-\item{abcd_df}{A dataframe containing subjectkeys}
-
-\item{mriqcrp10301}{The \code{mriqcrp10301} data object}
+\item{mri_y_qc_raw_rsfmr}{Dataframe with QC info for rs-fMRI.}
 
 \item{t}{timepoint of data collection (0: baseline, 1: 1yfu, ...)}
 
-\item{no_na}{whether observations containing NAs should be removed}
+\item{subjects}{Vector of subjects to filter to.}
+
+\item{metric}{Either "qc" (default) for quality control or "pc" for protocol
+compliance.}
 }
 \value{
-rsfmri_qc_list a list of:
+qc_results, a list of:
 \enumerate{
-\item The original dataframe with failing QC participants dropped
-\item A list of subjectkeys of dropped QC participants
+\item Subjects that passed QC (failed by none)
+\item Subjects that failed according to at least 1 rater
+\item Subjects that were missing all QC data
 }
 }
 \description{
-Given a raw MRI QC file and a dataframe containing subjects, removes subjects
-that do not pass all rsfMRI quality control and protocol compliance checks
+Extract quality control and protocol compliance information for rs-fMRI
 }

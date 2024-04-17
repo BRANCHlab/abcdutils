@@ -2,35 +2,28 @@
 % Please edit documentation in R/quality_control.R
 \name{qc_smri}
 \alias{qc_smri}
-\title{smri QC}
+\title{Extract quality control and protocol compliance information for sMRI}
 \usage{
-qc_smri(
-  abcd_df,
-  mri_y_qc_raw_smr_t1,
-  mri_y_qc_raw_smr_t2,
-  t = 0,
-  no_na = FALSE
-)
+qc_smri(mri_y_qc_raw_smr, t, subjects = NULL, metric = "qc")
 }
 \arguments{
-\item{abcd_df}{A dataframe containing subjectkeys}
+\item{mri_y_qc_raw_smr}{Dataframe with QC info for T1w or T2w sMRI.}
 
-\item{mri_y_qc_raw_smr_t1}{QC info for T1 sMRI}
+\item{t}{timepoint of data collection (0: baseline, 1: 1yfu, ...)}
 
-\item{mri_y_qc_raw_smr_t2}{QC info for T2 sMRI}
+\item{subjects}{Vector of subjects to filter to.}
 
-\item{t}{timepoint for data collection (0: baseline, 1: 1yfu, ...)}
-
-\item{no_na}{whether observations containing NAs should be removed}
+\item{metric}{Either "qc" (default) for quality control or "pc" for protocol
+compliance.}
 }
 \value{
-smri_qc_list a list of:
+qc_results, a list of:
 \enumerate{
-\item The original dataframe with failing QC participants dropped
-\item A list of subjectkeys of dropped QC participants
+\item Subjects that passed QC (failed by none)
+\item Subjects that failed according to at least 1 rater
+\item Subjects that were missing all QC data
 }
 }
 \description{
-Given a raw MRI QC file and a dataframe containing subjects, removes subjects
-that do not pass all smri quality control and protocol compliance checks
+Extract quality control and protocol compliance information for sMRI
 }

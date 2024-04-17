@@ -1,15 +1,3 @@
-#' Remove the data dictionary from a dataset
-#'
-#' @param abcd_df An ABCD dataframe containing a data dictionary
-#'
-#' @return abcd_df_no_dd The same dataframe without the data dictionary
-#'
-#' @export
-remove_dd <- function(abcd_df) {
-    abcd_df_no_dd <- abcd_df[-1, ]
-    return(abcd_df_no_dd)
-}
-
 #' Open data dictionary link
 #'
 #' @export
@@ -18,23 +6,7 @@ open_dict <- function() {
     utils::browseURL(url)
 }
 
-#' Search the abcd data dictionary
-#'
-#' @param search_string The string to be searched
-#'
-#' @export
-search_dd_web <- function(search_string) {
-    if (class(search_string)[1] != "character") {
-        search_string <- deparse(substitute(short_name))
-    }
-    url <- paste0(
-        "https://nda.nih.gov/general-query.html",
-        "?q=query=data-structure ~and~ searchTerm=", search_string,
-        " ~and~ resultsView=table-view")
-    utils::browseURL(url)
-}
-
-#' Search through a local data dictionary csv file (5.0)
+#' Search the ABCD data dictionary (5.0 version)
 #'
 #' @param search_string Parameter to search for
 #' @param fields A string or vector of strings indicating column names to use
@@ -53,7 +25,8 @@ search_dd <- function(search_string, fields = NULL) {
     if (is.null(fields)) {
         dict_to_search <- abcd_dict
     } else {
-        dict_to_search <- abcd_dict[, c(colnames(abcd_dict) %in% fields), drop = FALSE]
+        col_indices <- colnames(abcd_dict) %in% fields
+        dict_to_search <- abcd_dict[, col_indices, drop = FALSE]
     }
     matching_rows <- apply(
         dict_to_search,

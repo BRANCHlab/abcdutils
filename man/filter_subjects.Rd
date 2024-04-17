@@ -7,7 +7,7 @@
 filter_subjects(abcd_df, subjects = NULL)
 }
 \arguments{
-\item{abcd_df}{An ABCD dataframe.}
+\item{abcd_df}{A dataframe with a subjectkey column.}
 
 \item{subjects}{Vector of subjects to filter to.}
 }

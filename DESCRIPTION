@@ -16,9 +16,7 @@ Imports:
     digest,
     dplyr,
     fastDummies,
-    ggplot2,
     purrr,
-    readr,
     rlang,
     utils,
     visdat

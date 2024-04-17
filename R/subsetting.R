@@ -1,6 +1,6 @@
 #' Subset dataframe to a collection event
 #'
-#' @param abcd_df An ABCD dataframe.
+#' @param abcd_df A dataframe with a subjectkey column.
 #'
 #' @param t timepoint of data collection (0: baseline, 1: 1yfu, ...)
 #'
@@ -22,7 +22,7 @@ filter_timepoint <- function(abcd_df, t) {
 
 #' Subset a dataframe to a given subject list
 #'
-#' @param abcd_df An ABCD dataframe.
+#' @param abcd_df A dataframe with a subjectkey column.
 #'
 #' @param subjects Vector of subjects to filter to.
 #'
@@ -37,9 +37,20 @@ filter_subjects <- function(abcd_df, subjects = NULL) {
     }
 }
 
+#' Sort a dataframe by subjectkey
+#'
+#' @param abcd_df A dataframe with a subjectkey column.
+#'
+#' @export
+sort_subjects <- function(abcd_df) {
+    sorted_df <- abcd_df |>
+        dplyr::arrange(abcd_df$"subjectkey")
+    return(sorted_df)
+}
+
 #' Filter dataframe by time and subjectkey, then sort by subjectkey
 #'
-#' @param abcd_df A raw ABCD dataframe.
+#' @param abcd_df A dataframe with a subjectkey column.
 #'
 #' @param t timepoint of data collection (0: baseline, 1: 1yfu, ...)
 #'

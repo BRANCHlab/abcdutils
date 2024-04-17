@@ -34,9 +34,10 @@ generate_mock_data <- function(df, n = NULL, seed = NULL) {
     # Generate fake subject keys and assign them
     subjectchars <- c(toupper(letters), as.character(0:9))
     for (i in seq_len(nrow(df))) {
-        subjectkey <- paste(c("NDAR_INV",
-                            sample(subjectchars, size = 8)),
-                          collapse = "")
+        subjectkey <- paste(
+            c("NDAR_INV", sample(subjectchars, size = 8)),
+            collapse = ""
+        )
         df[i, c("subjectkey", "src_subject_id")] <- subjectkey
     }
     mock_df <- rbind(data_dictionary, df)

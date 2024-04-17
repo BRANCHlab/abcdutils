@@ -7,7 +7,7 @@
 filter_timepoint(abcd_df, t)
 }
 \arguments{
-\item{abcd_df}{An ABCD dataframe.}
+\item{abcd_df}{A dataframe with a subjectkey column.}
 
 \item{t}{timepoint of data collection (0: baseline, 1: 1yfu, ...)}
 }

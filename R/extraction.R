@@ -10,7 +10,9 @@
 #'
 #' @export
 get_sds_total_probs <- function(ph_p_sds, subjects = NULL, t = NULL) {
-    sds_df <- time_subject_filter_sort(ph_p_sds, subjects, t = t)
+    sds_df <- ph_p_sds |>
+        filter_subjects(subjects = subjects) |>
+        filter_timepoint(t = t)
     sds_total <- sds_df |>
         dplyr::select(
             "subjectkey",

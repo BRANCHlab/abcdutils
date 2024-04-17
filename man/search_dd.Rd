@@ -2,7 +2,7 @@
 % Please edit documentation in R/data_dictionary.R
 \name{search_dd}
 \alias{search_dd}
-\title{Search through a local data dictionary csv file (5.0)}
+\title{Search the ABCD data dictionary (5.0 version)}
 \usage{
 search_dd(search_string, fields = NULL)
 }
@@ -22,5 +22,5 @@ other variables. This column indicates what those conditions are.
 }}
 }
 \description{
-Search through a local data dictionary csv file (5.0)
+Search the ABCD data dictionary (5.0 version)
 }
