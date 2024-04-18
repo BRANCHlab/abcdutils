@@ -9,7 +9,7 @@ get_cort_sa(mri_y_smr_area_dsk, subjects = NULL, t = NULL)
 \arguments{
 \item{mri_y_smr_area_dsk}{Data file containing cortical data}
 
-\item{subjects}{Vector of subjects to extract data for.}
+\item{subjects}{Vector of subjectkeys.}
 
 \item{t}{timepoint of data collection (0: baseline, 1: 1yfu, ...)}
 }

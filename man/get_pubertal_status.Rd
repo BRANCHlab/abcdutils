@@ -17,7 +17,7 @@ get_pubertal_status(
 
 \item{ph_y_pds}{Dataframe containing youth pubertal status report}
 
-\item{subjects}{Vector of subjects to extract data for.}
+\item{subjects}{Vector of subjectkeys.}
 
 \item{max_value}{Maximum value for pubertal status}
 

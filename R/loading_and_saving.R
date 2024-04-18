@@ -67,3 +67,14 @@ read_subjects <- function(path) {
     subjects <- subject_df$"subjectkey"
     return(subjects)
 }
+
+#' Export subjectkey vector as csv
+#'
+#' @param subjects Vector of subjectkeys.
+#' @param path Path to .csv file containing subjectkey column
+#'
+#' @export
+write_subjects <- function(subjects, path) {
+    subject_df <- data.frame("subjectkey" = subjects)
+    readr::write_csv(subject_df, path)
+}

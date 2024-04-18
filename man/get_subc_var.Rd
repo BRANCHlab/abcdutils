@@ -9,7 +9,7 @@ get_subc_var(mrirstv02, subjects = NULL, t = NULL)
 \arguments{
 \item{mrirstv02}{Data file containing neurite density data}
 
-\item{subjects}{Vector of subjects to extract data for.}
+\item{subjects}{Vector of subjectkeys.}
 
 \item{t}{timepoint of data collection (0: baseline, 1: 1yfu, ...)}
 }

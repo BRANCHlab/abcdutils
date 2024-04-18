@@ -15,7 +15,7 @@ get_race(
 \arguments{
 \item{abcd_p_demo}{Dataframe containing parent demographic information}
 
-\item{subjects}{Vector of subjects to extract data for.}
+\item{subjects}{Vector of subjectkeys.}
 
 \item{t}{timepoint of data collection (0: baseline, 1: 1yfu, ...)}
 

@@ -3,7 +3,7 @@
 #' Factor loadings based on Mancini et al., 2019
 #'
 #' @param ph_p_sds Dataframe containing sleep disturbance scale data.
-#' @param subjects Vector of subjects to extract data for.
+#' @param subjects Vector of subjectkeys.
 #' @param t timepoint of data collection (0: baseline, 1: 1yfu, ...)
 #'
 #' @return full_sleep_df Dataframe containing sleep data
@@ -29,7 +29,7 @@ get_sds_total_probs <- function(ph_p_sds, subjects = NULL, t = NULL) {
 #' Modified from PhenX
 #' @param ce_p_fes ABCD Parent Family Environment Scale-Family Conflict
 #' Subscale Modified from PhenX
-#' @param subjects Vector of subjects to extract data for.
+#' @param subjects Vector of subjectkeys.
 #' @param t timepoint of data collection (0: baseline, 1: 1yfu, ...)
 #'
 #' @return family_function
@@ -100,7 +100,7 @@ get_family_function <- function(ce_y_fes, ce_p_fes, subjects = NULL, t = NULL) {
 #'
 #' @param ce_p_psb Parent Prosocial Behavior Survey
 #' @param ce_y_psb Youth Prosocial Behavior Survey
-#' @param subjects Vector of subjects to extract data for.
+#' @param subjects Vector of subjectkeys.
 #' @param t timepoint of data collection (0: baseline, 1: 1yfu, ...)
 #' @param no_zero Boolean indicating if zero values should be replaced with 1
 #'
@@ -166,7 +166,7 @@ get_prosocial_behaviour <- function(ce_p_psb,
 #'
 #' @param mh_y_or ABCD Other Resilience
 #' @param gish_p_gi Parent report of sex and gender dataframe
-#' @param subjects Vector of subjects to extract data for.
+#' @param subjects Vector of subjectkeys.
 #' @param t timepoint of data collection (0: baseline, 1: 1yfu, ...)
 #' @param discretize Boolean indicating if the loneliness measures should be
 #' discretized into quartiles
@@ -296,7 +296,7 @@ get_loneliness <- function(mh_y_or,
 #' Extract healthy behaviours: screen time questionnaire
 #'
 #' @param nt_p_stq ABCD Parent Screen Time Survey
-#' @param subjects Vector of subjects to extract data for.
+#' @param subjects Vector of subjectkeys.
 #' @param t timepoint of data collection (0: baseline, 1: 1yfu, ...)
 #'
 #' @return screen_time
@@ -331,7 +331,7 @@ get_screen_time <- function(nt_p_stq, subjects = NULL, t = NULL) {
 #'
 #' @param ph_p_saiq ABCD Parent Sports and Activities Involvement
 #' Questionnaire
-#' @param subjects Vector of subjects to extract data for.
+#' @param subjects Vector of subjectkeys.
 #' @param t timepoint of data collection (0: baseline, 1: 1yfu, ...)
 #'
 #' @return activities
@@ -369,7 +369,7 @@ get_sports_and_activities <- function(ph_p_saiq, subjects = NULL, t = NULL) {
 #'
 #' @param ph_y_yrb ABCD Youth Youth Risk Behavior Survey Exercise Physical
 #' Activity
-#' @param subjects Vector of subjects to extract data for.
+#' @param subjects Vector of subjectkeys.
 #' @param t timepoint of data collection (0: baseline, 1: 1yfu, ...)
 #'
 #' @return exercise
@@ -396,7 +396,7 @@ get_exercise <- function(ph_y_yrb, subjects = NULL, t = NULL) {
 #' Extract parent psychopathology
 #'
 #' @param mh_p_asr ABCD Parent Adult Self Report Scores Aseba
-#' @param subjects Vector of subjects to extract data for.
+#' @param subjects Vector of subjectkeys.
 #' @param t timepoint of data collection (0: baseline, 1: 1yfu, ...)
 #' @param raw Boolean indicating if extracted data should be raw (TRUE) or
 #'  t-scores (FALSE). Defaults to TRUE.
@@ -447,7 +447,7 @@ get_parent_psychopathology <- function(mh_p_asr,
 #' Get nihtbx list sorting data
 #'
 #' @param abcd_tbss01 NDA nihtbx dataframe
-#' @param subjects Vector of subjects to extract data for.
+#' @param subjects Vector of subjectkeys.
 #' @param t timepoint of data collection (0: baseline, 1: 1yfu, ...)
 #'
 #' @return nihtbx_list_fc list sorting data
@@ -468,7 +468,7 @@ get_nihtbx_list_fc <- function(abcd_tbss01, subjects = NULL, t = NULL) {
 #' Get nihtbx cardsort data
 #'
 #' @param abcd_tbss01 NDA nihtbx dataframe
-#' @param subjects Vector of subjects to extract data for.
+#' @param subjects Vector of subjectkeys.
 #' @param t timepoint of data collection (0: baseline, 1: 1yfu, ...)
 #'
 #' @return nihtbx_cardsort_fc cardsort data
@@ -489,7 +489,7 @@ get_nihtbx_cardsort_fc <- function(abcd_tbss01, subjects = NULL, t = NULL) {
 #' Get nihtbx pattern data
 #'
 #' @param abcd_tbss01 NDA nihtbx dataframe
-#' @param subjects Vector of subjects to extract data for.
+#' @param subjects Vector of subjectkeys.
 #' @param t timepoint of data collection (0: baseline, 1: 1yfu, ...)
 #'
 #' @return nihtbx_pattern_fc pattern data
@@ -510,7 +510,7 @@ get_nihtbx_pattern_fc <- function(abcd_tbss01, subjects = NULL, t = NULL) {
 #' Extract subcortical volumes
 #'
 #' @param mri_y_smr_vol_aseg Data file containing subcortical data
-#' @param subjects Vector of subjects to extract data for.
+#' @param subjects Vector of subjectkeys.
 #' @param t timepoint of data collection (0: baseline, 1: 1yfu, ...)
 #'
 #' @return subc_v_df Dataframe of subcortical volumes
@@ -528,7 +528,7 @@ get_subc_v <- function(mri_y_smr_vol_aseg, subjects = NULL, t = NULL) {
 #' Extract cortical thicknesses
 #'
 #' @param mri_y_smr_thk_dsk Data file containing cortical data
-#' @param subjects Vector of subjects to extract data for.
+#' @param subjects Vector of subjectkeys.
 #' @param t timepoint of data collection (0: baseline, 1: 1yfu, ...)
 #'
 #' @return cort_t_df Dataframe of cortical thicknesses
@@ -549,7 +549,7 @@ get_cort_t <- function(mri_y_smr_thk_dsk, subjects = NULL, t = NULL) {
 #' Extract cortical surface areas
 #'
 #' @param mri_y_smr_area_dsk Data file containing cortical data
-#' @param subjects Vector of subjects to extract data for.
+#' @param subjects Vector of subjectkeys.
 #' @param t timepoint of data collection (0: baseline, 1: 1yfu, ...)
 #'
 #' @return cort_sa_df Dataframe of cortical surface areas
@@ -575,7 +575,7 @@ get_cort_sa <- function(mri_y_smr_area_dsk, subjects = NULL, t = NULL) {
 #'
 #' @param mri_y_rsi_rnd_at Data file containing neurite density data
 #' @param mri_y_rsi_rnd_wm_dsk Data file containing neurite density data
-#' @param subjects Vector of subjects to extract data for.
+#' @param subjects Vector of subjectkeys.
 #' @param t timepoint of data collection (0: baseline, 1: 1yfu, ...)
 #'
 #' @return wmnd_df Dataframe of white matter neurite densities
@@ -601,7 +601,7 @@ get_all_wmnd <- function(mri_y_rsi_rnd_at,
 #' Extract cortical network correlations
 #'
 #' @param mri_y_rsfmr_cor_gp_gp Data file containing neurite density data
-#' @param subjects Vector of subjects to extract data for.
+#' @param subjects Vector of subjectkeys.
 #' @param t timepoint of data collection (0: baseline, 1: 1yfu, ...)
 #'
 #' @return gord_cor Dataframe of white matter neurite densities
@@ -631,7 +631,7 @@ get_gord_cor <- function(mri_y_rsfmr_cor_gp_gp, subjects = NULL, t = NULL) {
 #' Extract subcortical network correlations
 #'
 #' @param mri_y_rsfmr_cor_gp_aseg Data file containing neurite density data
-#' @param subjects Vector of subjects to extract data for.
+#' @param subjects Vector of subjectkeys.
 #' @param t timepoint of data collection (0: baseline, 1: 1yfu, ...)
 #'
 #' @return subc_cor Dataframe of white matter neurite densities
@@ -661,7 +661,7 @@ get_subc_cor <- function(mri_y_rsfmr_cor_gp_aseg, subjects = NULL, t = NULL) {
 #' Extract cortical temporal variances
 #'
 #' @param mri_y_rsfmr_var_gp Data file containing neurite density data
-#' @param subjects Vector of subjects to extract data for.
+#' @param subjects Vector of subjectkeys.
 #' @param t timepoint of data collection (0: baseline, 1: 1yfu, ...)
 #'
 #' @return subc_cor Dataframe of white matter neurite densities
@@ -682,7 +682,7 @@ get_gord_var <- function(mri_y_rsfmr_var_gp, subjects = NULL, t = NULL) {
 #' Extract cortical temporal variances
 #'
 #' @param mrirstv02 Data file containing neurite density data
-#' @param subjects Vector of subjects to extract data for.
+#' @param subjects Vector of subjectkeys.
 #' @param t timepoint of data collection (0: baseline, 1: 1yfu, ...)
 #'
 #' @return subc_cor Dataframe of white matter neurite densities
@@ -711,7 +711,7 @@ get_subc_var <- function(mrirstv02, subjects = NULL, t = NULL) {
 #'
 #' @param ph_p_otbi TBI dataframe
 #' @param abcd_y_lt Dataframe containing age information
-#' @param subjects Vector of subjects to extract data for.
+#' @param subjects Vector of subjectkeys.
 #' @param t timepoint of data collection (0: baseline, 1: 1yfu, ...)
 #' @param cutoff Maximum number of mtbis to be reported
 #'
@@ -748,7 +748,7 @@ get_mtbi_count <- function(ph_p_otbi,
 #' Get subject headache history
 #'
 #' @param ph_p_mhx Dataframe containing medical history
-#' @param subjects Vector of subjects to extract data for.
+#' @param subjects Vector of subjectkeys.
 #' @param t timepoint of data collection (0: baseline, 1: 1yfu, ...)
 #'
 #' @return headaches Dataframe containing headache history
@@ -767,7 +767,7 @@ get_headaches <- function(ph_p_mhx, subjects = NULL, t = NULL) {
 #'
 #' @param ph_p_pds Dataframe containing parent pubertal status report
 #' @param ph_y_pds Dataframe containing youth pubertal status report
-#' @param subjects Vector of subjects to extract data for.
+#' @param subjects Vector of subjectkeys.
 #' @param t timepoint of data collection (0: baseline, 1: 1yfu, ...)
 #' @param max_value Maximum value for pubertal status
 #'
@@ -835,7 +835,7 @@ get_pubertal_status <- function(ph_p_pds,
 #' Low: $0 - $50k, Medium: $50k - $100k, High: > $100k
 #'
 #' @param abcd_p_demo Dataframe containing parent demographic information
-#' @param subjects Vector of subjects to extract data for.
+#' @param subjects Vector of subjectkeys.
 #' @param t timepoint of data collection (0: baseline, 1: 1yfu, ...)
 #'
 #' @return income_df Dataframe containing household incomes
@@ -876,7 +876,7 @@ get_income <- function(abcd_p_demo, subjects = NULL, t = NULL) {
 #' are provided. Otherwise, a single categorical variable is returned.
 #'
 #' @param abcd_p_demo Dataframe containing parent demographic information
-#' @param subjects Vector of subjects to extract data for.
+#' @param subjects Vector of subjectkeys.
 #' @param t timepoint of data collection (0: baseline, 1: 1yfu, ...)
 #' @param dummy String indicating format to output race data
 #' @param asian_as_other If TRUE, Asian category is included in "other".
@@ -1029,7 +1029,7 @@ format_race <- function(race_df, format) {
 #' Return dataframe containing interview age of specified subjects
 #'
 #' @param abcd_df Any ABCD dataframe containing interview age
-#' @param subjects Vector of subjects to extract data for.
+#' @param subjects Vector of subjectkeys.
 #' @param t timepoint of data collection (0: baseline, 1: 1yfu, ...)
 #' @param as_years Logical indicating whether to convert age to years
 #'
@@ -1055,7 +1055,7 @@ get_interview_age <- function(abcd_df,
 #' Return dataframe containing sex of specified subjects
 #'
 #' @param gish_p_gi Parent report of sex and gender dataframe
-#' @param subjects Vector of subjects to extract data for.
+#' @param subjects Vector of subjectkeys.
 #' @param t timepoint of data collection (0: baseline, 1: 1yfu, ...)
 #' @param format
 #'     String indicating format to output sex data.
@@ -1128,7 +1128,7 @@ get_sex <- function(gish_p_gi,
 #' Return dataframe containing parent-reported genders
 #'
 #' @param gish_p_gi Parent report of sex and gender dataframe
-#' @param subjects Vector of subjects to extract data for.
+#' @param subjects Vector of subjectkeys.
 #' @param t timepoint of data collection (0: baseline, 1: 1yfu, ...)
 #'
 #' @return sex Dataframe containing sex
@@ -1161,7 +1161,7 @@ get_p_gender <- function(gish_p_gi, subjects = NULL, t = t) {
 #' Return dataframe containing youth-reported genders
 #'
 #' @param gish_y_gi Youth-reported gender dataframe
-#' @param subjects Vector of subjects to extract data for.
+#' @param subjects Vector of subjectkeys.
 #' @param t timepoint of data collection (0: baseline, 1: 1yfu, ...)
 #'
 #' @return sex Dataframe containing sex
@@ -1195,7 +1195,7 @@ get_y_gender <- function(gish_y_gi, subjects = NULL, t = t) {
 #'
 #' @param ph_p_otbi TBI dataframe
 #' @param abcd_y_lt Dataframe containing age information
-#' @param subjects Vector of subjects to extract data for.
+#' @param subjects Vector of subjectkeys.
 #' @param t timepoint of data collection (0: baseline, 1: 1yfu, ...)
 #' @param as_years Logical indicating whether to convert age to years
 #'
@@ -1267,7 +1267,7 @@ get_mtbi_age_l <- function(abcd_lpohstbi01, l_subs, y1_subs, y2_subs) {
 #'  "thought", "attention", "rulebreak", and "aggressive"
 #' @param raw Boolean indicating if extracted data should be raw (TRUE) or
 #'  t-scores (FALSE). Defaults to TRUE.
-#' @param subjects Vector of subjects to extract data for.
+#' @param subjects Vector of subjectkeys.
 #' @param t timepoint of data collection (0: baseline, 1: 1yfu, ...)
 #'
 #' @return ss_data Dataframe containing syndrome scale data
@@ -1312,7 +1312,7 @@ get_cbcl_syndrome_scale <- function(mh_p_cbcl,
 #' Get CBCL headache data
 #'
 #' @param mh_p_cbcl NDA cbcl dataframe
-#' @param subjects Vector of subjects to extract data for.
+#' @param subjects Vector of subjectkeys.
 #' @param t timepoint of data collection (0: baseline, 1: 1yfu, ...)
 #'
 #' @return cbcl_headaches headache data
@@ -1334,7 +1334,7 @@ get_cbcl_headaches <- function(mh_p_cbcl, subjects = NULL, t = NULL) {
 #' Get CBCL nausea data
 #'
 #' @param mh_p_cbcl NDA cbcl dataframe
-#' @param subjects Vector of subjects to extract data for.
+#' @param subjects Vector of subjectkeys.
 #' @param t timepoint of data collection (0: baseline, 1: 1yfu, ...)
 #'
 #' @return cbcl_nausea nausea data
@@ -1356,7 +1356,7 @@ get_cbcl_nausea <- function(mh_p_cbcl, subjects = NULL, t = NULL) {
 #' Get CBCL vomiting data
 #'
 #' @param mh_p_cbcl NDA cbcl dataframe
-#' @param subjects Vector of subjects to extract data for.
+#' @param subjects Vector of subjectkeys.
 #' @param t timepoint of data collection (0: baseline, 1: 1yfu, ...)
 #'
 #' @return cbcl_vomiting vomiting data
@@ -1378,7 +1378,7 @@ get_cbcl_vomiting <- function(mh_p_cbcl, subjects = NULL, t = NULL) {
 #' Get CBCL dizzy data
 #'
 #' @param mh_p_cbcl NDA cbcl dataframe
-#' @param subjects Vector of subjects to extract data for.
+#' @param subjects Vector of subjectkeys.
 #' @param t timepoint of data collection (0: baseline, 1: 1yfu, ...)
 #'
 #' @return cbcl_dizzy dizzy data
@@ -1400,7 +1400,7 @@ get_cbcl_dizzy <- function(mh_p_cbcl, subjects = NULL, t = NULL) {
 #' Get CBCL overtired data
 #'
 #' @param mh_p_cbcl NDA cbcl dataframe
-#' @param subjects Vector of subjects to extract data for.
+#' @param subjects Vector of subjectkeys.
 #' @param t timepoint of data collection (0: baseline, 1: 1yfu, ...)
 #'
 #' @return cbcl_overtired overtired data
@@ -1422,7 +1422,7 @@ get_cbcl_overtired <- function(mh_p_cbcl, subjects = NULL, t = NULL) {
 #' Get CBCL sleeping_more data
 #'
 #' @param mh_p_cbcl NDA cbcl dataframe
-#' @param subjects Vector of subjects to extract data for.
+#' @param subjects Vector of subjectkeys.
 #' @param t timepoint of data collection (0: baseline, 1: 1yfu, ...)
 #'
 #' @return cbcl_sleeping_more sleeping_more data
@@ -1444,7 +1444,7 @@ get_cbcl_sleeping_more <- function(mh_p_cbcl, subjects = NULL, t = NULL) {
 #' Get CBCL sleeping_less data
 #'
 #' @param mh_p_cbcl NDA cbcl dataframe
-#' @param subjects Vector of subjects to extract data for.
+#' @param subjects Vector of subjectkeys.
 #' @param t timepoint of data collection (0: baseline, 1: 1yfu, ...)
 #'
 #' @return cbcl_sleeping_less sleeping_less data
@@ -1466,7 +1466,7 @@ get_cbcl_sleeping_less <- function(mh_p_cbcl, subjects = NULL, t = NULL) {
 #' Get CBCL depression data
 #'
 #' @param mh_p_cbcl NDA cbcl dataframe
-#' @param subjects Vector of subjects to extract data for.
+#' @param subjects Vector of subjectkeys.
 #' @param t timepoint of data collection (0: baseline, 1: 1yfu, ...)
 #' @param raw Logical value indicating if raw or borderline/clinical
 #'  thresholded values should be obtained
@@ -1510,7 +1510,7 @@ get_cbcl_depress <- function(mh_p_cbcl, subjects = NULL, t = NULL,
 #' Get CBCL anxiety data
 #'
 #' @param mh_p_cbcl NDA cbcl dataframe
-#' @param subjects Vector of subjects to extract data for.
+#' @param subjects Vector of subjectkeys.
 #' @param t timepoint of data collection (0: baseline, 1: 1yfu, ...)
 #' @param raw Logical value indicating if raw or borderline/clinical
 #'  thresholded values should be obtained
@@ -1554,7 +1554,7 @@ get_cbcl_anxiety <- function(mh_p_cbcl, subjects = NULL, t = NULL,
 #' Get CBCL attention data
 #'
 #' @param mh_p_cbcl NDA cbcl dataframe
-#' @param subjects Vector of subjects to extract data for.
+#' @param subjects Vector of subjectkeys.
 #' @param t timepoint of data collection (0: baseline, 1: 1yfu, ...)
 #' @param raw Logical value indicating if raw or borderline/clinical
 #'  thresholded values should be obtained
@@ -1599,7 +1599,7 @@ get_cbcl_attention <- function(mh_p_cbcl, subjects = NULL, t = NULL,
 #' Get CBCL aggressive data
 #'
 #' @param mh_p_cbcl NDA cbcl dataframe
-#' @param subjects Vector of subjects to extract data for.
+#' @param subjects Vector of subjectkeys.
 #' @param t timepoint of data collection (0: baseline, 1: 1yfu, ...)
 #' @param raw Logical value indicating if raw or borderline/clinical
 #'  thresholded values should be obtained
@@ -1645,7 +1645,7 @@ get_cbcl_aggressive <- function(mh_p_cbcl, subjects = NULL, t = NULL,
 #'
 #' @param ph_p_otbi TBI dataframe
 #' @param abcd_y_lt Dataframe containing age information
-#' @param subjects Vector of subjects to extract data for.
+#' @param subjects Vector of subjectkeys.
 #' @param t timepoint of data collection (0: baseline, 1: 1yfu, ...)
 #' @param format Variable indicating if df is dummied or undummied
 #'
@@ -1684,7 +1684,7 @@ get_mtbi_mechanism <- function(ph_p_otbi,
 #'
 #' @param ph_p_otbi TBI dataframe
 #' @param abcd_y_lt Dataframe containing age information
-#' @param subjects Vector of subjects to extract data for.
+#' @param subjects Vector of subjectkeys.
 #' @param t timepoint of data collection (0: baseline, 1: 1yfu, ...)
 #'
 #' @return mtbi_loc Dataframe containing latest_mtbi_loc
@@ -1749,7 +1749,7 @@ get_mtbi_loc_l <- function(ph_p_otbi, abcd_y_lt, l_subs, y1_subs, y2_subs) {
 #'
 #' @param ph_p_otbi TBI dataframe
 #' @param abcd_y_lt Dataframe containing age information
-#' @param subjects Vector of subjects to extract data for.
+#' @param subjects Vector of subjectkeys.
 #' @param t timepoint of data collection (0: baseline, 1: 1yfu, ...)
 #'
 #' @return mtbi_mem_daze Dataframe containing latest_mtbi_mem_daze

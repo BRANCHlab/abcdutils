@@ -24,7 +24,7 @@ t-scores (FALSE). Defaults to TRUE.}
 
 \item{t}{timepoint of data collection (0: baseline, 1: 1yfu, ...)}
 
-\item{subjects}{Vector of subjects to extract data for.}
+\item{subjects}{Vector of subjectkeys.}
 }
 \value{
 ss_data Dataframe containing syndrome scale data

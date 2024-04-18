@@ -11,7 +11,7 @@ get_mtbi_count(ph_p_otbi, abcd_y_lt, subjects = NULL, cutoff = NULL, t = NULL)
 
 \item{abcd_y_lt}{Dataframe containing age information}
 
-\item{subjects}{Vector of subjects to extract data for.}
+\item{subjects}{Vector of subjectkeys.}
 
 \item{cutoff}{Maximum number of mtbis to be reported}
 

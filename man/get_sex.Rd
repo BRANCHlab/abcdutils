@@ -16,7 +16,7 @@ get_sex(
 \arguments{
 \item{gish_p_gi}{Parent report of sex and gender dataframe}
 
-\item{subjects}{Vector of subjects to extract data for.}
+\item{subjects}{Vector of subjectkeys.}
 
 \item{t}{timepoint of data collection (0: baseline, 1: 1yfu, ...)}
 

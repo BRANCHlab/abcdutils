@@ -9,7 +9,7 @@ get_subc_cor(mri_y_rsfmr_cor_gp_aseg, subjects = NULL, t = NULL)
 \arguments{
 \item{mri_y_rsfmr_cor_gp_aseg}{Data file containing neurite density data}
 
-\item{subjects}{Vector of subjects to extract data for.}
+\item{subjects}{Vector of subjectkeys.}
 
 \item{t}{timepoint of data collection (0: baseline, 1: 1yfu, ...)}
 }

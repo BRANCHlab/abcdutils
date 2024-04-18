@@ -9,7 +9,7 @@ get_parent_psychopathology(mh_p_asr, subjects = NULL, t = NULL, raw = TRUE)
 \arguments{
 \item{mh_p_asr}{ABCD Parent Adult Self Report Scores Aseba}
 
-\item{subjects}{Vector of subjects to extract data for.}
+\item{subjects}{Vector of subjectkeys.}
 
 \item{t}{timepoint of data collection (0: baseline, 1: 1yfu, ...)}
 

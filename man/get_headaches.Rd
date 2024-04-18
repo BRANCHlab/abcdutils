@@ -9,7 +9,7 @@ get_headaches(ph_p_mhx, subjects = NULL, t = NULL)
 \arguments{
 \item{ph_p_mhx}{Dataframe containing medical history}
 
-\item{subjects}{Vector of subjects to extract data for.}
+\item{subjects}{Vector of subjectkeys.}
 
 \item{t}{timepoint of data collection (0: baseline, 1: 1yfu, ...)}
 }

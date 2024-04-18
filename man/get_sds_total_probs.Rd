@@ -9,7 +9,7 @@ get_sds_total_probs(ph_p_sds, subjects = NULL, t = NULL)
 \arguments{
 \item{ph_p_sds}{Dataframe containing sleep disturbance scale data.}
 
-\item{subjects}{Vector of subjects to extract data for.}
+\item{subjects}{Vector of subjectkeys.}
 
 \item{t}{timepoint of data collection (0: baseline, 1: 1yfu, ...)}
 }

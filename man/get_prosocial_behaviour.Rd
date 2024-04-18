@@ -17,7 +17,7 @@ get_prosocial_behaviour(
 
 \item{ce_y_psb}{Youth Prosocial Behavior Survey}
 
-\item{subjects}{Vector of subjects to extract data for.}
+\item{subjects}{Vector of subjectkeys.}
 
 \item{no_zero}{Boolean indicating if zero values should be replaced with 1}
 

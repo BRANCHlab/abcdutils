@@ -11,7 +11,7 @@ get_all_wmnd(mri_y_rsi_rnd_at, mri_y_rsi_rnd_wm_dsk, subjects = NULL, t = NULL)
 
 \item{mri_y_rsi_rnd_wm_dsk}{Data file containing neurite density data}
 
-\item{subjects}{Vector of subjects to extract data for.}
+\item{subjects}{Vector of subjectkeys.}
 
 \item{t}{timepoint of data collection (0: baseline, 1: 1yfu, ...)}
 }

@@ -9,7 +9,7 @@ get_subc_v(mri_y_smr_vol_aseg, subjects = NULL, t = NULL)
 \arguments{
 \item{mri_y_smr_vol_aseg}{Data file containing subcortical data}
 
-\item{subjects}{Vector of subjects to extract data for.}
+\item{subjects}{Vector of subjectkeys.}
 
 \item{t}{timepoint of data collection (0: baseline, 1: 1yfu, ...)}
 }

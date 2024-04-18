@@ -10,7 +10,7 @@ get_exercise(ph_y_yrb, subjects = NULL, t = NULL)
 \item{ph_y_yrb}{ABCD Youth Youth Risk Behavior Survey Exercise Physical
 Activity}
 
-\item{subjects}{Vector of subjects to extract data for.}
+\item{subjects}{Vector of subjectkeys.}
 
 \item{t}{timepoint of data collection (0: baseline, 1: 1yfu, ...)}
 }

@@ -13,7 +13,7 @@ Modified from PhenX}
 \item{ce_p_fes}{ABCD Parent Family Environment Scale-Family Conflict
 Subscale Modified from PhenX}
 
-\item{subjects}{Vector of subjects to extract data for.}
+\item{subjects}{Vector of subjectkeys.}
 
 \item{t}{timepoint of data collection (0: baseline, 1: 1yfu, ...)}
 }

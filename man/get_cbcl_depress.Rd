@@ -16,7 +16,7 @@ get_cbcl_depress(
 \arguments{
 \item{mh_p_cbcl}{NDA cbcl dataframe}
 
-\item{subjects}{Vector of subjects to extract data for.}
+\item{subjects}{Vector of subjectkeys.}
 
 \item{t}{timepoint of data collection (0: baseline, 1: 1yfu, ...)}
 

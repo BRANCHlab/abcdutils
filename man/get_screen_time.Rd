@@ -9,7 +9,7 @@ get_screen_time(nt_p_stq, subjects = NULL, t = NULL)
 \arguments{
 \item{nt_p_stq}{ABCD Parent Screen Time Survey}
 
-\item{subjects}{Vector of subjects to extract data for.}
+\item{subjects}{Vector of subjectkeys.}
 
 \item{t}{timepoint of data collection (0: baseline, 1: 1yfu, ...)}
 }

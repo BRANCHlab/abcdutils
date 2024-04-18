@@ -11,7 +11,7 @@ get_mtbi_loc(ph_p_otbi, abcd_y_lt, subjects = NULL, t = NULL)
 
 \item{abcd_y_lt}{Dataframe containing age information}
 
-\item{subjects}{Vector of subjects to extract data for.}
+\item{subjects}{Vector of subjectkeys.}
 
 \item{t}{timepoint of data collection (0: baseline, 1: 1yfu, ...)}
 }
