@@ -1118,6 +1118,8 @@ get_sex <- function(gish_p_gi,
                 sex = dplyr::case_when(
                     sex == "F" ~ 0,
                     sex == "M" ~ 1,
+                    sex == "IM" ~ 2,
+                    sex == "IF" ~ 3,
                     TRUE ~ NA
                 )
             )
