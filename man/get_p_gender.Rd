@@ -4,7 +4,7 @@
 \alias{get_p_gender}
 \title{Return dataframe containing parent-reported genders}
 \usage{
-get_p_gender(gish_p_gi, subjects = NULL, t = t)
+get_p_gender(gish_p_gi, subjects = NULL, t = t, match_y_report = FALSE)
 }
 \arguments{
 \item{gish_p_gi}{Parent report of sex and gender dataframe}
@@ -12,10 +12,14 @@ get_p_gender(gish_p_gi, subjects = NULL, t = t)
 \item{subjects}{Vector of subjectkeys.}
 
 \item{t}{timepoint of data collection (0: baseline, 1: 1yfu, ...)}
-}
-\value{
-sex Dataframe containing sex
+
+\item{match_y_report}{If TRUE, codes outcomes to match youth report options
+at follow up timepoints (male, female, non-binary, NA). If FALSE, uses
+response options provided to parents (male, female, trans male, trans
+female, gender queer, and NA). In both cases, "refuse to answer" and
+"don't know" are pooled with the NA option.}
 }
 \description{
-Return dataframe containing parent-reported genders
+Collected parent reported gender information from the \code{demo_gender_id_v2}
+column of the \code{gish_p_gi} table.
 }

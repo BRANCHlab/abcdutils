@@ -1129,14 +1129,23 @@ get_sex <- function(gish_p_gi,
 
 #' Return dataframe containing parent-reported genders
 #'
+#' Collected parent reported gender information from the `demo_gender_id_v2`
+#' column of the `gish_p_gi` table.
+#'
 #' @param gish_p_gi Parent report of sex and gender dataframe
 #' @param subjects Vector of subjectkeys.
 #' @param t timepoint of data collection (0: baseline, 1: 1yfu, ...)
-#'
-#' @return sex Dataframe containing sex
+#' @param match_y_report If TRUE, codes outcomes to match youth report options
+#' at follow up timepoints (male, female, non-binary, NA). If FALSE, uses
+#' response options provided to parents (male, female, trans male, trans
+#' female, gender queer, and NA). In both cases, "refuse to answer" and
+#' "don't know" are pooled with the NA option.
 #'
 #' @export
-get_p_gender <- function(gish_p_gi, subjects = NULL, t = t) {
+get_p_gender <- function(gish_p_gi,
+                         subjects = NULL,
+                         t = t,
+                         match_y_report = FALSE) {
     pgi <- gish_p_gi |>
         filter_subjects(subjects = subjects) |>
         filter_timepoint(t = t) |>
@@ -1148,15 +1157,34 @@ get_p_gender <- function(gish_p_gi, subjects = NULL, t = t) {
         dplyr::rename(
             "p_gender" = "demo_gender_id_v2",
         )
-    gender <- gender |>
-        dplyr::mutate(
-            p_gender = dplyr::case_when(
-                p_gender == 1 ~ "M",
-                p_gender == 2 ~ "F",
-                p_gender == 3 ~ "NB",
-                TRUE ~ NA
+    if (match_y_report) {
+        gender <- gender |>
+            dplyr::mutate(
+                p_gender = dplyr::case_when(
+                    p_gender == 1 ~ "M",
+                    p_gender == 2 ~ "F",
+                    p_gender == 3 ~ "NB",
+                    p_gender == 4 ~ "NB",
+                    p_gender == 5 ~ "NB",
+                    p_gender == 6 ~ "NB",
+                    TRUE ~ NA
+                )
             )
-        )
+    } else {
+        gender <- gender |>
+            dplyr::mutate(
+                p_gender = dplyr::case_when(
+                    p_gender == 1 ~ "M",
+                    p_gender == 2 ~ "F",
+                    p_gender == 3 ~ "TM",
+                    p_gender == 4 ~ "TF",
+                    p_gender == 5 ~ "Q",
+                    p_gender == 6 ~ "ONB",
+                    TRUE ~ NA
+                )
+            )
+
+    }
     return(gender)
 }
 
