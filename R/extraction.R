@@ -770,6 +770,8 @@ get_headaches <- function(ph_p_mhx, subjects = NULL, t = NULL) {
 #' @param subjects Vector of subjectkeys.
 #' @param t timepoint of data collection (0: baseline, 1: 1yfu, ...)
 #' @param max_value Maximum value for pubertal status
+#' @param reports If "split" (default), returns parent and youth PDS scores.
+#' If "mean", returns the average of the parent and youth PDS scores.
 #'
 #' @return pubertal_status Dataframe containing average pubertal status
 #'
@@ -778,30 +780,36 @@ get_pubertal_status <- function(ph_p_pds,
                                 ph_y_pds,
                                 subjects = NULL,
                                 max_value = NULL,
+                                reports = "split",
                                 t = NULL) {
     youth_pubertal_df <- ph_y_pds |>
-        filter_subjects(subjects = subjects) |>
-        filter_timepoint(t = t)
+        filter_timepoint(t = t) |>
+        filter_subjects(subjects = subjects)
+    print(nrow(youth_pubertal_df))
     parent_pubertal_df <- ph_p_pds |>
-        filter_subjects(subjects = subjects) |>
-        filter_timepoint(t = t)
+        filter_timepoint(t = t) |>
+        filter_subjects(subjects = subjects)
     # Merge parent and youth dataframes
-    puberty_full <- dplyr::inner_join(
+    puberty_full <- dplyr::full_join(
         youth_pubertal_df,
         parent_pubertal_df,
         by = "subjectkey"
     )
     # Assign proper column types
-    puberty_full$"pds_y_ss_female_category" <-
-        as.numeric(puberty_full$"pds_y_ss_female_category")
-    puberty_full$"pds_p_ss_female_category" <-
-        as.numeric(puberty_full$"pds_p_ss_female_category")
-    puberty_full$"pds_y_ss_male_category" <-
-        as.numeric(puberty_full$"pds_y_ss_male_category")
-    puberty_full$"pds_p_ss_male_category" <-
-        as.numeric(puberty_full$"pds_p_ss_male_category")
+    puberty_full$"pds_y_ss_female_category" <- as.numeric(
+        puberty_full$"pds_y_ss_female_category"
+    )
+    puberty_full$"pds_p_ss_female_category" <- as.numeric(
+        puberty_full$"pds_p_ss_female_category"
+    )
+    puberty_full$"pds_y_ss_male_category" <- as.numeric(
+        puberty_full$"pds_y_ss_male_category"
+    )
+    puberty_full$"pds_p_ss_male_category" <- as.numeric(
+        puberty_full$"pds_p_ss_male_category"
+    )
     # Composite pubertal status by averaging parent and youth reports
-    puberty_full$pubertal_status <- rowMeans(
+    puberty_full$pubertal_status_mean <- rowMeans(
         puberty_full[,
             c(
                 "pds_y_ss_female_category",
@@ -812,20 +820,64 @@ get_pubertal_status <- function(ph_p_pds,
         ],
         na.rm = TRUE
     )
+    puberty_full$pubertal_status_y <- rowMeans(
+        puberty_full[,
+            c(
+                "pds_y_ss_female_category",
+                "pds_y_ss_male_category"
+            )
+        ],
+        na.rm = TRUE
+    )
+    puberty_full$pubertal_status_p <- rowMeans(
+        puberty_full[,
+            c(
+                "pds_p_ss_female_category",
+                "pds_p_ss_male_category"
+            )
+        ],
+        na.rm = TRUE
+    )
     # Select relevant variables
     pubertal_status_df <- puberty_full |>
         dplyr::select(
             "subjectkey",
-            "pubertal_status"
+            "pubertal_status_mean",
+            "pubertal_status_y",
+            "pubertal_status_p"
         )
     if (!is.null(max_value)) {
         pubertal_status_df <- pubertal_status_df |>
             dplyr::mutate(
-                pubertal_status = dplyr::case_when(
-                    pubertal_status > max_value ~ max_value,
-                    TRUE ~ pubertal_status
+                pubertal_status_mean = dplyr::case_when(
+                    pubertal_status_mean > max_value ~ max_value,
+                    TRUE ~ pubertal_status_mean
+                ),
+                pubertal_status_y = dplyr::case_when(
+                    pubertal_status_y > max_value ~ max_value,
+                    TRUE ~ pubertal_status_y
+                ),
+                pubertal_status_p = dplyr::case_when(
+                    pubertal_status_p > max_value ~ max_value,
+                    TRUE ~ pubertal_status_p
                 )
             )
+    }
+    if (reports == "split") {
+        pubertal_status_df <- pubertal_status_df |>
+            dplyr::select(
+                "subjectkey",
+                "pubertal_status_y",
+                "pubertal_status_p"
+            )
+    } else if (reports == "mean"){
+        pubertal_status_df <- pubertal_status_df |>
+            dplyr::select(
+                "subjectkey",
+                "pubertal_status_mean"
+            )
+    } else {
+        stop("Invalid `reports` value.")
     }
     return(pubertal_status_df)
 }

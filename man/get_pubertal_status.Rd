@@ -9,6 +9,7 @@ get_pubertal_status(
   ph_y_pds,
   subjects = NULL,
   max_value = NULL,
+  reports = "split",
   t = NULL
 )
 }
@@ -20,6 +21,9 @@ get_pubertal_status(
 \item{subjects}{Vector of subjectkeys.}
 
 \item{max_value}{Maximum value for pubertal status}
+
+\item{reports}{If "split" (default), returns parent and youth PDS scores.
+If "mean", returns the average of the parent and youth PDS scores.}
 
 \item{t}{timepoint of data collection (0: baseline, 1: 1yfu, ...)}
 }

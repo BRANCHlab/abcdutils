@@ -34,8 +34,8 @@ filter_subjects <- function(abcd_df, subjects = NULL) {
         if (isFALSE(inherits(subjects, "character"))) {
             stop("Subjects must be a character vector.")
         }
-        keep_subs <- abcd_df$"subjectkey" %in% subjects
-        filtered_df <- abcd_df[keep_subs, ]
+        keep_df <- data.frame(subjectkey = subjects)
+        filtered_df <- dplyr::left_join(keep_df, abcd_df, by = "subjectkey")
         return(filtered_df)
     }
 }
