@@ -11,8 +11,8 @@
 #' @export
 get_sds_total_probs <- function(ph_p_sds, subjects = NULL, t = NULL) {
     sds_df <- ph_p_sds |>
-        filter_subjects(subjects = subjects) |>
-        filter_timepoint(t = t)
+        filter_timepoint(t = t) |>
+        filter_subjects(subjects = subjects)
     sds_total <- sds_df |>
         dplyr::select(
             "subjectkey",
@@ -37,11 +37,11 @@ get_sds_total_probs <- function(ph_p_sds, subjects = NULL, t = NULL) {
 #' @export
 get_family_function <- function(ce_y_fes, ce_p_fes, subjects = NULL, t = NULL) {
     p_family_function  <- ce_y_fes |>
-        filter_subjects(subjects = subjects) |>
-        filter_timepoint(t = t)
+        filter_timepoint(t = t) |>
+        filter_subjects(subjects = subjects)
     y_family_function  <- ce_p_fes |>
-        filter_subjects(subjects = subjects) |>
-        filter_timepoint(t = t)
+        filter_timepoint(t = t) |>
+        filter_subjects(subjects = subjects)
     family_function  <- dplyr::inner_join(
         p_family_function,
         y_family_function,
@@ -113,11 +113,11 @@ get_prosocial_behaviour <- function(ce_p_psb,
                                     no_zero = FALSE,
                                     t = NULL) {
     pr_prosocial <- ce_p_psb |>
-        filter_subjects(subjects = subjects) |>
-        filter_timepoint(t = t)
+        filter_timepoint(t = t) |>
+        filter_subjects(subjects = subjects)
     yr_prosocial <- ce_y_psb |>
-        filter_subjects(subjects = subjects) |>
-        filter_timepoint(t = t)
+        filter_timepoint(t = t) |>
+        filter_subjects(subjects = subjects)
     prosocial <- dplyr::inner_join(
         pr_prosocial, yr_prosocial, by = "subjectkey"
     )
@@ -188,12 +188,12 @@ get_loneliness <- function(mh_y_or,
         )
     }
     gish_p_gi <- gish_p_gi |>
-        filter_subjects(subjects = subjects) |>
-        filter_timepoint(t = t)
+        filter_timepoint(t = t) |>
+        filter_subjects(subjects = subjects)
     sex <- get_sex(gish_p_gi, subjects, t = t)
     loneliness <- mh_y_or |>
-        filter_subjects(subjects = subjects) |>
-        filter_timepoint(t = t)
+        filter_timepoint(t = t) |>
+        filter_subjects(subjects = subjects)
     loneliness <- dplyr::full_join(
         loneliness,
         sex,
@@ -304,8 +304,8 @@ get_loneliness <- function(mh_y_or,
 #' @export
 get_screen_time <- function(nt_p_stq, subjects = NULL, t = NULL) {
     screen_time <- nt_p_stq |>
-        filter_subjects(subjects = subjects) |>
         filter_timepoint(t = t) |>
+        filter_subjects(subjects = subjects) |>
         dplyr::select(
             "subjectkey",
             "screentime1_p_hours",
@@ -339,8 +339,8 @@ get_screen_time <- function(nt_p_stq, subjects = NULL, t = NULL) {
 #' @export
 get_sports_and_activities <- function(ph_p_saiq, subjects = NULL, t = NULL) {
     sports <- ph_p_saiq |>
-        filter_subjects(subjects = subjects) |>
-        filter_timepoint(t = t)
+        filter_timepoint(t = t) |>
+        filter_subjects(subjects = subjects)
     sports <- sports |> dplyr::select("subjectkey", dplyr::starts_with("sai"))
     sports <- col_to_num(sports, 2:length(sports))
     # Number of activities organized inside of school
@@ -377,8 +377,8 @@ get_sports_and_activities <- function(ph_p_saiq, subjects = NULL, t = NULL) {
 #' @export
 get_exercise <- function(ph_y_yrb, subjects = NULL, t = NULL) {
     exercise <- ph_y_yrb |>
-        filter_subjects(subjects = subjects) |>
         filter_timepoint(t = t) |>
+        filter_subjects(subjects = subjects) |>
         dplyr::select("subjectkey", dplyr::ends_with("y"))
     # Taking the scaled average of all physical activity scores
     exercise <- exercise |>
@@ -455,8 +455,8 @@ get_parent_psychopathology <- function(mh_p_asr,
 #' @export
 get_nihtbx_list_fc <- function(abcd_tbss01, subjects = NULL, t = NULL) {
     nihtbx_full <- abcd_tbss01 |>
-        filter_subjects(subjects = subjects) |>
-        filter_timepoint(t = t)
+        filter_timepoint(t = t) |>
+        filter_subjects(subjects = subjects)
     nihtbx_list_fc <- nihtbx_full |>
         dplyr::select(
             "subjectkey",
@@ -476,8 +476,8 @@ get_nihtbx_list_fc <- function(abcd_tbss01, subjects = NULL, t = NULL) {
 #' @export
 get_nihtbx_cardsort_fc <- function(abcd_tbss01, subjects = NULL, t = NULL) {
     nihtbx_full <- abcd_tbss01 |>
-        filter_subjects(subjects = subjects) |>
-        filter_timepoint(t = t)
+        filter_timepoint(t = t) |>
+        filter_subjects(subjects = subjects)
     nihtbx_cardsort_fc <- nihtbx_full |>
         dplyr::select(
             "subjectkey",
@@ -497,8 +497,8 @@ get_nihtbx_cardsort_fc <- function(abcd_tbss01, subjects = NULL, t = NULL) {
 #' @export
 get_nihtbx_pattern_fc <- function(abcd_tbss01, subjects = NULL, t = NULL) {
     nihtbx_full <- abcd_tbss01 |>
-        filter_subjects(subjects = subjects) |>
-        filter_timepoint(t = t)
+        filter_timepoint(t = t) |>
+        filter_subjects(subjects = subjects)
     nihtbx_pattern_fc <- nihtbx_full |>
         dplyr::select(
             "subjectkey",
@@ -518,8 +518,8 @@ get_nihtbx_pattern_fc <- function(abcd_tbss01, subjects = NULL, t = NULL) {
 #' @export
 get_subc_v <- function(mri_y_smr_vol_aseg, subjects = NULL, t = NULL) {
     smri_raw <- mri_y_smr_vol_aseg |>
-        filter_subjects(subjects = subjects) |>
-        filter_timepoint(t = t)
+        filter_timepoint(t = t) |>
+        filter_subjects(subjects = subjects)
     subc_v_df <- smri_raw |>
         dplyr::select("subjectkey", "smri_vol_scs_wholeb")
     return(subc_v_df)
@@ -536,8 +536,8 @@ get_subc_v <- function(mri_y_smr_vol_aseg, subjects = NULL, t = NULL) {
 #' @export
 get_cort_t <- function(mri_y_smr_thk_dsk, subjects = NULL, t = NULL) {
     cort_raw <- mri_y_smr_thk_dsk |>
-        filter_subjects(subjects = subjects) |>
-        filter_timepoint(t = t)
+        filter_timepoint(t = t) |>
+        filter_subjects(subjects = subjects)
     cort_t_df <- cort_raw |>
         dplyr::select(
             "subjectkey",
@@ -557,8 +557,8 @@ get_cort_t <- function(mri_y_smr_thk_dsk, subjects = NULL, t = NULL) {
 #' @export
 get_cort_sa <- function(mri_y_smr_area_dsk, subjects = NULL, t = NULL) {
     cort_raw <- mri_y_smr_area_dsk |>
-        filter_subjects(subjects = subjects) |>
-        filter_timepoint(t = t)
+        filter_timepoint(t = t) |>
+        filter_subjects(subjects = subjects)
     cort_sa_df <- cort_raw |>
         dplyr::select(
             "subjectkey",
@@ -586,12 +586,12 @@ get_all_wmnd <- function(mri_y_rsi_rnd_at,
                          subjects = NULL,
                          t = NULL) {
     mri_y_rsi_rnd_at <- mri_y_rsi_rnd_at |>
-        filter_subjects(subjects = subjects) |>
         filter_timepoint(t = t) |>
+        filter_subjects(subjects = subjects) |>
         dplyr::select("subjectkey", "dmri_rsirnd_fib_allfib")
     mri_y_rsi_rnd_wm_dsk <- mri_y_rsi_rnd_wm_dsk |>
-        filter_subjects(subjects = subjects) |>
         filter_timepoint(t = t) |>
+        filter_subjects(subjects = subjects) |>
         dplyr::select("subjectkey", "dmri_rsirndwm_cdk_mean")
     df_list <- list(mri_y_rsi_rnd_at, mri_y_rsi_rnd_wm_dsk)
     wmnd_df <- merge_df_list(df_list, join = "full")
@@ -609,8 +609,8 @@ get_all_wmnd <- function(mri_y_rsi_rnd_at,
 #' @export
 get_gord_cor <- function(mri_y_rsfmr_cor_gp_gp, subjects = NULL, t = NULL) {
     gord_cor <- mri_y_rsfmr_cor_gp_gp |>
-        filter_subjects(subjects = subjects) |>
-        filter_timepoint(t = t)
+        filter_timepoint(t = t) |>
+        filter_subjects(subjects = subjects)
     # Store the subjectkeys in the rownames
     row.names(gord_cor) <- gord_cor$"subjectkey"
     # Remove the subjectkeys
@@ -639,8 +639,8 @@ get_gord_cor <- function(mri_y_rsfmr_cor_gp_gp, subjects = NULL, t = NULL) {
 #' @export
 get_subc_cor <- function(mri_y_rsfmr_cor_gp_aseg, subjects = NULL, t = NULL) {
     subc_cor <- mri_y_rsfmr_cor_gp_aseg |>
-        filter_subjects(subjects = subjects) |>
-        filter_timepoint(t = t)
+        filter_timepoint(t = t) |>
+        filter_subjects(subjects = subjects)
     # Store the subjectkeys in the rownames
     row.names(subc_cor) <- subc_cor$"subjectkey"
     # Remove the subjectkeys
@@ -669,8 +669,8 @@ get_subc_cor <- function(mri_y_rsfmr_cor_gp_aseg, subjects = NULL, t = NULL) {
 #' @export
 get_gord_var <- function(mri_y_rsfmr_var_gp, subjects = NULL, t = NULL) {
     gord_var_raw <- mri_y_rsfmr_var_gp |>
-        filter_subjects(subjects = subjects) |>
-        filter_timepoint(t = t)
+        filter_timepoint(t = t) |>
+        filter_subjects(subjects = subjects)
     gord_var <- gord_var_raw |>
         dplyr::select(
             "subjectkey",
@@ -690,8 +690,8 @@ get_gord_var <- function(mri_y_rsfmr_var_gp, subjects = NULL, t = NULL) {
 #' @export
 get_subc_var <- function(mrirstv02, subjects = NULL, t = NULL) {
     subc_var_raw <- mrirstv02 |>
-        filter_subjects(subjects = subjects) |>
-        filter_timepoint(t = t)
+        filter_timepoint(t = t) |>
+        filter_subjects(subjects = subjects)
     subc_var <- subc_var_raw |>
         dplyr::select(
             "subjectkey",
@@ -756,8 +756,8 @@ get_mtbi_count <- function(ph_p_otbi,
 #' @export
 get_headaches <- function(ph_p_mhx, subjects = NULL, t = NULL) {
     headaches <- ph_p_mhx |>
-        filter_subjects(subjects = subjects) |>
         filter_timepoint(t = t) |>
+        filter_subjects(subjects = subjects) |>
         dplyr::rename("headache" = "medhx_2q") |>
         dplyr::select("subjectkey", "headache")
     return(headaches)
@@ -770,7 +770,7 @@ get_headaches <- function(ph_p_mhx, subjects = NULL, t = NULL) {
 #' @param subjects Vector of subjectkeys.
 #' @param t timepoint of data collection (0: baseline, 1: 1yfu, ...)
 #' @param max_value Maximum value for pubertal status
-#' @param reports If "split" (default), returns parent and youth PDS scores.
+#' @param format If "split" (default), returns parent and youth PDS scores.
 #' If "mean", returns the average of the parent and youth PDS scores.
 #'
 #' @return pubertal_status Dataframe containing average pubertal status
@@ -780,72 +780,47 @@ get_pubertal_status <- function(ph_p_pds,
                                 ph_y_pds,
                                 subjects = NULL,
                                 max_value = NULL,
-                                reports = "split",
+                                format = "split",
                                 t = NULL) {
     youth_pubertal_df <- ph_y_pds |>
         filter_timepoint(t = t) |>
         filter_subjects(subjects = subjects)
-    print(nrow(youth_pubertal_df))
     parent_pubertal_df <- ph_p_pds |>
         filter_timepoint(t = t) |>
         filter_subjects(subjects = subjects)
     # Merge parent and youth dataframes
-    puberty_full <- dplyr::full_join(
+    pubertal_status_df <- dplyr::full_join(
         youth_pubertal_df,
         parent_pubertal_df,
         by = "subjectkey"
     )
-    # Assign proper column types
-    puberty_full$"pds_y_ss_female_category" <- as.numeric(
-        puberty_full$"pds_y_ss_female_category"
-    )
-    puberty_full$"pds_p_ss_female_category" <- as.numeric(
-        puberty_full$"pds_p_ss_female_category"
-    )
-    puberty_full$"pds_y_ss_male_category" <- as.numeric(
-        puberty_full$"pds_y_ss_male_category"
-    )
-    puberty_full$"pds_p_ss_male_category" <- as.numeric(
-        puberty_full$"pds_p_ss_male_category"
-    )
     # Composite pubertal status by averaging parent and youth reports
-    puberty_full$pubertal_status_mean <- rowMeans(
-        puberty_full[,
+    pubertal_status_df$pubertal_status_y <- rowMeans(
+        pubertal_status_df[,
             c(
-                "pds_y_ss_female_category",
-                "pds_p_ss_female_category",
-                "pds_y_ss_male_category",
-                "pds_p_ss_male_category"
+                "pds_y_ss_female_category_2",
+                "pds_y_ss_male_cat_2"
             )
         ],
         na.rm = TRUE
     )
-    puberty_full$pubertal_status_y <- rowMeans(
-        puberty_full[,
+    pubertal_status_df$pubertal_status_p <- rowMeans(
+        pubertal_status_df[,
             c(
-                "pds_y_ss_female_category",
-                "pds_y_ss_male_category"
+                "pds_p_ss_female_category_2",
+                "pds_p_ss_male_category_2"
             )
         ],
         na.rm = TRUE
     )
-    puberty_full$pubertal_status_p <- rowMeans(
-        puberty_full[,
+    pubertal_status_df$pubertal_status_mean <- rowMeans(
+        pubertal_status_df[,
             c(
-                "pds_p_ss_female_category",
-                "pds_p_ss_male_category"
+                "pubertal_status_y",
+                "pubertal_status_p"
             )
-        ],
-        na.rm = TRUE
+        ]
     )
-    # Select relevant variables
-    pubertal_status_df <- puberty_full |>
-        dplyr::select(
-            "subjectkey",
-            "pubertal_status_mean",
-            "pubertal_status_y",
-            "pubertal_status_p"
-        )
     if (!is.null(max_value)) {
         pubertal_status_df <- pubertal_status_df |>
             dplyr::mutate(
@@ -863,21 +838,21 @@ get_pubertal_status <- function(ph_p_pds,
                 )
             )
     }
-    if (reports == "split") {
+    if (format == "split") {
         pubertal_status_df <- pubertal_status_df |>
             dplyr::select(
                 "subjectkey",
                 "pubertal_status_y",
                 "pubertal_status_p"
             )
-    } else if (reports == "mean"){
+    } else if (format == "mean"){
         pubertal_status_df <- pubertal_status_df |>
             dplyr::select(
                 "subjectkey",
                 "pubertal_status_mean"
             )
     } else {
-        stop("Invalid `reports` value.")
+        stop("Valid `format` options are 'split' or 'mean'.")
     }
     return(pubertal_status_df)
 }
@@ -895,8 +870,8 @@ get_pubertal_status <- function(ph_p_pds,
 #' @export
 get_income <- function(abcd_p_demo, subjects = NULL, t = NULL) {
     parent_demographics <- abcd_p_demo |>
-        filter_subjects(subjects = subjects) |>
-        filter_timepoint(t = t)
+        filter_timepoint(t = t) |>
+        filter_subjects(subjects = subjects)
     parent_demographics$"demo_comb_income_v2" <-
         as.numeric(parent_demographics$"demo_comb_income_v2")
     income_df <- parent_demographics |>
@@ -942,8 +917,8 @@ get_race <- function(abcd_p_demo,
                      dummy = FALSE,
                      asian_as_other = FALSE) {
     race_df <- abcd_p_demo |>
-        filter_subjects(subjects = subjects) |>
         filter_timepoint(t = t) |>
+        filter_subjects(subjects = subjects) |>
         dplyr::select(
             "subjectkey",
             "race_ethnicity",
@@ -1093,8 +1068,8 @@ get_interview_age <- function(abcd_df,
                               t = NULL,
                               as_years = TRUE) {
     interview_age <- abcd_df |>
-        filter_subjects(subjects = subjects) |>
         filter_timepoint(t = t) |>
+        filter_subjects(subjects = subjects) |>
         dplyr::select("subjectkey", "interview_age")
     if (as_years == TRUE) {
         interview_age$"interview_age" <- round(
@@ -1135,8 +1110,8 @@ get_sex <- function(gish_p_gi,
         return(NULL)
     }
     pgi <- gish_p_gi |>
-        filter_subjects(subjects = subjects) |>
         filter_timepoint(t = t) |>
+        filter_subjects(subjects = subjects) |>
         dplyr::select(
             "subjectkey",
             "demo_sex_v2", # what is their assigned sex
@@ -1199,8 +1174,8 @@ get_p_gender <- function(gish_p_gi,
                          t = t,
                          match_y_report = FALSE) {
     pgi <- gish_p_gi |>
-        filter_subjects(subjects = subjects) |>
         filter_timepoint(t = t) |>
+        filter_subjects(subjects = subjects) |>
         dplyr::select(
             "subjectkey",
             "demo_gender_id_v2", # what is their assigned sex
@@ -1251,8 +1226,8 @@ get_p_gender <- function(gish_p_gi,
 #' @export
 get_y_gender <- function(gish_y_gi, subjects = NULL, t = t) {
     pgi <- gish_y_gi |>
-        filter_subjects(subjects = subjects) |>
         filter_timepoint(t = t) |>
+        filter_subjects(subjects = subjects) |>
         dplyr::select(
             "subjectkey",
             "kbi_gender", # what is their assigned sex
@@ -1376,8 +1351,8 @@ get_cbcl_syndrome_scale <- function(mh_p_cbcl,
     }
     # Initial cleaning and filtering of the dataframe
     mh_p_cbcl <- mh_p_cbcl |>
-        filter_subjects(subjects = subjects) |>
-        filter_timepoint(t = t)
+        filter_timepoint(t = t) |>
+        filter_subjects(subjects = subjects)
     if (raw == TRUE) {
         cbcl_col <- paste0("cbcl_scr_syn_", syndrome, "_r")
     } else if (raw == FALSE) {
@@ -1402,8 +1377,8 @@ get_cbcl_syndrome_scale <- function(mh_p_cbcl,
 #' @export
 get_cbcl_headaches <- function(mh_p_cbcl, subjects = NULL, t = NULL) {
     cbcl_full <- mh_p_cbcl |>
-        filter_subjects(subjects = subjects) |>
-        filter_timepoint(t = t)
+        filter_timepoint(t = t) |>
+        filter_subjects(subjects = subjects)
     cbcl_headaches <- cbcl_full |>
         dplyr::select(
             "subjectkey",
@@ -1424,8 +1399,8 @@ get_cbcl_headaches <- function(mh_p_cbcl, subjects = NULL, t = NULL) {
 #' @export
 get_cbcl_nausea <- function(mh_p_cbcl, subjects = NULL, t = NULL) {
     cbcl_full <- mh_p_cbcl |>
-        filter_subjects(subjects = subjects) |>
-        filter_timepoint(t = t)
+        filter_timepoint(t = t) |>
+        filter_subjects(subjects = subjects)
     cbcl_nausea <- cbcl_full |>
         dplyr::select(
             "subjectkey",
@@ -1446,8 +1421,8 @@ get_cbcl_nausea <- function(mh_p_cbcl, subjects = NULL, t = NULL) {
 #' @export
 get_cbcl_vomiting <- function(mh_p_cbcl, subjects = NULL, t = NULL) {
     cbcl_full <- mh_p_cbcl |>
-        filter_subjects(subjects = subjects) |>
-        filter_timepoint(t = t)
+        filter_timepoint(t = t) |>
+        filter_subjects(subjects = subjects)
     cbcl_vomiting <- cbcl_full |>
         dplyr::select(
             "subjectkey",
@@ -1468,8 +1443,8 @@ get_cbcl_vomiting <- function(mh_p_cbcl, subjects = NULL, t = NULL) {
 #' @export
 get_cbcl_dizzy <- function(mh_p_cbcl, subjects = NULL, t = NULL) {
     cbcl_full <- mh_p_cbcl |>
-        filter_subjects(subjects = subjects) |>
-        filter_timepoint(t = t)
+        filter_timepoint(t = t) |>
+        filter_subjects(subjects = subjects)
     cbcl_dizzy <- cbcl_full |>
         dplyr::select(
             "subjectkey",
@@ -1490,8 +1465,8 @@ get_cbcl_dizzy <- function(mh_p_cbcl, subjects = NULL, t = NULL) {
 #' @export
 get_cbcl_overtired <- function(mh_p_cbcl, subjects = NULL, t = NULL) {
     cbcl_full <- mh_p_cbcl |>
-        filter_subjects(subjects = subjects) |>
-        filter_timepoint(t = t)
+        filter_timepoint(t = t) |>
+        filter_subjects(subjects = subjects)
     cbcl_overtired <- cbcl_full |>
         dplyr::select(
             "subjectkey",
@@ -1512,8 +1487,8 @@ get_cbcl_overtired <- function(mh_p_cbcl, subjects = NULL, t = NULL) {
 #' @export
 get_cbcl_sleeping_more <- function(mh_p_cbcl, subjects = NULL, t = NULL) {
     cbcl_full <- mh_p_cbcl |>
-        filter_subjects(subjects = subjects) |>
-        filter_timepoint(t = t)
+        filter_timepoint(t = t) |>
+        filter_subjects(subjects = subjects)
     cbcl_sleeping_more <- cbcl_full |>
         dplyr::select(
             "subjectkey",
@@ -1534,8 +1509,8 @@ get_cbcl_sleeping_more <- function(mh_p_cbcl, subjects = NULL, t = NULL) {
 #' @export
 get_cbcl_sleeping_less <- function(mh_p_cbcl, subjects = NULL, t = NULL) {
     cbcl_full <- mh_p_cbcl |>
-        filter_subjects(subjects = subjects) |>
-        filter_timepoint(t = t)
+        filter_timepoint(t = t) |>
+        filter_subjects(subjects = subjects)
     cbcl_sleeping_less <- cbcl_full |>
         dplyr::select(
             "subjectkey",
@@ -1563,8 +1538,8 @@ get_cbcl_depress <- function(mh_p_cbcl, subjects = NULL, t = NULL,
                              depress_thresh_borderline = 5,
                              depress_thresh_clinical = 7) {
     cbcl_full <- mh_p_cbcl |>
-        filter_subjects(subjects = subjects) |>
-        filter_timepoint(t = t)
+        filter_timepoint(t = t) |>
+        filter_subjects(subjects = subjects)
     cbcl_depress_r <- cbcl_full |>
         dplyr::select(
             "subjectkey",
@@ -1607,8 +1582,8 @@ get_cbcl_anxiety <- function(mh_p_cbcl, subjects = NULL, t = NULL,
                              anxiety_thresh_borderline = 6,
                              anxiety_thresh_clinical = 8) {
     cbcl_full <- mh_p_cbcl |>
-        filter_subjects(subjects = subjects) |>
-        filter_timepoint(t = t)
+        filter_timepoint(t = t) |>
+        filter_subjects(subjects = subjects)
     cbcl_anxiety_r <- cbcl_full |>
         dplyr::select(
             "subjectkey",
@@ -1651,8 +1626,8 @@ get_cbcl_attention <- function(mh_p_cbcl, subjects = NULL, t = NULL,
                                attention_thresh_borderline = 9,
                                attention_thresh_clinical = 12) {
     cbcl_full <- mh_p_cbcl |>
-        filter_subjects(subjects = subjects) |>
-        filter_timepoint(t = t)
+        filter_timepoint(t = t) |>
+        filter_subjects(subjects = subjects)
     cbcl_attention_r <- cbcl_full |>
         dplyr::select(
             "subjectkey",
@@ -1696,8 +1671,8 @@ get_cbcl_aggressive <- function(mh_p_cbcl, subjects = NULL, t = NULL,
                                 aggressive_thresh_borderline = 11,
                                 aggressive_thresh_clinical = 15) {
     cbcl_full <- mh_p_cbcl |>
-        filter_subjects(subjects = subjects) |>
-        filter_timepoint(t = t)
+        filter_timepoint(t = t) |>
+        filter_subjects(subjects = subjects)
     cbcl_aggressive_r <- cbcl_full |>
         dplyr::select(
             "subjectkey",
