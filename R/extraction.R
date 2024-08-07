@@ -72,27 +72,27 @@ get_family_function <- function(ce_y_fes, ce_p_fes, subjects = NULL, t = NULL) {
     family_function <- col_to_num(family_function, 2:length(family_function))
     # Average the reports from youth and parents
     family_function <- family_function |>
-        dplyr::mutate(
-            "q1_fight" = family_function$"fes_youth_q1" +
-                family_function$"fam_enviro1_p",
-            "q2_angry" = family_function$"fes_youth_q2" +
-                family_function$"fam_enviro2r_p",
-            "q3_throw" = family_function$"fes_youth_q3" +
-                family_function$"fam_enviro3_p",
-            "q4_temper" = family_function$"fes_youth_q4" +
-                family_function$"fam_enviro4r_p",
-            "q5_criticize" = family_function$"fes_youth_q5" +
-                family_function$"fam_enviro5_p",
-            "q6_hit" = family_function$"fes_youth_q6" +
-                family_function$"fam_enviro6_p",
-            "q7_peaceful" = family_function$"fes_youth_q7" +
-                family_function$"fam_enviro7r_p",
-            "q8_outdo" = family_function$"fes_youth_q8" +
-                family_function$"fam_enviro8_p",
-            "q9_yell" = family_function$"fes_youth_q9" +
-                family_function$"fam_enviro9r_p"
+        dplyr::rename(
+            "fam_fight_y" = "fes_youth_q1",
+            "fam_fight_p" = "fam_enviro1_p",
+            "fam_angry_y" = "fes_youth_q2",
+            "fam_angry_p" = "fam_enviro2r_p",
+            "fam_throw_y" = "fes_youth_q3",
+            "fam_throw_p" = "fam_enviro3_p",
+            "fam_temper_y" = "fes_youth_q4",
+            "fam_temper_p" = "fam_enviro4r_p",
+            "fam_criticize_y" = "fes_youth_q5",
+            "fam_criticize_p" = "fam_enviro5_p",
+            "fam_hit_y" = "fes_youth_q6",
+            "fam_hit_p" = "fam_enviro6_p",
+            "fam_peaceful_y" = "fes_youth_q7",
+            "fam_peaceful_p" = "fam_enviro7r_p",
+            "fam_outdo_y" = "fes_youth_q8",
+            "fam_outdo_p" = "fam_enviro8_p",
+            "fam_yell_y" = "fes_youth_q9",
+            "fam_yell_p" = "fam_enviro9r_p"
         ) |>
-        dplyr::select("subjectkey", dplyr::starts_with("q"))
+        dplyr::select("subjectkey", dplyr::starts_with("fam"))
     return(family_function)
 }
 
@@ -128,36 +128,16 @@ get_prosocial_behaviour <- function(ce_p_psb,
         )
     prosocial <- col_to_num(prosocial, 2:length(prosocial))
     prosocial <- prosocial |>
-        dplyr::mutate(
-            "considerate" = prosocial$"prosocial_q1_y" +
-                prosocial$"prosocial_q1_p",
-            "helps_hurt" = prosocial$"prosocial_q2_y" +
-                prosocial$"prosocial_q2_p",
-            "helpful" = prosocial$"prosocial_q3_y" +
-                prosocial$"prosocial_q3_p"
-        ) |>
-        dplyr::select(
-            "subjectkey",
-            "considerate",
-            "helps_hurt",
-            "helpful"
+        dplyr::rename(
+            "considerate_y" = "prosocial_q1_y",
+            "considerate_p" = "prosocial_q1_p",
+            "helps_hurt_y" = "prosocial_q2_y",
+            "helps_hurt_p" = "prosocial_q2_p",
+            "helpful_y" = "prosocial_q3_y",
+            "helpful_p" = "prosocial_q3_p"
         )
     if (no_zero) {
-        prosocial <- prosocial |>
-            dplyr::mutate(
-                considerate = dplyr::case_when(
-                    considerate == 0 ~ 1,
-                    TRUE ~ considerate
-                ),
-                helps_hurt = dplyr::case_when(
-                    helps_hurt == 0 ~ 1,
-                    TRUE ~ helps_hurt
-                ),
-                helpful = dplyr::case_when(
-                    helpful == 0 ~ 1,
-                    TRUE ~ helpful
-                )
-            )
+        prosocial[prosocial == 0] <- 1
     }
     return(prosocial)
 }
@@ -484,27 +464,6 @@ get_nihtbx_cardsort_fc <- function(abcd_tbss01, subjects = NULL, t = NULL) {
             "nihtbx_cardsort_fc"
         )
     return(nihtbx_cardsort_fc)
-}
-
-#' Get nihtbx pattern data
-#'
-#' @param abcd_tbss01 NDA nihtbx dataframe
-#' @param subjects Vector of subjectkeys.
-#' @param t timepoint of data collection (0: baseline, 1: 1yfu, ...)
-#'
-#' @return nihtbx_pattern_fc pattern data
-#'
-#' @export
-get_nihtbx_pattern_fc <- function(abcd_tbss01, subjects = NULL, t = NULL) {
-    nihtbx_full <- abcd_tbss01 |>
-        filter_timepoint(t = t) |>
-        filter_subjects(subjects = subjects)
-    nihtbx_pattern_fc <- nihtbx_full |>
-        dplyr::select(
-            "subjectkey",
-            "nihtbx_pattern_fc"
-        )
-    return(nihtbx_pattern_fc)
 }
 
 #' Extract subcortical volumes
@@ -1319,24 +1278,23 @@ get_mtbi_age_l <- function(abcd_lpohstbi01, l_subs, y1_subs, y2_subs) {
 #' Extract CBCL syndrome scale data
 #'
 #' @param mh_p_cbcl Dataframe containing ABCD CBCL data
-#' @param syndrome String indicating which of the 8 CBCL syndrome scales should
-#'  be collected. Options include: "anxdep", "withdep", "somatic", "social",
-#'  "thought", "attention", "rulebreak", and "aggressive"
+#'
 #' @param raw Boolean indicating if extracted data should be raw (TRUE) or
 #'  t-scores (FALSE). Defaults to TRUE.
+#'
 #' @param subjects Vector of subjectkeys.
+#'
 #' @param t timepoint of data collection (0: baseline, 1: 1yfu, ...)
 #'
 #' @return ss_data Dataframe containing syndrome scale data
 #'
 #' @export
 get_cbcl_syndrome_scale <- function(mh_p_cbcl,
-                                    syndrome,
                                     raw = TRUE,
                                     t = NULL,
                                     subjects = NULL) {
     # Check that the provided syndrome is present
-    options <- list(
+    syndromes <- list(
         "anxdep",
         "withdep",
         "somatic",
@@ -1346,23 +1304,17 @@ get_cbcl_syndrome_scale <- function(mh_p_cbcl,
         "rulebreak",
         "aggressive"
     )
-    if (!syndrome %in% options) {
-        stop("Invalid syndrome scale entered. See ?get_cbcl_syndrome_scale.")
-    }
     # Initial cleaning and filtering of the dataframe
     mh_p_cbcl <- mh_p_cbcl |>
         filter_timepoint(t = t) |>
         filter_subjects(subjects = subjects)
     if (raw == TRUE) {
-        cbcl_col <- paste0("cbcl_scr_syn_", syndrome, "_r")
+        cbcl_cols <- paste0("cbcl_scr_syn_", syndromes, "_r")
     } else if (raw == FALSE) {
-        cbcl_col <- paste0("cbcl_scr_syn_", syndrome, "_t")
+        cbcl_cols <- paste0("cbcl_scr_syn_", syndromes, "_t")
     }
-    ss_data <- mh_p_cbcl |>
-        dplyr::select(
-            "subjectkey",
-            !!as.symbol(cbcl_col)
-        )
+    cbcl_cols <- c("subjectkey", cbcl_cols)
+    ss_data <- mh_p_cbcl[, cbcl_cols]
     return(ss_data)
 }
 
@@ -1518,184 +1470,6 @@ get_cbcl_sleeping_less <- function(mh_p_cbcl, subjects = NULL, t = NULL) {
         ) |>
         dplyr::rename("cbcl_sleeping_less" = "cbcl_q76_p")
     return(cbcl_sleeping_less)
-}
-
-#' Get CBCL depression data
-#'
-#' @param mh_p_cbcl NDA cbcl dataframe
-#' @param subjects Vector of subjectkeys.
-#' @param t timepoint of data collection (0: baseline, 1: 1yfu, ...)
-#' @param raw Logical value indicating if raw or borderline/clinical
-#'  thresholded values should be obtained
-#' @param depress_thresh_borderline threshold for borderline clinical
-#' @param depress_thresh_clinical threshold for clinical
-#'
-#' @return cbcl_depress_r depression data
-#'
-#' @export
-get_cbcl_depress <- function(mh_p_cbcl, subjects = NULL, t = NULL,
-                             raw = TRUE,
-                             depress_thresh_borderline = 5,
-                             depress_thresh_clinical = 7) {
-    cbcl_full <- mh_p_cbcl |>
-        filter_timepoint(t = t) |>
-        filter_subjects(subjects = subjects)
-    cbcl_depress_r <- cbcl_full |>
-        dplyr::select(
-            "subjectkey",
-            "cbcl_scr_dsm5_depress_r"
-        ) |>
-        dplyr::rename("cbcl_depress_r" = "cbcl_scr_dsm5_depress_r")
-    cbcl_depress_r$cbcl_depress_r <- as.numeric(cbcl_depress_r$cbcl_depress_r)
-    if (raw) {
-        return(cbcl_depress_r)
-    } else {
-        cbcl_depress <- cbcl_depress_r |>
-            dplyr::mutate(
-                cbcl_depress = dplyr::case_when(
-                    cbcl_depress_r < depress_thresh_borderline ~ 0,
-                    cbcl_depress_r < depress_thresh_clinical ~ 1,
-                    cbcl_depress_r >= depress_thresh_clinical ~ 2,
-                    TRUE ~ NA
-                )
-            ) |>
-            dplyr::select("subjectkey", "cbcl_depress")
-        return(cbcl_depress)
-    }
-}
-
-#' Get CBCL anxiety data
-#'
-#' @param mh_p_cbcl NDA cbcl dataframe
-#' @param subjects Vector of subjectkeys.
-#' @param t timepoint of data collection (0: baseline, 1: 1yfu, ...)
-#' @param raw Logical value indicating if raw or borderline/clinical
-#'  thresholded values should be obtained
-#' @param anxiety_thresh_borderline threshold for borderline clinical
-#' @param anxiety_thresh_clinical threshold for clinical
-#'
-#' @return cbcl_anxiety_r anxiety data
-#'
-#' @export
-get_cbcl_anxiety <- function(mh_p_cbcl, subjects = NULL, t = NULL,
-                             raw = TRUE,
-                             anxiety_thresh_borderline = 6,
-                             anxiety_thresh_clinical = 8) {
-    cbcl_full <- mh_p_cbcl |>
-        filter_timepoint(t = t) |>
-        filter_subjects(subjects = subjects)
-    cbcl_anxiety_r <- cbcl_full |>
-        dplyr::select(
-            "subjectkey",
-            "cbcl_scr_dsm5_anxdisord_r"
-        ) |>
-        dplyr::rename("cbcl_anxiety_r" = "cbcl_scr_dsm5_anxdisord_r")
-    cbcl_anxiety_r$cbcl_anxiety_r <- as.numeric(cbcl_anxiety_r$cbcl_anxiety_r)
-    if (raw) {
-        return(cbcl_anxiety_r)
-    } else {
-        cbcl_anxiety <- cbcl_anxiety_r |>
-            dplyr::mutate(
-                cbcl_anxiety = dplyr::case_when(
-                    cbcl_anxiety_r < anxiety_thresh_borderline ~ 0,
-                    cbcl_anxiety_r < anxiety_thresh_clinical ~ 1,
-                    cbcl_anxiety_r >= anxiety_thresh_clinical ~ 2,
-                    TRUE ~ NA
-                )
-            ) |>
-            dplyr::select("subjectkey", "cbcl_anxiety")
-        return(cbcl_anxiety)
-    }
-}
-
-#' Get CBCL attention data
-#'
-#' @param mh_p_cbcl NDA cbcl dataframe
-#' @param subjects Vector of subjectkeys.
-#' @param t timepoint of data collection (0: baseline, 1: 1yfu, ...)
-#' @param raw Logical value indicating if raw or borderline/clinical
-#'  thresholded values should be obtained
-#' @param attention_thresh_borderline threshold for borderline clinical
-#' @param attention_thresh_clinical threshold for clinical
-#'
-#' @return cbcl_attention_r attention data
-#'
-#' @export
-get_cbcl_attention <- function(mh_p_cbcl, subjects = NULL, t = NULL,
-                               raw = TRUE,
-                               attention_thresh_borderline = 9,
-                               attention_thresh_clinical = 12) {
-    cbcl_full <- mh_p_cbcl |>
-        filter_timepoint(t = t) |>
-        filter_subjects(subjects = subjects)
-    cbcl_attention_r <- cbcl_full |>
-        dplyr::select(
-            "subjectkey",
-            "cbcl_scr_syn_attention_r"
-        ) |>
-        dplyr::rename("cbcl_attention_r" = "cbcl_scr_syn_attention_r")
-    cbcl_attention_r$cbcl_attention_r <-
-        as.numeric(cbcl_attention_r$cbcl_attention_r)
-    if (raw) {
-        return(cbcl_attention_r)
-    } else {
-        cbcl_attention <- cbcl_attention_r |>
-            dplyr::mutate(
-                cbcl_attention = dplyr::case_when(
-                    cbcl_attention_r < attention_thresh_borderline ~ 0,
-                    cbcl_attention_r < attention_thresh_clinical ~ 1,
-                    cbcl_attention_r >= attention_thresh_clinical ~ 2,
-                    TRUE ~ NA
-                )
-            ) |>
-            dplyr::select("subjectkey", "cbcl_attention")
-        return(cbcl_attention)
-    }
-}
-
-#' Get CBCL aggressive data
-#'
-#' @param mh_p_cbcl NDA cbcl dataframe
-#' @param subjects Vector of subjectkeys.
-#' @param t timepoint of data collection (0: baseline, 1: 1yfu, ...)
-#' @param raw Logical value indicating if raw or borderline/clinical
-#'  thresholded values should be obtained
-#' @param aggressive_thresh_borderline threshold for borderline clinical
-#' @param aggressive_thresh_clinical threshold for clinical
-#'
-#' @return cbcl_aggressive_r aggressive data
-#'
-#' @export
-get_cbcl_aggressive <- function(mh_p_cbcl, subjects = NULL, t = NULL,
-                                raw = TRUE,
-                                aggressive_thresh_borderline = 11,
-                                aggressive_thresh_clinical = 15) {
-    cbcl_full <- mh_p_cbcl |>
-        filter_timepoint(t = t) |>
-        filter_subjects(subjects = subjects)
-    cbcl_aggressive_r <- cbcl_full |>
-        dplyr::select(
-            "subjectkey",
-            "cbcl_scr_syn_aggressive_r"
-        ) |>
-        dplyr::rename("cbcl_aggressive_r" = "cbcl_scr_syn_aggressive_r")
-    cbcl_aggressive_r$cbcl_aggressive_r <-
-        as.numeric(cbcl_aggressive_r$cbcl_aggressive_r)
-    if (raw) {
-        return(cbcl_aggressive_r)
-    } else {
-        cbcl_aggressive <- cbcl_aggressive_r |>
-            dplyr::mutate(
-                cbcl_aggressive = dplyr::case_when(
-                    cbcl_aggressive_r < aggressive_thresh_borderline ~ 0,
-                    cbcl_aggressive_r < aggressive_thresh_clinical ~ 1,
-                    cbcl_aggressive_r >= aggressive_thresh_clinical ~ 2,
-                    TRUE ~ NA
-                )
-            ) |>
-            dplyr::select("subjectkey", "cbcl_aggressive")
-        return(cbcl_aggressive)
-    }
 }
 
 #' Get acute symptom input variable 'latest_mtbi_mechanism'

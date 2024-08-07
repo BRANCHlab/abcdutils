@@ -4,20 +4,10 @@
 \alias{get_cbcl_syndrome_scale}
 \title{Extract CBCL syndrome scale data}
 \usage{
-get_cbcl_syndrome_scale(
-  mh_p_cbcl,
-  syndrome,
-  raw = TRUE,
-  t = NULL,
-  subjects = NULL
-)
+get_cbcl_syndrome_scale(mh_p_cbcl, raw = TRUE, t = NULL, subjects = NULL)
 }
 \arguments{
 \item{mh_p_cbcl}{Dataframe containing ABCD CBCL data}
-
-\item{syndrome}{String indicating which of the 8 CBCL syndrome scales should
-be collected. Options include: "anxdep", "withdep", "somatic", "social",
-"thought", "attention", "rulebreak", and "aggressive"}
 
 \item{raw}{Boolean indicating if extracted data should be raw (TRUE) or
 t-scores (FALSE). Defaults to TRUE.}
