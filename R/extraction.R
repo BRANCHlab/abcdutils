@@ -129,13 +129,19 @@ get_prosocial_behaviour <- function(ce_p_psb,
         )
     prosocial <- col_to_num(prosocial, 2:length(prosocial))
     prosocial <- prosocial |>
-        dplyr::rename(
-            "considerate_y" = "prosocial_q1_y",
-            "considerate_p" = "prosocial_q1_p",
-            "helps_hurt_y" = "prosocial_q2_y",
-            "helps_hurt_p" = "prosocial_q2_p",
-            "helpful_y" = "prosocial_q3_y",
-            "helpful_p" = "prosocial_q3_p"
+        dplyr::mutate(
+            "considerate" = prosocial$"prosocial_q1_y" +
+                prosocial$"prosocial_q1_p",
+            "helps_hurt" = prosocial$"prosocial_q2_y" +
+                prosocial$"prosocial_q2_p",
+            "helpful" = prosocial$"prosocial_q3_y" +
+                prosocial$"prosocial_q3_p"
+        ) |>
+        dplyr::select(
+            "subjectkey",
+            "considerate",
+            "helps_hurt",
+            "helpful"
         )
     if (no_zero) {
         prosocial[prosocial == 0] <- 1
