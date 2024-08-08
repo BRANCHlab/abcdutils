@@ -72,29 +72,30 @@ get_family_function <- function(ce_y_fes, ce_p_fes, subjects = NULL, t = NULL) {
     family_function <- col_to_num(family_function, 2:length(family_function))
     # Average the reports from youth and parents
     family_function <- family_function |>
-        dplyr::rename(
-            "fam_fight_y" = "fes_youth_q1",
-            "fam_fight_p" = "fam_enviro1_p",
-            "fam_angry_y" = "fes_youth_q2",
-            "fam_angry_p" = "fam_enviro2r_p",
-            "fam_throw_y" = "fes_youth_q3",
-            "fam_throw_p" = "fam_enviro3_p",
-            "fam_temper_y" = "fes_youth_q4",
-            "fam_temper_p" = "fam_enviro4r_p",
-            "fam_criticize_y" = "fes_youth_q5",
-            "fam_criticize_p" = "fam_enviro5_p",
-            "fam_hit_y" = "fes_youth_q6",
-            "fam_hit_p" = "fam_enviro6_p",
-            "fam_peaceful_y" = "fes_youth_q7",
-            "fam_peaceful_p" = "fam_enviro7r_p",
-            "fam_outdo_y" = "fes_youth_q8",
-            "fam_outdo_p" = "fam_enviro8_p",
-            "fam_yell_y" = "fes_youth_q9",
-            "fam_yell_p" = "fam_enviro9r_p"
+        dplyr::mutate(
+            "q1_fight" = family_function$"fes_youth_q1" +
+                family_function$"fam_enviro1_p",
+            "q2_angry" = family_function$"fes_youth_q2" +
+                family_function$"fam_enviro2r_p",
+            "q3_throw" = family_function$"fes_youth_q3" +
+                family_function$"fam_enviro3_p",
+            "q4_temper" = family_function$"fes_youth_q4" +
+                family_function$"fam_enviro4r_p",
+            "q5_criticize" = family_function$"fes_youth_q5" +
+                family_function$"fam_enviro5_p",
+            "q6_hit" = family_function$"fes_youth_q6" +
+                family_function$"fam_enviro6_p",
+            "q7_peaceful" = family_function$"fes_youth_q7" +
+                family_function$"fam_enviro7r_p",
+            "q8_outdo" = family_function$"fes_youth_q8" +
+                family_function$"fam_enviro8_p",
+            "q9_yell" = family_function$"fes_youth_q9" +
+                family_function$"fam_enviro9r_p"
         ) |>
-        dplyr::select("subjectkey", dplyr::starts_with("fam"))
+        dplyr::select("subjectkey", dplyr::starts_with("q"))
     return(family_function)
 }
+
 
 #' Extract prosocial behaviour
 #'
