@@ -96,7 +96,6 @@ get_family_function <- function(ce_y_fes, ce_p_fes, subjects = NULL, t = NULL) {
     return(family_function)
 }
 
-
 #' Parent report of prosocial behaviour
 #'
 #' @param ce_p_psb Parent Prosocial Behavior Survey
@@ -1298,9 +1297,6 @@ get_mtbi_age_l <- function(abcd_lpohstbi01, l_subs, y1_subs, y2_subs) {
 #' Extract CBCL syndrome scale data
 #'
 #' @param mh_p_cbcl Dataframe containing ABCD CBCL data
-#' @param syndrome String indicating which of the 8 CBCL syndrome scales should
-#'  be collected. Options include: "anxdep", "withdep", "somatic", "social",
-#'  "thought", "attention", "rulebreak", and "aggressive"
 #' @param raw Boolean indicating if extracted data should be raw (TRUE) or
 #'  t-scores (FALSE). Defaults to TRUE.
 #' @param subjects Vector of subjectkeys.
@@ -1310,12 +1306,11 @@ get_mtbi_age_l <- function(abcd_lpohstbi01, l_subs, y1_subs, y2_subs) {
 #'
 #' @export
 get_cbcl_syndrome_scale <- function(mh_p_cbcl,
-                                    syndrome,
                                     raw = TRUE,
                                     t = NULL,
                                     subjects = NULL) {
     # Check that the provided syndrome is present
-    options <- list(
+    syndromes <- c(
         "anxdep",
         "withdep",
         "somatic",
@@ -1325,23 +1320,18 @@ get_cbcl_syndrome_scale <- function(mh_p_cbcl,
         "rulebreak",
         "aggressive"
     )
-    if (!syndrome %in% options) {
-        stop("Invalid syndrome scale entered. See ?get_cbcl_syndrome_scale.")
-    }
     # Initial cleaning and filtering of the dataframe
     mh_p_cbcl <- mh_p_cbcl |>
         filter_timepoint(t = t) |>
         filter_subjects(subjects = subjects)
     if (raw == TRUE) {
-        cbcl_col <- paste0("cbcl_scr_syn_", syndrome, "_r")
+        suffix <- "_r"
     } else if (raw == FALSE) {
-        cbcl_col <- paste0("cbcl_scr_syn_", syndrome, "_t")
+        suffix <- "_t"
     }
-    ss_data <- mh_p_cbcl |>
-        dplyr::select(
-            "subjectkey",
-            !!as.symbol(cbcl_col)
-        )
+    syndromes <- paste0("cbcl_scr_syn_", syndromes, suffix)
+    cols_to_keep <- c("subjectkey", syndromes)
+    ss_data <- mh_p_cbcl[, cols_to_keep]
     return(ss_data)
 }
 
