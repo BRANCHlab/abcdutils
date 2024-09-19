@@ -97,10 +97,9 @@ get_family_function <- function(ce_y_fes, ce_p_fes, subjects = NULL, t = NULL) {
 }
 
 
-#' Extract prosocial behaviour
+#' Parent report of prosocial behaviour
 #'
 #' @param ce_p_psb Parent Prosocial Behavior Survey
-#' @param ce_y_psb Youth Prosocial Behavior Survey
 #' @param subjects Vector of subjectkeys.
 #' @param t timepoint of data collection (0: baseline, 1: 1yfu, ...)
 #' @param no_zero Boolean indicating if zero values should be replaced with 1
@@ -108,40 +107,61 @@ get_family_function <- function(ce_y_fes, ce_p_fes, subjects = NULL, t = NULL) {
 #' @return prosocial_behaviour
 #'
 #' @export
-get_prosocial_behaviour <- function(ce_p_psb,
-                                    ce_y_psb,
-                                    subjects = NULL,
-                                    no_zero = FALSE,
-                                    t = NULL) {
-    pr_prosocial <- ce_p_psb |>
+get_prosocial_behaviour_p <- function(ce_p_psb,
+                                      subjects = NULL,
+                                      no_zero = FALSE,
+                                      t = NULL) {
+    prosocial <- ce_p_psb |>
         filter_timepoint(t = t) |>
         filter_subjects(subjects = subjects)
-    yr_prosocial <- ce_y_psb |>
-        filter_timepoint(t = t) |>
-        filter_subjects(subjects = subjects)
-    prosocial <- dplyr::inner_join(
-        pr_prosocial, yr_prosocial, by = "subjectkey"
-    )
+    prosocial <- numcol_to_numeric(prosocial)
     prosocial <- prosocial |>
-        dplyr::select(
-            "subjectkey",
-            dplyr::ends_with(c("_y", "_p"))
-        )
-    prosocial <- col_to_num(prosocial, 2:length(prosocial))
-    prosocial <- prosocial |>
-        dplyr::mutate(
-            "considerate" = prosocial$"prosocial_q1_y" +
-                prosocial$"prosocial_q1_p",
-            "helps_hurt" = prosocial$"prosocial_q2_y" +
-                prosocial$"prosocial_q2_p",
-            "helpful" = prosocial$"prosocial_q3_y" +
-                prosocial$"prosocial_q3_p"
+        dplyr::rename(
+            "considerate_p" = "prosocial_q1_p",
+            "helps_hurt_p" = "prosocial_q2_p",
+            "helpful_p" = "prosocial_q3_p"
         ) |>
         dplyr::select(
             "subjectkey",
-            "considerate",
-            "helps_hurt",
-            "helpful"
+            "considerate_p",
+            "helps_hurt_p",
+            "helpful_p"
+        )
+    if (no_zero) {
+        prosocial[prosocial == 0] <- 1
+    }
+    return(prosocial)
+}
+
+#' Youth report of prosocial behaviour
+#'
+#' @param ce_y_psb Parent Prosocial Behavior Survey
+#' @param subjects Vector of subjectkeys.
+#' @param t timepoint of data collection (0: baseline, 1: 1yfu, ...)
+#' @param no_zero Boolean indicating if zero values should be replaced with 1
+#'
+#' @return prosocial_behaviour
+#'
+#' @export
+get_prosocial_behaviour_y <- function(ce_y_psb,
+                                      subjects = NULL,
+                                      no_zero = FALSE,
+                                      t = NULL) {
+    prosocial <- ce_y_psb |>
+        filter_timepoint(t = t) |>
+        filter_subjects(subjects = subjects)
+    prosocial <- numcol_to_numeric(prosocial)
+    prosocial <- prosocial |>
+        dplyr::rename(
+            "considerate_y" = "prosocial_q1_y",
+            "helps_hurt_y" = "prosocial_q2_y",
+            "helpful_y" = "prosocial_q3_y"
+        ) |>
+        dplyr::select(
+            "subjectkey",
+            "considerate_y",
+            "helps_hurt_y",
+            "helpful_y"
         )
     if (no_zero) {
         prosocial[prosocial == 0] <- 1
@@ -729,37 +749,23 @@ get_headaches <- function(ph_p_mhx, subjects = NULL, t = NULL) {
     return(headaches)
 }
 
-#' Return dataframe containing pubertal status of specified subjects
+#' Youth report of pubertal status
 #'
-#' @param ph_p_pds Dataframe containing parent pubertal status report
 #' @param ph_y_pds Dataframe containing youth pubertal status report
 #' @param subjects Vector of subjectkeys.
 #' @param t timepoint of data collection (0: baseline, 1: 1yfu, ...)
 #' @param max_value Maximum value for pubertal status
-#' @param format If "split" (default), returns parent and youth PDS scores.
-#' If "mean", returns the average of the parent and youth PDS scores.
 #'
 #' @return pubertal_status Dataframe containing average pubertal status
 #'
 #' @export
-get_pubertal_status <- function(ph_p_pds,
-                                ph_y_pds,
-                                subjects = NULL,
-                                max_value = NULL,
-                                format = "split",
-                                t = NULL) {
-    youth_pubertal_df <- ph_y_pds |>
+get_pubertal_status_y <- function(ph_y_pds,
+                                  subjects = NULL,
+                                  max_value = NULL,
+                                  t = NULL) {
+    pubertal_status_df <- ph_y_pds |>
         filter_timepoint(t = t) |>
         filter_subjects(subjects = subjects)
-    parent_pubertal_df <- ph_p_pds |>
-        filter_timepoint(t = t) |>
-        filter_subjects(subjects = subjects)
-    # Merge parent and youth dataframes
-    pubertal_status_df <- dplyr::full_join(
-        youth_pubertal_df,
-        parent_pubertal_df,
-        by = "subjectkey"
-    )
     # Composite pubertal status by averaging parent and youth reports
     pubertal_status_df$pubertal_status_y <- rowMeans(
         pubertal_status_df[,
@@ -770,6 +776,40 @@ get_pubertal_status <- function(ph_p_pds,
         ],
         na.rm = TRUE
     )
+    if (!is.null(max_value)) {
+        pubertal_status_df <- pubertal_status_df |>
+            dplyr::mutate(
+                pubertal_status_y = dplyr::case_when(
+                    pubertal_status_y > max_value ~ max_value,
+                    TRUE ~ pubertal_status_y
+                )
+            )
+    }
+    pubertal_status_df <- pubertal_status_df |>
+        dplyr::select(
+            "subjectkey",
+            "pubertal_status_y"
+        )
+    return(pubertal_status_df)
+}
+
+#' Parent report of pubertal status
+#'
+#' @param ph_p_pds Dataframe containing youth pubertal status report
+#' @param subjects Vector of subjectkeys.
+#' @param t timepoint of data collection (0: baseline, 1: 1yfu, ...)
+#' @param max_value Maximum value for pubertal status
+#'
+#' @return pubertal_status Dataframe containing average pubertal status
+#'
+#' @export
+get_pubertal_status_p <- function(ph_p_pds,
+                                  subjects = NULL,
+                                  max_value = NULL,
+                                  t = NULL) {
+    pubertal_status_df <- ph_p_pds |>
+        filter_timepoint(t = t) |>
+        filter_subjects(subjects = subjects)
     pubertal_status_df$pubertal_status_p <- rowMeans(
         pubertal_status_df[,
             c(
@@ -779,47 +819,20 @@ get_pubertal_status <- function(ph_p_pds,
         ],
         na.rm = TRUE
     )
-    pubertal_status_df$pubertal_status_mean <- rowMeans(
-        pubertal_status_df[,
-            c(
-                "pubertal_status_y",
-                "pubertal_status_p"
-            )
-        ]
-    )
     if (!is.null(max_value)) {
         pubertal_status_df <- pubertal_status_df |>
             dplyr::mutate(
-                pubertal_status_mean = dplyr::case_when(
-                    pubertal_status_mean > max_value ~ max_value,
-                    TRUE ~ pubertal_status_mean
-                ),
-                pubertal_status_y = dplyr::case_when(
-                    pubertal_status_y > max_value ~ max_value,
-                    TRUE ~ pubertal_status_y
-                ),
                 pubertal_status_p = dplyr::case_when(
                     pubertal_status_p > max_value ~ max_value,
                     TRUE ~ pubertal_status_p
                 )
             )
     }
-    if (format == "split") {
-        pubertal_status_df <- pubertal_status_df |>
-            dplyr::select(
-                "subjectkey",
-                "pubertal_status_y",
-                "pubertal_status_p"
-            )
-    } else if (format == "mean"){
-        pubertal_status_df <- pubertal_status_df |>
-            dplyr::select(
-                "subjectkey",
-                "pubertal_status_mean"
-            )
-    } else {
-        stop("Valid `format` options are 'split' or 'mean'.")
-    }
+    pubertal_status_df <- pubertal_status_df |>
+        dplyr::select(
+            "subjectkey",
+            "pubertal_status_p"
+        )
     return(pubertal_status_df)
 }
 
