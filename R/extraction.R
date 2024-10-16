@@ -742,9 +742,16 @@ get_mtbi_count <- function(ph_p_otbi,
 get_headaches <- function(ph_p_mhx, subjects = NULL, t = NULL) {
     headaches <- ph_p_mhx |>
         filter_timepoint(t = t) |>
-        filter_subjects(subjects = subjects) |>
-        dplyr::rename("headache" = "medhx_2q") |>
-        dplyr::select("subjectkey", "headache")
+        filter_subjects(subjects = subjects)
+    if (isTRUE(t > 0)) {
+        headaches <- headaches |>
+            dplyr::rename("headache" = "medhx_2q_l") |>
+            dplyr::select("subjectkey", "headache")
+    } else {
+        headaches <- headaches |>
+            dplyr::rename("headache" = "medhx_2q") |>
+            dplyr::select("subjectkey", "headache")
+    }
     return(headaches)
 }
 
@@ -847,29 +854,33 @@ get_pubertal_status_p <- function(ph_p_pds,
 #'
 #' @export
 get_income <- function(abcd_p_demo, subjects = NULL, t = NULL) {
-    parent_demographics <- abcd_p_demo |>
+    income <- ""
+    income_df <- abcd_p_demo |>
         filter_timepoint(t = t) |>
         filter_subjects(subjects = subjects)
-    parent_demographics$"demo_comb_income_v2" <-
-        as.numeric(parent_demographics$"demo_comb_income_v2")
-    income_df <- parent_demographics |>
+    if (isTRUE(t > 0)) {
+        income_df$"income" <- income_df$"demo_comb_income_v2_l"
+    } else {
+        income_df$"income" <- income_df$"demo_comb_income_v2"
+    }
+    income_df$"income" <- as.numeric(income_df$"income")
+    income_df <- income_df |>
         dplyr::select(
             "subjectkey",
-            "demo_comb_income_v2"
+            "income"
         )
     income_df <- income_df |>
         dplyr::mutate(
             household_income = dplyr::case_when(
-                parent_demographics$"demo_comb_income_v2" == 777 ~ NA_real_,
-                parent_demographics$"demo_comb_income_v2" == 999 ~ NA_real_,
-                parent_demographics$"demo_comb_income_v2" < 7 ~ 1,
-                parent_demographics$"demo_comb_income_v2" < 9 ~ 2,
-                parent_demographics$"demo_comb_income_v2" < 11 ~ 3,
+                income == 777 ~ NA_real_,
+                income == 999 ~ NA_real_,
+                income < 7 ~ 1,
+                income < 9 ~ 2,
+                income < 11 ~ 3,
                 TRUE ~ NA_real_,
             )
         )
-    income_df <- income_df |>
-        dplyr::select("subjectkey", "household_income")
+    income_df <- income_df |> dplyr::select("subjectkey", "household_income")
     return(income_df)
 }
 
