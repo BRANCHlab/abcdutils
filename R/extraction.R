@@ -309,27 +309,49 @@ get_loneliness <- function(mh_y_or,
 #'
 #' @export
 get_screen_time <- function(nt_p_stq, subjects = NULL, t = NULL) {
+    weekend_hours <- ""
+    weekday_hours <- ""
+    weekend_mins <- ""
+    weekday_mins <- ""
     screen_time <- nt_p_stq |>
         filter_timepoint(t = t) |>
-        filter_subjects(subjects = subjects) |>
+        filter_subjects(subjects = subjects)
+    if (isTRUE(t > 0)) {
+        screen_time <- screen_time |>
+            dplyr::rename(
+                "weekend_hours" = "screentime_1_wknd_hrs_p",
+                "weekend_mins" = "screentime_1_wknd_min_p",
+                "weekday_hours" = "screentime_1_wkdy_hrs_p",
+                "weekday_mins" = "screentime_1_wkdy_min_p"
+            )
+    } else {
+        screen_time <- screen_time |>
+            dplyr::rename(
+                "weekend_hours" = "screentime1_p_hours",
+                "weekend_mins" = "screentime1_p_minutes",
+                "weekday_hours" = "screentime2_p_hours",
+                "weekday_mins" = "screentime2_p_minutes"
+            )
+    }
+    screen_time <- screen_time |> 
         dplyr::select(
             "subjectkey",
-            "screentime1_p_hours",
-            "screentime1_p_minutes",
-            "screentime2_p_hours",
-            "screentime2_p_minutes"
+            "weekend_hours",
+            "weekend_mins",
+            "weekday_hours",
+            "weekday_mins"
         )
     # Convert columns to numeric
     screen_time <- numcol_to_numeric(screen_time)
     # Convert to hours
     screen_time <- screen_time |>
         dplyr::mutate(
-            "screentime_wknd_hrs" = screen_time$"screentime1_p_hours" +
-                (screen_time$"screentime1_p_minutes" / 60),
-            "screentime_wkday_hrs" = screen_time$"screentime2_p_hours" +
-                (screen_time$"screentime2_p_minutes" / 60)
+            screentime_wknd_hrs = weekend_hours + (weekend_mins / 60),
+            screentime_wkday_hrs = weekday_hours + (weekday_mins / 60),
         ) |>
-        dplyr::select(dplyr::contains(c("subjectkey", "wknd", "wkday")))
+        dplyr::select(
+            "subjectkey", "screentime_wknd_hrs", "screentime_wkday_hrs"
+        )
     return(screen_time)
 }
 
