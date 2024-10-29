@@ -185,85 +185,56 @@ get_loneliness <- function(mh_y_or,
                            subjects = NULL,
                            discretize = FALSE,
                            t = NULL) {
-    if (is.null(t)) {
-        stop(
-            paste0(
-                "Specifying a specific timepoint is necessary to avoid",
-                "many-to-many matching problems."
-            )
-        )
-    }
-    gish_p_gi <- gish_p_gi |>
-        filter_timepoint(t = t) |>
-        filter_subjects(subjects = subjects)
-    sex <- get_sex(gish_p_gi, subjects, t = t)
+    sex <- get_sex(gish_p_gi, subjects, t = 0)
     loneliness <- mh_y_or |>
         filter_timepoint(t = t) |>
         filter_subjects(subjects = subjects)
-    loneliness <- dplyr::full_join(
-        loneliness,
-        sex,
-        by = c(
-            "subjectkey"
-        )
-    )
+    loneliness <- dplyr::full_join(loneliness, sex, by = "subjectkey")
     loneliness <- loneliness |>
-        dplyr::select(
-            "subjectkey",
-            "sex",
-            "resiliency5a_y",
-            "resiliency5b_y",
-            "resiliency6a_y",
-            "resiliency6b_y"
-        ) |>
         dplyr::rename(
             "friend_boy" = "resiliency5a_y",
             "close_friend_boy" = "resiliency5b_y",
             "friend_girl" = "resiliency6a_y",
             "close_friend_girl" = "resiliency6b_y"
         )
+    loneliness <- numcol_to_numeric(loneliness)
     loneliness <- loneliness |>
         dplyr::mutate(
             "ss_friend" = dplyr::case_when(
-                loneliness$"sex" == "M" ~
-                    as.numeric(loneliness$"friend_boy"),
-                loneliness$"sex" == "F" ~
-                    as.numeric(loneliness$"friend_girl")
+                loneliness$"sex" == "M" ~ loneliness$"friend_boy",
+                loneliness$"sex" == "F" ~ loneliness$"friend_girl"
             ),
             "os_friend" = dplyr::case_when(
-                loneliness$"sex" == "M" ~
-                    as.numeric(loneliness$"friend_girl"),
-                loneliness$"sex" == "F" ~
-                    as.numeric(loneliness$"friend_boy")
+                loneliness$"sex" == "M" ~ loneliness$"friend_girl",
+                loneliness$"sex" == "F" ~ loneliness$"friend_boy"
             ),
             "ss_close_friend" = dplyr::case_when(
-                loneliness$"sex" == "M" ~
-                    as.numeric(loneliness$"close_friend_boy"),
-                loneliness$"sex" == "F" ~
-                    as.numeric(loneliness$"close_friend_girl")
+                loneliness$"sex" == "M" ~ loneliness$"close_friend_boy",
+                loneliness$"sex" == "F" ~ loneliness$"close_friend_girl"
             ),
             "os_close_friend" = dplyr::case_when(
-                loneliness$"sex" == "M" ~
-                    as.numeric(loneliness$"close_friend_girl"),
-                loneliness$"sex" == "F" ~
-                    as.numeric(loneliness$"close_friend_boy")
+                loneliness$"sex" == "M" ~ loneliness$"close_friend_girl",
+                loneliness$"sex" == "F" ~ loneliness$"close_friend_boy"
             )
-        ) |>
-        dplyr::select(
-            "subjectkey",
-            "ss_friend",
-            "os_friend",
-            "ss_close_friend",
-            "os_close_friend"
         )
+    friend_fts <- c(
+        "ss_friend", "os_friend", "ss_close_friend", "os_close_friend"
+    )
+    if (is.null(t)) {
+        features <- c("subjectkey", "eventname", friend_fts)
+    } else {
+        features <- c("subjectkey", friend_fts)
+    }
+    loneliness <- dplyr::select(loneliness, dplyr::all_of(features))
     if (discretize) {
         # Based on the quantiles of these measures on all baseline subjects.
         # This can be re-obtained by running `get_loneliness` at bl without
         # specifying any subjects.
-        ss_qs <- c(6, 10, 18) # nolint: object_usage_linter
-        os_qs <- c(1, 3, 6) # nolint: object_usage_linter
-        ss_close_qs <- c(2, 3, 5) # nolint: object_usage_linter
-        os_close_qs <- c(0, 1, 2) # nolint: object_usage_linter
+        disc_df <- get_loneliness(mh_y_or, gish_p_gi, t = t)
+        ss_qs <- stats::quantile(stats::na.omit(disc_df$"ss_friend"))[2:4]
+        os_qs <- stats::quantile(stats::na.omit(disc_df$"os_friend"))[2:4]
+        ss_close_qs <- stats::quantile(stats::na.omit(disc_df$"ss_close_friend"))[2:4]
+        os_close_qs <- stats::quantile(stats::na.omit(disc_df$"os_close_friend"))[2:4]
         loneliness <- loneliness |>
             dplyr::mutate(
                 ss_friend = dplyr::case_when(
