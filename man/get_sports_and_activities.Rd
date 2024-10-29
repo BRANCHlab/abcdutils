@@ -4,7 +4,12 @@
 \alias{get_sports_and_activities}
 \title{Extract healthy behaviours: spots and activities questionnaire}
 \usage{
-get_sports_and_activities(ph_p_saiq, subjects = NULL, t = NULL)
+get_sports_and_activities(
+  ph_p_saiq,
+  subjects = NULL,
+  t = NULL,
+  discretize = FALSE
+)
 }
 \arguments{
 \item{ph_p_saiq}{ABCD Parent Sports and Activities Involvement
@@ -13,6 +18,9 @@ Questionnaire}
 \item{subjects}{Vector of subjectkeys.}
 
 \item{t}{timepoint of data collection (0: baseline, 1: 1yfu, ...)}
+
+\item{discretize}{Boolean indicating if measures should be discretized into
+quartiles}
 }
 \value{
 activities

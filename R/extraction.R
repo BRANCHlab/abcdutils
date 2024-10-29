@@ -168,7 +168,7 @@ get_prosocial_behaviour_y <- function(ce_y_psb,
     return(prosocial)
 }
 
-#' Extract loneliness
+#' Extract number of friends
 #'
 #' @param mh_y_or ABCD Other Resilience
 #' @param gish_p_gi Parent report of sex and gender dataframe
@@ -177,44 +177,42 @@ get_prosocial_behaviour_y <- function(ce_y_psb,
 #' @param discretize Boolean indicating if the loneliness measures should be
 #' discretized into quartiles
 #'
-#' @return loneliness
-#'
 #' @export
-get_loneliness <- function(mh_y_or,
-                           gish_p_gi,
-                           subjects = NULL,
-                           discretize = FALSE,
-                           t = NULL) {
+get_friends <- function(mh_y_or,
+                        gish_p_gi,
+                        subjects = NULL,
+                        discretize = FALSE,
+                        t = NULL) {
     sex <- get_sex(gish_p_gi, subjects, t = 0)
-    loneliness <- mh_y_or |>
+    friends <- mh_y_or |>
         filter_timepoint(t = t) |>
         filter_subjects(subjects = subjects)
-    loneliness <- dplyr::full_join(loneliness, sex, by = "subjectkey")
-    loneliness <- loneliness |>
+    friends <- dplyr::full_join(friends, sex, by = "subjectkey")
+    friends <- friends |>
         dplyr::rename(
             "friend_boy" = "resiliency5a_y",
             "close_friend_boy" = "resiliency5b_y",
             "friend_girl" = "resiliency6a_y",
             "close_friend_girl" = "resiliency6b_y"
         )
-    loneliness <- numcol_to_numeric(loneliness)
-    loneliness <- loneliness |>
+    friends <- numcol_to_numeric(friends)
+    friends <- friends |>
         dplyr::mutate(
             "ss_friend" = dplyr::case_when(
-                loneliness$"sex" == "M" ~ loneliness$"friend_boy",
-                loneliness$"sex" == "F" ~ loneliness$"friend_girl"
+                friends$"sex" == "M" ~ friends$"friend_boy",
+                friends$"sex" == "F" ~ friends$"friend_girl"
             ),
             "os_friend" = dplyr::case_when(
-                loneliness$"sex" == "M" ~ loneliness$"friend_girl",
-                loneliness$"sex" == "F" ~ loneliness$"friend_boy"
+                friends$"sex" == "M" ~ friends$"friend_girl",
+                friends$"sex" == "F" ~ friends$"friend_boy"
             ),
             "ss_close_friend" = dplyr::case_when(
-                loneliness$"sex" == "M" ~ loneliness$"close_friend_boy",
-                loneliness$"sex" == "F" ~ loneliness$"close_friend_girl"
+                friends$"sex" == "M" ~ friends$"close_friend_boy",
+                friends$"sex" == "F" ~ friends$"close_friend_girl"
             ),
             "os_close_friend" = dplyr::case_when(
-                loneliness$"sex" == "M" ~ loneliness$"close_friend_girl",
-                loneliness$"sex" == "F" ~ loneliness$"close_friend_boy"
+                friends$"sex" == "M" ~ friends$"close_friend_girl",
+                friends$"sex" == "F" ~ friends$"close_friend_boy"
             )
         )
     friend_fts <- c(
@@ -225,17 +223,17 @@ get_loneliness <- function(mh_y_or,
     } else {
         features <- c("subjectkey", friend_fts)
     }
-    loneliness <- dplyr::select(loneliness, dplyr::all_of(features))
+    friends <- dplyr::select(friends, dplyr::all_of(features))
     if (discretize) {
         # Based on the quantiles of these measures on all baseline subjects.
-        # This can be re-obtained by running `get_loneliness` at bl without
+        # This can be re-obtained by running `get_friends` at bl without
         # specifying any subjects.
-        disc_df <- get_loneliness(mh_y_or, gish_p_gi, t = t)
+        disc_df <- get_friends(mh_y_or, gish_p_gi, t = t)
         ss_qs <- stats::quantile(stats::na.omit(disc_df$"ss_friend"))[2:4]
         os_qs <- stats::quantile(stats::na.omit(disc_df$"os_friend"))[2:4]
         ss_close_qs <- stats::quantile(stats::na.omit(disc_df$"ss_close_friend"))[2:4]
         os_close_qs <- stats::quantile(stats::na.omit(disc_df$"os_close_friend"))[2:4]
-        loneliness <- loneliness |>
+        friends <- friends |>
             dplyr::mutate(
                 ss_friend = dplyr::case_when(
                     ss_friend <= ss_qs[1] ~ 1,
@@ -267,7 +265,7 @@ get_loneliness <- function(mh_y_or,
                 )
             )
     }
-    return(loneliness)
+    return(friends)
 }
 
 #' Extract healthy behaviours: screen time questionnaire
@@ -330,38 +328,143 @@ get_screen_time <- function(nt_p_stq, subjects = NULL, t = NULL) {
 #'
 #' @param ph_p_saiq ABCD Parent Sports and Activities Involvement
 #' Questionnaire
+#'
 #' @param subjects Vector of subjectkeys.
+#'
 #' @param t timepoint of data collection (0: baseline, 1: 1yfu, ...)
+#'
+#' @param discretize Boolean indicating if measures should be discretized into
+#' quartiles
 #'
 #' @return activities
 #'
 #' @export
-get_sports_and_activities <- function(ph_p_saiq, subjects = NULL, t = NULL) {
-    sports <- ph_p_saiq |>
+get_sports_and_activities <- function(ph_p_saiq,
+                                      subjects = NULL,
+                                      t = NULL,
+                                      discretize = FALSE) {
+    saiq <- ph_p_saiq |>
         filter_timepoint(t = t) |>
         filter_subjects(subjects = subjects)
-    sports <- sports |> dplyr::select("subjectkey", dplyr::starts_with("sai"))
-    sports <- col_to_num(sports, 2:length(sports))
+    saiq <- numcol_to_numeric(saiq)
+    ###########################################################################
+    # Unusual specific variable selection:
+    # For whatever reason, the lacross variable uses 11 to code yes and 0 to
+    # code no.
+    saiq$"sai_p_lax_school"[saiq$"sai_p_lax_school" == 11] <- 1
+    saiq$"sai_p_lax_school_l"[saiq$"sai_p_lax_school_l" == 11] <- 1
+    ###########################################################################
     # Number of activities organized inside of school
-    org_school_cols <- colnames(sports)[endsWith(colnames(sports), "school")]
-    sports$"organized_school_activities" <-
-        rowSums(sports[, org_school_cols], na.rm = TRUE)
+    school_idx <- endsWith(colnames(saiq), "school")
+    school_l_idx <- endsWith(colnames(saiq), "school_l")
+    school_all_idx <- school_idx | school_l_idx
+    school_cols <- colnames(saiq)[school_all_idx]
+    saiq$"school_activities" <- rowSums(
+        saiq[, school_cols],
+        na.rm = TRUE
+    )
+    ###########################################################################
     # Number of activities organized outside of school
-    org_out_cols <- colnames(sports)[endsWith(colnames(sports), "outside")]
-    sports$"organized_outside_activities" <-
-        rowSums(sports[, org_out_cols], na.rm = TRUE)
+    outside_idx <- endsWith(colnames(saiq), "outside")
+    outside_l_idx <- endsWith(colnames(saiq), "outside_l")
+    outside_all_idx <- outside_idx | outside_l_idx
+    outside_cols <- colnames(saiq)[outside_all_idx]
+    saiq$"extracurriculars" <- rowSums(
+        saiq[, outside_cols],
+        na.rm = TRUE
+    )
+    ###########################################################################
     # Number of activities receiving private instruction
-    private_cols <- colnames(sports)[endsWith(colnames(sports), "private")]
-    sports$"private_instruction_activities" <-
-        rowSums(sports[, private_cols], na.rm = TRUE)
+    private_idx <- endsWith(colnames(saiq), "private")
+    private_l_idx <- endsWith(colnames(saiq), "private_l")
+    private_all_idx <- private_idx | private_l_idx
+    private_cols <- colnames(saiq)[private_all_idx]
+    saiq$"private_instruction" <- rowSums(
+        saiq[, private_cols],
+        na.rm = TRUE
+    )
+    ###########################################################################
     # Number of activities participated in the last year
-    p12_cols <- colnames(sports)[endsWith(colnames(sports), "p12")]
-    sports$"p12_activities" <-
-        rowSums(sports[, p12_cols], na.rm = TRUE)
+    p12_idx <- endsWith(colnames(saiq), "p12")
+    p12_l_idx <- endsWith(colnames(saiq), "p12_l")
+    p12_all_idx <- p12_idx | p12_l_idx
+    p12_cols <- colnames(saiq)[p12_all_idx]
+    saiq$"activities_last_year" <- rowSums(
+        saiq[, p12_cols],
+        na.rm = TRUE
+    )
+    ###########################################################################
     # Select columns
-    sports <- sports |>
-        dplyr::select("subjectkey", dplyr::ends_with("activities"))
-    return(sports)
+    saiq <- dplyr::select(
+        saiq,
+        "subjectkey",
+        "school_activities",
+        "extracurriculars",
+        "private_instruction",
+        "activities_last_year"
+    )
+    if (discretize) {
+        # Based on the quantiles of these measures on all baseline subjects.
+        # This can be re-obtained by running `get_saiq` at bl without
+        # specifying any subjects.
+        disc_df <- get_sports_and_activities(
+            ph_p_saiq,
+            t = t,
+            discretize = FALSE
+        )
+        school_qs <- stats::quantile(
+            disc_df$"school_activities",
+            na.rm = TRUE,
+            probs = c(0.25, 0.5, 0.75)
+        )
+        extra_qs <- stats::quantile(
+            disc_df$"extracurriculars",
+            na.rm = TRUE,
+            probs = c(0.25, 0.5, 0.75)
+        )
+        private_qs <- stats::quantile(
+            disc_df$"private_instruction",
+            na.rm = TRUE,
+            probs = c(0.25, 0.5, 0.75)
+        )
+        ly_qs <- stats::quantile(
+            disc_df$"activities_last_year",
+            na.rm = TRUE,
+            probs = c(0.25, 0.5, 0.75)
+        )
+        saiq <- saiq |>
+            dplyr::mutate(
+                school_activities = dplyr::case_when(
+                    school_activities <= school_qs[1] ~ 1,
+                    school_activities <= school_qs[2] ~ 2,
+                    school_activities <= school_qs[3] ~ 3,
+                    school_activities > school_qs[3] ~ 4,
+                    TRUE ~ NA
+                ),
+                extracurriculars = dplyr::case_when(
+                    extracurriculars <= extra_qs[1] ~ 1,
+                    extracurriculars <= extra_qs[2] ~ 2,
+                    extracurriculars <= extra_qs[3] ~ 3,
+                    extracurriculars > extra_qs[3] ~ 4,
+                    TRUE ~ NA
+                ),
+                private_instruction = dplyr::case_when(
+                    private_instruction <= private_qs[1] ~ 1,
+                    private_instruction <= private_qs[2] ~ 2,
+                    private_instruction <= private_qs[3] ~ 3,
+                    private_instruction > private_qs[3] ~ 4,
+                    TRUE ~ NA
+                ),
+                activities_last_year = dplyr::case_when(
+                    activities_last_year <= ly_qs[1] ~ 1,
+                    activities_last_year <= ly_qs[2] ~ 2,
+                    activities_last_year <= ly_qs[3] ~ 3,
+                    activities_last_year > ly_qs[3] ~ 4,
+                    TRUE ~ NA
+                )
+            )
+    }
+    return(saiq)
 }
 
 #' Extract healthy behaviours: exercise questionnaire
