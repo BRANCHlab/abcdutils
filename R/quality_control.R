@@ -25,8 +25,8 @@ qc_smri <- function(mri_y_qc_raw_smr,
     # Filter to specified time / subjects, then select only QC columns
     ###########################################################################
     mri_qc <- mri_y_qc_raw_smr |>
-        filter_subjects(subjects = subjects) |>
-        filter_timepoint(t = t)
+        filter_timepoint(t = t) |> 
+        filter_subjects(subjects = subjects)
     if (metric == "qc") {
         mri_qc <- mri_qc |>
             dplyr::select(
@@ -96,8 +96,8 @@ qc_dmri <- function(mri_y_qc_raw_dmr,
     # Filter to specified time / subjects, then select only QC columns
     ###########################################################################
     mri_qc <- mri_y_qc_raw_dmr |>
-        filter_subjects(subjects = subjects) |>
-        filter_timepoint(t = t)
+        filter_timepoint(t = t) |>
+        filter_subjects(subjects = subjects)
     if (metric == "qc") {
         mri_qc <- mri_qc |>
             dplyr::select(
@@ -167,8 +167,8 @@ qc_rsfmri <- function(mri_y_qc_raw_rsfmr,
     # Filter to specified time / subjects, then select only QC columns
     ###########################################################################
     mri_qc <- mri_y_qc_raw_rsfmr |>
-        filter_subjects(subjects = subjects) |>
-        filter_timepoint(t = t)
+        filter_timepoint(t = t) |>
+        filter_subjects(subjects = subjects)
     if (metric == "qc") {
         mri_qc <- mri_qc |>
             dplyr::select(

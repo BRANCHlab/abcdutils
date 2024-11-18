@@ -385,14 +385,23 @@ get_sports_and_activities <- function(ph_p_saiq,
     )
     ###########################################################################
     # Number of activities participated in the last year
-    p12_idx <- endsWith(colnames(saiq), "p12")
-    p12_l_idx <- endsWith(colnames(saiq), "p12_l")
-    p12_all_idx <- p12_idx | p12_l_idx
-    p12_cols <- colnames(saiq)[p12_all_idx]
-    saiq$"activities_last_year" <- rowSums(
-        saiq[, p12_cols],
-        na.rm = TRUE
-    )
+    if (t == 0) {
+        p12_idx <- endsWith(colnames(saiq), "p12")
+        p12_all_idx <- p12_idx
+        p12_cols <- colnames(saiq)[p12_all_idx]
+        saiq$"activities_last_year" <- rowSums(
+            saiq[, p12_cols],
+            na.rm = TRUE
+        )
+    } else {
+        p12_idx <- endsWith(colnames(saiq), "nmonth_p_l")
+        p12_all_idx <- p12_idx
+        p12_cols <- colnames(saiq)[p12_all_idx]
+        saiq$"activities_last_year" <- rowSums(
+            saiq[, p12_cols],
+            na.rm = TRUE
+        )
+    }
     ###########################################################################
     # Select columns
     saiq <- dplyr::select(
@@ -512,8 +521,8 @@ get_parent_psychopathology <- function(mh_p_asr,
                                        raw = TRUE) {
     if (raw == TRUE) {
         parent_psychopathology <- mh_p_asr |>
-            filter_subjects(subjects = subjects) |>
             filter_timepoint(t = t) |>
+            filter_subjects(subjects = subjects) |>
             dplyr::select("subjectkey", dplyr::ends_with("r")) |>
             dplyr::select(
                 -c(
@@ -528,8 +537,8 @@ get_parent_psychopathology <- function(mh_p_asr,
             )
     } else {
         parent_psychopathology <- mh_p_asr |>
-            filter_subjects(subjects = subjects) |>
             filter_timepoint(t = t) |>
+            filter_subjects(subjects = subjects) |>
             dplyr::select("subjectkey", dplyr::ends_with("t")) |>
             dplyr::select(
                 -c(
