@@ -1,3 +1,8 @@
+# abcdutils 0.2.0
+
+* Updated TBI/Uninjured extraction functions
+* Improved documentation
+
 # abcdutils 0.1.1
 
 ## Minor changes
