@@ -4,20 +4,28 @@
 \alias{get_friends}
 \title{Extract number of friends}
 \usage{
-get_friends(mh_y_or, gish_p_gi, subjects = NULL, discretize = FALSE, t = NULL)
+get_friends(mh_y_or, gish_p_gi, subjects = NULL, t = NULL, discretize = FALSE)
 }
 \arguments{
-\item{mh_y_or}{ABCD Other Resilience}
+\item{mh_y_or}{ABCD Other Resilience.}
 
-\item{gish_p_gi}{Parent report of sex and gender dataframe}
+\item{gish_p_gi}{Parent report of sex and gender data frame.}
 
-\item{subjects}{Vector of subjectkeys.}
-
-\item{discretize}{Boolean indicating if the loneliness measures should be
-discretized into quartiles}
+\item{subjects}{Vector of subjects to filter to.}
 
 \item{t}{timepoint of data collection (0: baseline, 1: 1yfu, ...)}
+
+\item{discretize}{Boolean indicating if the loneliness measures should be
+discretized into quartiles.}
+}
+\value{
+A data frame containing number of friends.
 }
 \description{
-Extract number of friends
+This function returns the number of friends and close friends of the same
+and opposite sex as reported by the ABCD Parent Resilience Survey. The values
+are stored in the ABCD table \code{mh_y_or.txt} under the names \code{resiliency5a_y},
+'\code{resiliency5b_y}, \code{resiliency6a_y}, and \code{resiliency6b_y}. The variables
+can also be discretized into quartiles relative to the entire sample at
+the specified timepoint.
 }

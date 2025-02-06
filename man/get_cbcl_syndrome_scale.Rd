@@ -7,17 +7,17 @@
 get_cbcl_syndrome_scale(mh_p_cbcl, raw = TRUE, t = NULL, subjects = NULL)
 }
 \arguments{
-\item{mh_p_cbcl}{Dataframe containing ABCD CBCL data}
+\item{mh_p_cbcl}{Data frame containing ABCD CBCL data}
 
 \item{raw}{Boolean indicating if extracted data should be raw (TRUE) or
 t-scores (FALSE). Defaults to TRUE.}
 
 \item{t}{timepoint of data collection (0: baseline, 1: 1yfu, ...)}
 
-\item{subjects}{Vector of subjectkeys.}
+\item{subjects}{Vector of subjects to filter to.}
 }
 \value{
-ss_data Dataframe containing syndrome scale data
+A data frame containing syndrome scale data
 }
 \description{
 Extract CBCL syndrome scale data

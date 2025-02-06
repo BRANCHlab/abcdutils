@@ -4,20 +4,29 @@
 \alias{get_prosocial_behaviour_p}
 \title{Parent report of prosocial behaviour}
 \usage{
-get_prosocial_behaviour_p(ce_p_psb, subjects = NULL, no_zero = FALSE, t = NULL)
+get_prosocial_behaviour_p(ce_p_psb, subjects = NULL, t = NULL, no_zero = FALSE)
 }
 \arguments{
-\item{ce_p_psb}{Parent Prosocial Behavior Survey}
+\item{ce_p_psb}{Parent Prosocial Behavior Survey.}
 
-\item{subjects}{Vector of subjectkeys.}
-
-\item{no_zero}{Boolean indicating if zero values should be replaced with 1}
+\item{subjects}{Vector of subjects to filter to.}
 
 \item{t}{timepoint of data collection (0: baseline, 1: 1yfu, ...)}
+
+\item{no_zero}{Boolean indicating if zero values should be replaced with 1.}
 }
 \value{
-prosocial_behaviour
+A data frame containing 3 parent responses concerning prosocial
+behaviour in their children.
 }
 \description{
-Parent report of prosocial behaviour
+This function returns parent responses to the ABCD Parent Prosocial Behavior
+Survey. The values are stored in the ABCD table \code{ce_p_psb.txt} under the
+names \code{prosocial_q1_p}, \code{prosocial_q2_p}, and \code{prosocial_q3_p}.'
+The function also renames the variables as follows:
+\itemize{
+\item "prosocial_q1_p" -> "considerate_p"
+\item "prosocial_q2_p" -> "helps_hurt_p"
+\item "prosocial_q3_p" -> "helpful_p"
+}
 }

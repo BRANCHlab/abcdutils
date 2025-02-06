@@ -2,9 +2,7 @@
 #'
 #' @param df The dataframe containing columns to be converted
 #' @param col_indices The positions of the columns to be converted
-#'
 #' @return df The dataframe with numeric columns
-#'
 #' @export
 col_to_num <- function(df, col_indices) {
     key_cols <- colnames(df)[col_indices]
@@ -14,14 +12,11 @@ col_to_num <- function(df, col_indices) {
 
 #' Convert dataframe columns to numeric type
 #'
+#' @keywords internal
 #' Converts all columns in a dataframe that can be converted to numeric type to
 #'  numeric type.
-#'
 #' @param df A dataframe
-#'
 #' @return df The dataframe with all possible columns converted to type numeric
-#'
-#' @export
 numcol_to_numeric <- function(df) {
     df[] <- lapply(df,
         function(x) {
@@ -42,9 +37,7 @@ numcol_to_numeric <- function(df) {
 #' Convert char columns to factors
 #'
 #' @param df The dataframe containing char columns to be converted
-#'
 #' @return df The dataframe with factor columns
-#'
 #' @export
 char_to_fac <- function(df) {
     df[sapply(df, is.character)] <-
@@ -63,9 +56,7 @@ char_to_fac <- function(df) {
 #'
 #' @param train_frac The fraction (0 to 1) of subjects for training
 #' @param subjects Vector of subjects to assign.
-#'
 #' @return split a named list containing the training and testing subject_ids
-#'
 #' @export
 train_test_assign <- function(train_frac, subjects) {
     train_thresh <- 2147483647 * train_frac
@@ -80,9 +71,7 @@ train_test_assign <- function(train_frac, subjects) {
 #'
 #' @param df_list list of dataframes
 #' @param join String indicating if join should be "inner" or "full"
-#'
 #' @return merged_df inner join of all dataframes in list
-#'
 #' @export
 merge_df_list <- function(df_list, join = "inner") {
     if (join == "inner") {
@@ -104,10 +93,9 @@ merge_df_list <- function(df_list, join = "inner") {
 #'  this function returns FALSE instead. Otherwise, evaluates the expression
 #'  normally.
 #'
+#' @keywords internal
 #' @param x a conditional expression
-#'
-#' @export
-flex_cond <- function(x) {
+is_true <- function(x) {
     tryCatch({
         if (length(x) > 0) {
             return(x)
@@ -133,7 +121,6 @@ flex_cond <- function(x) {
 #' @param c1 string name of first column
 #' @param c2 string name of second column
 #' @param new_col string name of collapsed column
-#'
 #' @export
 col_collapse <- function(df, c1, c2, new_col) {
     c1_col <- df[, c1]
@@ -154,7 +141,6 @@ col_collapse <- function(df, c1, c2, new_col) {
 #' Sort a dataframe by subjectkey
 #'
 #' @param abcd_df A dataframe with a subjectkey column.
-#'
 #' @export
 sort_subjects <- function(abcd_df) {
     sorted_df <- abcd_df |>

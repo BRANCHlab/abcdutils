@@ -7,19 +7,46 @@
 get_family_function(ce_y_fes, ce_p_fes, subjects = NULL, t = NULL)
 }
 \arguments{
-\item{ce_y_fes}{ABCD Parent Family Environment Scale-Family Conflict Subscale
-Modified from PhenX}
+\item{ce_y_fes}{ABCD table containing Parent Family Environment Scale-Family
+Conflict Subscale Modified from PhenX (youth report).}
 
-\item{ce_p_fes}{ABCD Parent Family Environment Scale-Family Conflict
-Subscale Modified from PhenX}
+\item{ce_p_fes}{ABCD table containing Parent Family Environment Scale-Family
+Conflict Subscale Modified from PhenX (parent report).}
 
-\item{subjects}{Vector of subjectkeys.}
+\item{subjects}{Vector of subjects to filter to.}
 
 \item{t}{timepoint of data collection (0: baseline, 1: 1yfu, ...)}
 }
 \value{
-family_function
+A data frame containing 18 response (9 parent, 9 youth) columns for
+family environment.
 }
 \description{
-Extract family function
+This function returns parent and youth responses to the ABCD Parent Family
+Environment Scale-Family Conflict Subscale Modified from PhenX. The values
+are stored in the ABCD tables ce_y_fes.txt and ce_p_fes.txt under the names
+\code{fes_youth_q1} to \code{fes_youth_q9} and \code{fam_enviro1_p} to \code{fam_enviro9r_p}.
+}
+\details{
+The function also renames the variables as follows:
+\itemize{
+\item "fes_youth_q1" -> "q1_fight_y"
+\item "fam_enviro1_p" -> "q1_fight_p"
+\item "fes_youth_q2" -> "q2_angry_y"
+\item "fam_enviro2r_p" -> "q2_angry_p"
+\item "fes_youth_q3" -> "q3_throw_y"
+\item "fam_enviro3_p" -> "q3_throw_p"
+\item "fes_youth_q4" -> "q4_temper_y"
+\item "fam_enviro4r_p" -> "q4_temper_p"
+\item "fes_youth_q5" -> "q5_criticize_y"
+\item "fam_enviro5_p" -> "q5_criticize_p"
+\item "fes_youth_q6" -> "q6_hit_y"
+\item "fam_enviro6_p" -> "q6_hit_p"
+\item "fes_youth_q7" -> "q7_peaceful_y"
+\item "fam_enviro7r_p" -> "q7_peaceful_p"
+\item "fes_youth_q8" -> "q8_outdo_y"
+\item "fam_enviro8_p" -> "q8_outdo_p"
+\item "fes_youth_q9" -> "q9_yell_y"
+\item "fam_enviro9r_p" -> "q9_yell_p"
+}
 }

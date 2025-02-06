@@ -7,16 +7,19 @@
 get_exercise(ph_y_yrb, subjects = NULL, t = NULL)
 }
 \arguments{
-\item{ph_y_yrb}{ABCD Youth Youth Risk Behavior Survey Exercise Physical
-Activity}
+\item{ph_y_yrb}{ABCD Youth Risk Behavior Survey Exercise Physical Activity.}
 
-\item{subjects}{Vector of subjectkeys.}
+\item{subjects}{Vector of subjects to filter to.}
 
 \item{t}{timepoint of data collection (0: baseline, 1: 1yfu, ...)}
 }
 \value{
-exercise
+A data frame containing exercise data.
 }
 \description{
-Extract healthy behaviours: exercise questionnaire
+This function returns a measure of exercise time from the ABCD Youth Risk
+Behavior Survey. The values are stored in the ABCD table \code{ph_y_yrb.txt}
+under the names \code{physical_activity1_y}, \code{physical_activity2_y}, and
+\code{physical_activity5_y}. The final measure is the average of these three
+variables.
 }

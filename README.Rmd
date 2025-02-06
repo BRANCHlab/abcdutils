@@ -24,17 +24,13 @@ A collection of utility functions for working with the Adolescent Brain and Cogn
 
 You can install abcdutils from [GitHub](https://github.com/) with:
 
-``` r
-# install.packages("devtools")
-devtools::install_github("psvelayudhan/abcdutils") # latest development version
+```{r eval = FALSE}
+# Latest development version
+devtools::install_github("psvelayudhan/abcdutils")
 
-devtools::install_github("psvelayudhan/abcdutils@stable") # latest stable version
-
-devtools::install_github("psvelayudhan/abcdutils@v0.1.0") # specific version
+# Install a specific tagged version
+devtools::install_github("psvelayudhan/abcdutils@v0.2.0")
 ```
-
-See https://github.com/psvelayudhan/abcdutils/tags for available specific versions.
-
 
 ## Usage
 
@@ -47,12 +43,8 @@ library(readr)
 # Search the NDA's data dictionary from R
 search_dd("traumatic brain injury")
 
-# Go to the data dictionary page of a dataframe based on its short name
-abcd_dd("abcd_otbi01")
-
-# Remove the data dictionary (yes, this is just df[-1, ])
-abcd_otbi01 <- read_csv("abcd_otbi01.txt")
-remove_dd(abcd_otbi01)
+# Launch the data dictionary in your browser
+open_dd()
 ```
 
 ### Extract cleaned dataframes
@@ -60,7 +52,7 @@ remove_dd(abcd_otbi01)
 Subcortical volumes (structural MRI)
 
 ```{r eval = FALSE}
-subc_v <- get_subc_v(smrip10201)
+subc_v <- get_subc_v(mri_y_smr_vol_aseg)
 ```
 
 Subcortical volumes for a predefined set of subjects and a specific collection event
@@ -69,52 +61,54 @@ Subcortical volumes for a predefined set of subjects and a specific collection e
 # Dataframe containing "subjectkey" column
 subject_df <- read_csv("subjectlist.csv")
 
-subc_v <- get_subc_v(smrip10201, subjects = subject_df, t = 0)
+subc_v <- get_subc_v(
+    mri_y_smr_vol_aseg,
+    subjects = subject_df,
+    t = 0
+)
 ```
 
 (where `t = 0` refers to baseline data)
 
 Extraction available for a wide range of variables related to neuroimaging, demographics, psychosocial resilience, and medical history:
 
-- `get_cbcl_aggressive_r`
-- `get_cbcl_anxiety_r`
-- `get_cbcl_attention_r`
-- `get_cbcl_depress_r`
-- `get_cbcl_dizzy`
-- `get_cbcl_headaches`
-- `get_cbcl_overtired`
-- `get_cbcl_sleeping_less`
-- `get_cbcl_sleeping_more`
-- `get_cbcl_vomiting`
-- `get_cort_sa`
-- `get_cort_t`
-- `get_exercise`
-- `get_family_function`
-- `get_full_sleep_df`
-- `get_gord_cor`
-- `get_gord_var`
-- `get_headaches`
-- `get_income`
-- `get_loneliness`
-- `get_mtbi_age`
-- `get_mtbi_count`
-- `get_mtbi_loc`
-- `get_mtbi_mechanism`
-- `get_mtbi_mem_daze`
-- `get_nihtbx_cardsort_fc`
-- `get_nihtbx_list_fc`
-- `get_nihtbx_pattern_fc`
-- `get_parent_psychopathology`
-- `get_prosocial_behaviour`
-- `get_pubertal_status`
-- `get_race`
-- `get_screen_time`
-- `get_sex`
-- `get_sports_and_activities`
-- `get_subc_cor`
-- `get_subc_v`
-- `get_subc_var`
-- `get_wmnd`
+- `get_all_wmnd()`
+- `get_cbcl_syndrome_scale()`
+- `get_cort_sa()`
+- `get_cort_t()`
+- `get_exercise()`
+- `get_family_function()`
+- `get_friends()`
+- `get_gord_cor()`
+- `get_gord_var()`
+- `get_headaches()`
+- `get_income()`
+- `get_interview_age()`
+- `get_mtbi_age()`
+- `get_mtbi_count()`
+- `get_mtbi_loc()`
+- `get_mtbi_mechanism()`
+- `get_mtbi_mem_daze()`
+- `get_mtbi_subjects()`
+- `get_nihtbx_cardsort_fc()`
+- `get_nihtbx_list_fc()`
+- `get_p_gender()`
+- `get_parent_psychopathology()`
+- `get_prosocial_behaviour_p()`
+- `get_prosocial_behaviour_y()`
+- `get_pubertal_status_p()`
+- `get_pubertal_status_y()`
+- `get_race()`
+- `get_screen_time()`
+- `get_sds_total_probs()`
+- `get_sex()`
+- `get_sleep_disturbance()`
+- `get_sports_and_activities()`
+- `get_subc_cor()`
+- `get_subc_v()`
+- `get_subc_var()`
+- `get_uninjured_subjects()`
+- `get_y_gender()`
 
 
 ### Helpful subsetting
@@ -170,7 +164,6 @@ detail_mtbi(abcd_otbi01)
 
 ```{r eval = FALSE}
 # Visualize missing data across several dataframes
-
 df_list <- list(
     "loss of consciousness" = as_mtbi_loc,
     "mechanism of injury" = as_mtbi_mechanism,

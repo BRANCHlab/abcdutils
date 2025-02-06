@@ -7,15 +7,15 @@
 get_race(
   abcd_p_demo,
   subjects = NULL,
-  t = t,
+  t = NULL,
   dummy = FALSE,
   asian_as_other = FALSE
 )
 }
 \arguments{
-\item{abcd_p_demo}{Dataframe containing parent demographic information}
+\item{abcd_p_demo}{Data frame containing parent demographic information}
 
-\item{subjects}{Vector of subjectkeys.}
+\item{subjects}{Vector of subjects to filter to.}
 
 \item{t}{timepoint of data collection (0: baseline, 1: 1yfu, ...)}
 
@@ -24,7 +24,7 @@ get_race(
 \item{asian_as_other}{If TRUE, Asian category is included in "other".}
 }
 \value{
-race_df Dataframe containing subject race
+A data frame containing subject race
 }
 \description{
 Returns race data categorized by the ABCD Study based on the NIH Minimum

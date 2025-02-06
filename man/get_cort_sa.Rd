@@ -9,12 +9,12 @@ get_cort_sa(mri_y_smr_area_dsk, subjects = NULL, t = NULL)
 \arguments{
 \item{mri_y_smr_area_dsk}{Data file containing cortical data}
 
-\item{subjects}{Vector of subjectkeys.}
+\item{subjects}{Vector of subjects to filter to.}
 
 \item{t}{timepoint of data collection (0: baseline, 1: 1yfu, ...)}
 }
 \value{
-cort_sa_df Dataframe of cortical surface areas
+A data frame of cortical surface areas
 }
 \description{
 Extract cortical surface areas

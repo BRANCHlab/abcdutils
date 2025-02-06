@@ -1,13 +1,11 @@
-#' Rename non-descriptive columns in ABCD's TBI file.
+#' Rename non-descriptive columns in ABCD's Ohio TBI table.
 #'
-#' Renames column names of ABCD's Ohio TBI Screen data to meaningful names
-#' that are easier to work with.
-#' Use 'original_otbi_names()' to print out a conversion table of old and new
-#'  column names.
+#' This function renames columns of ABCD's Ohio TBI Screen data to
+#' be more understandable. Use `original_otbi_names()` to display a
+#' conversion table of old and new column names.
 #'
-#' @param tbi_df The complete file abcd_otbi01.txt
-#'
-#' @return renamed_tbi A modified form of tbi_df with clearer column names
+#' @param tbi_df A data frame containing columns from abcd_otbi01.txt.
+#' @return A modified form of tbi_df with clearer column names.
 #' @export
 rename_tbi <- function(tbi_df) {
     if (!is.data.frame(tbi_df)) {
@@ -66,144 +64,46 @@ rename_tbi <- function(tbi_df) {
     return(renamed_tbi)
 }
 
-#' Return conversion table of original and new otbi names
+#' Display conversion table of original and new TBI variable names
 #'
+#' This function neatly displays a table indicating the original and new
+#' variable names for the TBI variables in the ABCD dataset following usage
+#' of the `rename_tbi` function.
 #' @export
 original_tbi_names <- function() {
     df <- data.frame(
         new_name = c(
-            "hosp_er_inj",
-            "hosp_er_loc",
-            "hosp_er_mem_daze",
-            "hosp_er_age",
-            "vehicle_inj",
-            "vehicle_loc",
-            "vehicle_mem_daze",
-            "vehicle_age",
-            "fall_hit_inj",
-            "fall_hit_loc",
-            "fall_hit_mem_daze",
-            "fall_hit_age",
-            "violent_inj",
-            "violent_loc",
-            "violent_mem_daze",
-            "violent_age",
-            "blast_inj",
-            "blast_loc",
-            "blast_mem_daze",
-            "blast_age",
-            "other_loc_inj",
-            "other_loc_num",
-            "other_loc_max_loc_mins",
-            "other_loc_num_over_30",
-            "other_loc_min_age",
-            "multi_inj",
-            "multi_loc",
-            "multi_mem_daze",
-            "multi_effect_start_age",
-            "multi_effect_end_age",
-            "other_multi_inj",
-            "other_multi_effect_type",
-            "other_multi_effect_start_age",
-            "other_multi_effect_end_age",
-            "num_sport_concussions",
-            "school_missed_sport_concussion",
-            "school_missed_worst_sport_concussion",
-            "other_other_multi_inj",
+            "hosp_er_inj", "hosp_er_loc", "hosp_er_mem_daze", "hosp_er_age",
+            "vehicle_inj", "vehicle_loc", "vehicle_mem_daze", "vehicle_age",
+            "fall_hit_inj", "fall_hit_loc", "fall_hit_mem_daze",
+            "fall_hit_age", "violent_inj", "violent_loc", "violent_mem_daze",
+            "violent_age", "blast_inj", "blast_loc", "blast_mem_daze",
+            "blast_age", "other_loc_inj", "other_loc_num",
+            "other_loc_max_loc_mins", "other_loc_num_over_30",
+            "other_loc_min_age", "multi_inj", "multi_loc", "multi_mem_daze",
+            "multi_effect_start_age", "multi_effect_end_age",
+            "other_multi_inj", "other_multi_effect_type",
+            "other_multi_effect_start_age", "other_multi_effect_end_age",
+            "num_sport_concussions", "school_missed_sport_concussion",
+            "school_missed_worst_sport_concussion", "other_other_multi_inj",
             "other_other_multi_effect_type",
             "other_other_multi_effect_start_age",
             "other_other_multi_effect_end_age"
         ),
         old_name = c(
-            "tbi_1",
-            "tbi_1b",
-            "tbi_1c",
-            "tbi_1d",
-            "tbi_2",
-            "tbi_2b",
-            "tbi_2c",
-            "tbi_2d",
-            "tbi_3",
-            "tbi_3b",
-            "tbi_3c",
-            "tbi_3d",
-            "tbi_4",
-            "tbi_4b",
-            "tbi_4c",
-            "tbi_4d",
-            "tbi_5",
-            "tbi_5b",
-            "tbi_5c",
-            "tbi_5d",
-            "tbi_6o",
-            "tbi_6p",
-            "tbi_6q",
-            "tbi_6r",
-            "tbi_6s",
-            "tbi_7a",
-            "tbi_7c1",
-            "tbl_7c2",
-            "tbi_7e",
-            "tbi_7f",
-            "tbi_7g",
-            "tbi_7i",
-            "tbi_7k",
-            "tbi_7l",
-            "tbi_8",
-            "tbi_8a",
-            "tbi_8b",
-            "tbi_8g",
-            "tbi_8i",
-            "tbi_8k",
-            "tbi_8l"
-        ),
-        description = c(
-            "ever hospitalized/ER for head/neck injury?",
-            "if LOC, how long?",
-            "were they dazed or have memory gap?",
-            "how old were they?",
-            "ever injured in a vehicle accident?",
-            "if LOC, how long?",
-            "were they dazed or have memory gap?",
-            "how old were they?",
-            "ever injured head/neck from fall or hit?",
-            "if LOC, how long?",
-            "were they dazed or have memory gap?",
-            "how old were they?",
-            "ever injure head/neck from violence?",
-            "if LOC, how long?",
-            "were they dazed or have memory gap?",
-            "how old were they?",
-            "ever injure head or neck from blast?",
-            "if LOC, how long?",
-            "were they dazed or have memory gap?",
-            "how old were they?",
-            "any other injuries with LOC?",
-            "how many more?",
-            "how long was longest LOC?",
-            "how many were >= 30 min?",
-            "what was their youngest age?",
-            "did they have a period of multiple injuries?",
-            "if LOC, how long?",
-            "were they dazed or have memory gap?",
-            "at what age did the effects begin?",
-            "at what age did the effects end?",
-            "was there another multiple injury period?",
-            "typical effect of the injury?",
-            "start age of those effects?",
-            "end age of those effects?",
-            "how many sport/activity-related concussions?*",
-            "days of school missed due to worst concussion (if multiple)?",
-            "days of school missed due to concussion?",
-            "another period of multiple inj?",
-            "typical effects?",
-            "start age of effects?",
-            "end age of effects?"
+            "tbi_1", "tbi_1b", "tbi_1c", "tbi_1d", "tbi_2", "tbi_2b", "tbi_2c",
+            "tbi_2d", "tbi_3", "tbi_3b", "tbi_3c", "tbi_3d", "tbi_4", "tbi_4b",
+            "tbi_4c", "tbi_4d", "tbi_5", "tbi_5b", "tbi_5c", "tbi_5d",
+            "tbi_6o", "tbi_6p", "tbi_6q", "tbi_6r", "tbi_6s", "tbi_7a",
+            "tbi_7c1", "tbl_7c2", "tbi_7e", "tbi_7f", "tbi_7g", "tbi_7i",
+            "tbi_7k", "tbi_7l", "tbi_8", "tbi_8a", "tbi_8b", "tbi_8g",
+            "tbi_8i", "tbi_8k", "tbi_8l"
         )
     )
-    options(width = 110)
-    print(df)
-    options(width = 80)
+    output <- utils::capture.output(print(df))
+    for (i in output) {
+        cat(i, "\n")
+    }
 }
 
 #' Adds columns to tbi_df showing if a child has had an mTBI or moderate+ TBI
@@ -217,48 +117,117 @@ original_tbi_names <- function() {
 #' These definitions aim to match typical GCS-based definitions as well as
 #' possible.
 #'
-#' @param tbi_df A TBI dataframe
-#'
-#' @return tbi_df A modified form of tbi_df added tbi columns
-#'
+#' @param tbi_df A TBI dataframe.
+#' @return A modified form of tbi_df added tbi columns.
 #' @export
 identify_all_tbi <- function(tbi_df) {
     # Assign column types
     tbi_df <- numcol_to_numeric(tbi_df)
-    # Generate mtbi and moderate_or_severe_tbi columns
+    # Generate columns
     tbi_df <- tbi_df |> dplyr::mutate(
+        # mTBI #
         mtbi = dplyr::case_when(
-            (tbi_df$"hosp_er_loc" < 2 & tbi_df$"hosp_er_mem_daze" == 1) |
-                tbi_df$"hosp_er_loc" == 1 ~ 1,
-            (tbi_df$"vehicle_loc" < 2 & tbi_df$"vehicle_mem_daze" == 1) |
-                tbi_df$"vehicle_loc" == 1 ~ 1,
-            (tbi_df$"fall_hit_loc" < 2 & tbi_df$"fall_hit_mem_daze" == 1) |
-                tbi_df$"fall_hit_loc" == 1 ~ 1,
-            (tbi_df$"violent_loc" < 2 & tbi_df$"violent_mem_daze" == 1) |
-                tbi_df$"violent_loc" == 1 ~ 1,
-            (tbi_df$"blast_loc" < 2 & tbi_df$"blast_mem_daze" == 1) |
-                tbi_df$"blast_loc" == 1 ~ 1,
-            (tbi_df$"other_loc_num" - tbi_df$"other_loc_num_over_30") > 0 ~ 1,
-            (tbi_df$"multi_loc" < 2 & tbi_df$"multi_mem_daze" == 1) |
-                tbi_df$"multi_loc" == 1 ~ 1,
-            flex_cond(tbi_df$"num_sport_concussions" > 0) ~ 1,
-            flex_cond(tbi_df$"other_multi_inj" == 1) ~ 0.5,
-            flex_cond(tbi_df$"other_other_multi_inj" == 1) ~ 0.5,
-            TRUE ~ 0
+            ## LOC
+            hosp_er_loc == 1 ~ TRUE,
+            vehicle_loc == 1 ~ TRUE,
+            fall_hit_loc == 1 ~ TRUE,
+            violent_loc == 1 ~ TRUE,
+            blast_loc == 1 ~ TRUE,
+            other_loc_num - other_loc_num_over_30 > 0 ~ TRUE,
+            ## PTA, or PTA + LOC both
+            hosp_er_loc <= 1 & hosp_er_mem_daze == 1 ~ TRUE,
+            vehicle_loc <= 1 & vehicle_mem_daze == 1 ~ TRUE,
+            fall_hit_loc <= 1 & fall_hit_mem_daze == 1 ~ TRUE,
+            violent_loc <= 1 & violent_mem_daze == 1 ~ TRUE,
+            blast_loc <= 1 & blast_mem_daze == 1 ~ TRUE,
+            ## Repeated head impacts
+            num_sport_concussions > 0 ~ TRUE,
+            ## Concussion
+            other_multi_inj == 1 ~ TRUE,
+            ## Negation of other conditions
+            hosp_er_loc != 1 &
+                vehicle_loc != 1 &
+                fall_hit_loc != 1 &
+                violent_loc != 1 &
+                blast_loc != 1 &
+                (other_loc_num - other_loc_num_over_30 == 0) &
+                num_sport_concussions == 0 &
+                other_multi_inj != 1 ~ FALSE,
+            TRUE ~ NA
         ),
-        moderate_or_severe_tbi = dplyr::case_when(
-            (
-                tbi_df$"hosp_er_loc" > 1 |
-                    tbi_df$"vehicle_loc" > 1 |
-                    tbi_df$"fall_hit_loc" > 1 |
-                    tbi_df$"violent_loc" > 1 |
-                    tbi_df$"blast_loc" > 1 |
-                    tbi_df$"other_loc_num_over_30" > 0 |
-                    tbi_df$"multi_loc" > 1
-            ) ~ 1,
-            flex_cond(tbi_df$"other_multi_inj" == 1) ~ 0.5,
-            flex_cond(tbi_df$"other_other_multi_inj" == 1) ~ 0.5,
-            TRUE ~ 0
+        # Possible mTBI #
+        possible_mtbi = dplyr::case_when(
+            ## PTA + no LOC
+            hosp_er_loc == 0 & hosp_er_mem_daze == 1 ~ TRUE,
+            vehicle_loc == 0 & vehicle_mem_daze == 1 ~ TRUE,
+            fall_hit_loc == 0 & fall_hit_mem_daze == 1 ~ TRUE,
+            violent_loc == 0 & violent_mem_daze == 1 ~ TRUE,
+            blast_loc == 0 & blast_mem_daze == 1 ~ TRUE,
+            ## Repeated head impacts
+            other_multi_inj == 0.5 ~ TRUE,
+            ## Negation of other conditions
+            !(hospital_er_loc == 0 & hosp_er_mem_daze == 1) &
+                !(vehicle_loc == 0 & vehicle_mem_daze == 1) &
+                !(fall_hit_loc == 0 & fall_hit_mem_daze == 1) &
+                !(violent_loc == 0 & violent_mem_daze == 1) &
+                !(blast_loc == 0 & blast_mem_daze == 1) &
+                other_multi_inj != 0.5 ~ FALSE,
+            TRUE ~ NA
+        ),
+        # Improbable TBI #
+        improbable_tbi = dplyr::case_when(
+            ## LOC
+            hosp_er_loc == 0 & hosp_er_mem_daze == 0 ~ TRUE,
+            vehicle_loc == 0 & vehicle_mem_daze == 0 ~ TRUE,
+            fall_hit_loc == 0 & fall_hit_mem_daze == 0 ~ TRUE,
+            violent_loc == 0 & violent_mem_daze == 0 ~ TRUE,
+            blast_loc == 0 & blast_mem_daze == 0 ~ TRUE,
+            ## Repeated head impacts
+            num_sport_concussions == 0 ~ TRUE,
+            ## Negation of other conditions
+            !(hospital_er_loc == 0 & hosp_er_mem_daze == 0) &
+                !(vehicle_loc == 0 & vehicle_mem_daze == 0) &
+                !(fall_hit_loc == 0 & fall_hit_mem_daze == 0) &
+                !(violent_loc == 0 & violent_mem_daze == 0) &
+                !(blast_loc == 0 & blast_mem_daze == 0) &
+                num_sport_concussions != 0 ~ FALSE,
+            TRUE ~ NA
+        ),
+        # Moderate TBI #
+        moderate_tbi = dplyr::case_when(
+            hosp_er_loc == 2 ~ TRUE,
+            vehicle_loc == 2 ~ TRUE,
+            fall_hit_loc == 2 ~ TRUE,
+            violent_loc == 2 ~ TRUE,
+            blast_loc == 2 ~ TRUE,
+            multi_loc == 2 ~ TRUE,
+            ## Negation of other conditions
+            hosp_er_loc != 2 &
+                vehicle_loc != 2 &
+                fall_hit_loc != 2 &
+                violent_loc != 2 &
+                blast_loc != 2 &
+                multi_loc != 2 ~ FALSE,
+            TRUE ~ NA
+        ),
+        # Severe TBI #
+        severe_tbi = dplyr::case_when(
+            hosp_er_loc >= 3 ~ TRUE,
+            vehicle_loc >= 3 ~ TRUE,
+            fall_hit_loc >= 3 ~ TRUE,
+            violent_loc >= 3 ~ TRUE,
+            blast_loc >= 3 ~ TRUE,
+            multi_loc >= 3 ~ TRUE,
+            ## Negation of other conditions
+            pmax(
+                hosp_er_loc,
+                vehicle_loc,
+                fall_hit_loc,
+                violent_loc,
+                blast_loc,
+                multi_loc
+            ) < 3 ~ FALSE,
+            TRUE ~ NA
         )
     )
     return(tbi_df)
@@ -267,9 +236,7 @@ identify_all_tbi <- function(tbi_df) {
 #' Generate columns indicating which injury types were mTBIs
 #'
 #' @param tbi_df A TBI dataframe
-#'
-#' @return df_mtbi The modified dataframe
-#'
+#' @return The modified dataframe
 #' @export
 identify_mtbi <- function(tbi_df) {
     df_mtbi <- tbi_df |> dplyr::mutate(
@@ -319,9 +286,7 @@ identify_mtbi <- function(tbi_df) {
 #' Identify time since and age at each mTBI / most recent mTBI
 #'
 #' @param tbi_df A TBI dataframe
-#'
 #' @return dfa The modified dataframe
-#'
 #' @export
 identify_mtbi_times <- function(tbi_df) {
     # Scale injury ages to match interview ages if necessary
@@ -496,13 +461,11 @@ identify_latest_mtbi_mem_daze <- function(tbi_df) {
 
 #' Extract mTBI subjects with a minimum time-since-last-mtbi threshold
 #'
-#' @param ph_p_otbi TBI dataframe
+#' @param ph_p_otbi ABCD table containing TBI information.
 #' @param abcd_y_lt Dataframe containing age information
 #' @param subjects Vector of subjects to extract data for.
 #' @param t timepoint of data collection (0: baseline, 1: 1yfu, ...)
-#'
 #' @return subjects Dataframe containing list of required subjects
-#'
 #' @export
 detail_mtbi <- function(ph_p_otbi,
                         abcd_y_lt,
@@ -641,24 +604,73 @@ get_mtbi_subjects <- function(ph_p_otbi,
 #'
 #' @export
 get_uninjured_subjects <- function(ph_p_otbi, abcd_y_lt, t = NULL) {
-    ph_p_otbi <- detail_mtbi(
-        ph_p_otbi,
-        abcd_y_lt,
-        t = t
-    )
     subjectkey <- ""
     mtbi <- ""
-    moderate_or_severe_tbi <- ""
+    possible_mtbi <- ""
+    improbable_tbi <- ""
+    moderate_tbi <- ""
+    severe_tbi <- ""
     all_inj <- ""
-    ph_p_otbi <- ph_p_otbi |>
+    mtbi_sum <- ""
+    possible_mtbi_sum <- ""
+    improbable_tbi_sum <- ""
+    moderate_tbi_sum <- ""
+    severe_tbi_sum <- ""
+    ph_p_otbi <- detail_mtbi(ph_p_otbi, abcd_y_lt, t = t) |>
         dplyr::group_by(subjectkey) |>
         dplyr::summarize(
-            mtbi_sum = sum(mtbi),
-            mod_sev_sum = sum(moderate_or_severe_tbi)
+            mtbi_sum = sum(mtbi, na.rm = TRUE),
+            possible_mtbi_sum = sum(possible_mtbi, na.rm = TRUE),
+            improbable_tbi_sum = sum(improbable_tbi, na.rm = TRUE),
+            moderate_tbi_sum = sum(moderate_tbi, na.rm = TRUE),
+            severe_tbi_sum = sum(severe_tbi, na.rm = TRUE)
+        ) |>
+        dplyr::mutate(
+            all_inj = mtbi_sum + possible_mtbi_sum + improbable_tbi_sum +
+                moderate_tbi_sum + severe_tbi_sum
         )
-    ph_p_otbi$"all_inj" <- ph_p_otbi$"mtbi_sum" + ph_p_otbi$"mod_sev_sum"
     uninjured_subjects <- ph_p_otbi |>
         dplyr::filter(all_inj == 0) |>
         dplyr::select(subjectkey)
     return(uninjured_subjects)
+}
+
+#' Identify subjects that have reported any head or neck injury
+#'
+#' @param tbi_df A TBI data frame.
+#' @return 
+#' @export
+identify_injured <- function(tbi_df) {
+    # Avoid dplyr global variable flags
+    hosp_er_inj <- ""
+    vehicle_inj <- ""
+    fall_hit_inj <- ""
+    violent_inj <- ""
+    blast_inj <- ""
+    other_loc_inj <- ""
+    multi_inj <- ""
+    other_multi_inj <- ""
+    num_sport_concussions <- ""
+    # Ensure the dataframe is in the correct format (if needed)
+    tbi_df <- numcol_to_numeric(tbi_df)
+    # Generate any head or neck injury column based on the renamed column names
+    tbi_df <- tbi_df |> dplyr::mutate(
+        # any head or neck injury
+        any_headneck_inj = dplyr::case_when(
+            hosp_er_inj == 1 ~ TRUE,
+            vehicle_inj == 1 ~ TRUE,
+            fall_hit_inj == 1 ~ TRUE,
+            violent_inj == 1 ~ TRUE,
+            blast_inj == 1 ~ TRUE, 
+            other_loc_inj == 1 ~ TRUE,
+            multi_inj == 1 ~ TRUE,   
+            other_multi_inj == 1 ~ TRUE,
+            num_sport_concussions >= 1 ~ TRUE,
+            hosp_er_inj + vehicle_inj + fall_hit_inj + violent_inj +
+                blast_inj + other_loc_inj + multi_inj + other_multi_inj +
+                num_sport_concussions == 0 ~ FALSE,
+            TRUE ~ NA                                
+        )
+    )
+    return(tbi_df)
 }

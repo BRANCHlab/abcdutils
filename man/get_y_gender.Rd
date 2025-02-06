@@ -2,20 +2,20 @@
 % Please edit documentation in R/extraction.R
 \name{get_y_gender}
 \alias{get_y_gender}
-\title{Return dataframe containing youth-reported genders}
+\title{return A data frame containing youth-reported genders}
 \usage{
-get_y_gender(gish_y_gi, subjects = NULL, t = t)
+get_y_gender(gish_y_gi, subjects = NULL, t = NULL)
 }
 \arguments{
-\item{gish_y_gi}{Youth-reported gender dataframe}
+\item{gish_y_gi}{Youth-reported gender data frame}
 
-\item{subjects}{Vector of subjectkeys.}
+\item{subjects}{Vector of subjects to filter to.}
 
 \item{t}{timepoint of data collection (0: baseline, 1: 1yfu, ...)}
 }
 \value{
-sex Dataframe containing sex
+A data frame containing sex
 }
 \description{
-Return dataframe containing youth-reported genders
+return A data frame containing youth-reported genders
 }

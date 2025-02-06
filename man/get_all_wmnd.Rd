@@ -11,12 +11,12 @@ get_all_wmnd(mri_y_rsi_rnd_at, mri_y_rsi_rnd_wm_dsk, subjects = NULL, t = NULL)
 
 \item{mri_y_rsi_rnd_wm_dsk}{Data file containing neurite density data}
 
-\item{subjects}{Vector of subjectkeys.}
+\item{subjects}{Vector of subjects to filter to.}
 
 \item{t}{timepoint of data collection (0: baseline, 1: 1yfu, ...)}
 }
 \value{
-wmnd_df Dataframe of white matter neurite densities
+A data frame of white matter neurite densities
 }
 \description{
 Extract neurite densities for major white matter tracts (AtlasTrack ROIs) as

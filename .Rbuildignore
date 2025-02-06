@@ -1,6 +1,7 @@
 ^LICENSE\.md$
 ^README\.Rmd$
 build.R
+build_lite.R
 build_no_dep.R
 ^data-raw$
 .lintr

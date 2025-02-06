@@ -2,10 +2,12 @@
 % Please edit documentation in R/tbi.R
 \name{original_tbi_names}
 \alias{original_tbi_names}
-\title{Return conversion table of original and new otbi names}
+\title{Display conversion table of original and new TBI variable names}
 \usage{
 original_tbi_names()
 }
 \description{
-Return conversion table of original and new otbi names
+This function neatly displays a table indicating the original and new
+variable names for the TBI variables in the ABCD dataset following usage
+of the \code{rename_tbi} function.
 }

@@ -13,6 +13,20 @@ numcol_to_numeric(df)
 df The dataframe with all possible columns converted to type numeric
 }
 \description{
-Converts all columns in a dataframe that can be converted to numeric type to
-numeric type.
+Convert dataframe columns to numeric type
 }
+\keyword{Converts}
+\keyword{a}
+\keyword{all}
+\keyword{be}
+\keyword{can}
+\keyword{columns}
+\keyword{converted}
+\keyword{dataframe}
+\keyword{in}
+\keyword{internal}
+\keyword{numeric}
+\keyword{that}
+\keyword{to}
+\keyword{type}
+\keyword{type.}

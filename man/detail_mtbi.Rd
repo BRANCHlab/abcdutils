@@ -7,7 +7,7 @@
 detail_mtbi(ph_p_otbi, abcd_y_lt, subjects = NULL, t = 0)
 }
 \arguments{
-\item{ph_p_otbi}{TBI dataframe}
+\item{ph_p_otbi}{ABCD table containing TBI information.}
 
 \item{abcd_y_lt}{Dataframe containing age information}
 

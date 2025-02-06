@@ -7,14 +7,14 @@
 get_nihtbx_list_fc(abcd_tbss01, subjects = NULL, t = NULL)
 }
 \arguments{
-\item{abcd_tbss01}{NDA nihtbx dataframe}
+\item{abcd_tbss01}{NDA nihtbx data frame}
 
-\item{subjects}{Vector of subjectkeys.}
+\item{subjects}{Vector of subjects to filter to.}
 
 \item{t}{timepoint of data collection (0: baseline, 1: 1yfu, ...)}
 }
 \value{
-nihtbx_list_fc list sorting data
+A data frame containing nihtbx list sorting data.
 }
 \description{
 Get nihtbx list sorting data

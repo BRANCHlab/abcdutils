@@ -4,19 +4,19 @@
 \alias{get_pubertal_status_y}
 \title{Youth report of pubertal status}
 \usage{
-get_pubertal_status_y(ph_y_pds, subjects = NULL, max_value = NULL, t = NULL)
+get_pubertal_status_y(ph_y_pds, subjects = NULL, t = NULL, max_value = NULL)
 }
 \arguments{
-\item{ph_y_pds}{Dataframe containing youth pubertal status report}
+\item{ph_y_pds}{Data frame containing youth pubertal status report}
 
-\item{subjects}{Vector of subjectkeys.}
-
-\item{max_value}{Maximum value for pubertal status}
+\item{subjects}{Vector of subjects to filter to.}
 
 \item{t}{timepoint of data collection (0: baseline, 1: 1yfu, ...)}
+
+\item{max_value}{Maximum value for pubertal status}
 }
 \value{
-pubertal_status Dataframe containing average pubertal status
+A data frame containing average pubertal status
 }
 \description{
 Youth report of pubertal status

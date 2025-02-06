@@ -2,14 +2,14 @@
 % Please edit documentation in R/extraction.R
 \name{get_p_gender}
 \alias{get_p_gender}
-\title{Return dataframe containing parent-reported genders}
+\title{return A data frame containing parent-reported genders}
 \usage{
-get_p_gender(gish_p_gi, subjects = NULL, t = t, match_y_report = FALSE)
+get_p_gender(gish_p_gi, subjects = NULL, t = NULL, match_y_report = FALSE)
 }
 \arguments{
-\item{gish_p_gi}{Parent report of sex and gender dataframe}
+\item{gish_p_gi}{Parent report of sex and gender data frame}
 
-\item{subjects}{Vector of subjectkeys.}
+\item{subjects}{Vector of subjects to filter to.}
 
 \item{t}{timepoint of data collection (0: baseline, 1: 1yfu, ...)}
 

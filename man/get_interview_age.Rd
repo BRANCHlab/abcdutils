@@ -2,22 +2,22 @@
 % Please edit documentation in R/extraction.R
 \name{get_interview_age}
 \alias{get_interview_age}
-\title{Return dataframe containing interview age of specified subjects}
+\title{return A data frame containing interview age of specified subjects}
 \usage{
 get_interview_age(abcd_df, subjects = NULL, t = NULL, as_years = TRUE)
 }
 \arguments{
-\item{abcd_df}{Any ABCD dataframe containing interview age}
+\item{abcd_df}{Any ABCD data frame containing interview age}
 
-\item{subjects}{Vector of subjectkeys.}
+\item{subjects}{Vector of subjects to filter to.}
 
 \item{t}{timepoint of data collection (0: baseline, 1: 1yfu, ...)}
 
 \item{as_years}{Logical indicating whether to convert age to years}
 }
 \value{
-interview_age Dataframe containing interview age
+A data frame containing interview age
 }
 \description{
-Return dataframe containing interview age of specified subjects
+return A data frame containing interview age of specified subjects
 }

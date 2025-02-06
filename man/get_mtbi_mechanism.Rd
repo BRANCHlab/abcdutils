@@ -13,18 +13,18 @@ get_mtbi_mechanism(
 )
 }
 \arguments{
-\item{ph_p_otbi}{TBI dataframe}
+\item{ph_p_otbi}{TBI data frame}
 
-\item{abcd_y_lt}{Dataframe containing age information}
+\item{abcd_y_lt}{Data frame containing age information}
 
-\item{subjects}{Vector of subjectkeys.}
+\item{subjects}{Vector of subjects to filter to.}
 
 \item{t}{timepoint of data collection (0: baseline, 1: 1yfu, ...)}
 
 \item{format}{Variable indicating if df is dummied or undummied}
 }
 \value{
-mtbi_mechanism Dataframe containing latest_mtbi_mechanism
+A data frame containing latest_mtbi_mechanism
 }
 \description{
 Get acute symptom input variable 'latest_mtbi_mechanism'

@@ -9,12 +9,12 @@ get_gord_cor(mri_y_rsfmr_cor_gp_gp, subjects = NULL, t = NULL)
 \arguments{
 \item{mri_y_rsfmr_cor_gp_gp}{Data file containing neurite density data}
 
-\item{subjects}{Vector of subjectkeys.}
+\item{subjects}{Vector of subjects to filter to.}
 
 \item{t}{timepoint of data collection (0: baseline, 1: 1yfu, ...)}
 }
 \value{
-gord_cor Dataframe of white matter neurite densities
+A data frame of white matter neurite densities
 }
 \description{
 Extract cortical network correlations

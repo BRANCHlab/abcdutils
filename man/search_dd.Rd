@@ -7,7 +7,7 @@
 search_dd(search_string, fields = NULL)
 }
 \arguments{
-\item{search_string}{Parameter to search for}
+\item{search_string}{String to search data dictionary for.}
 
 \item{fields}{A string or vector of strings indicating column names to use
 for the search. Options are
@@ -22,5 +22,7 @@ other variables. This column indicates what those conditions are.
 }}
 }
 \description{
-Search the ABCD data dictionary (5.0 version)
+This function enables grep-searching the complete ABCD data dictionary.
+Users can restrict the search to a limited number of fields using the
+\code{fields} parameter.
 }

@@ -4,21 +4,21 @@
 \alias{get_mtbi_count}
 \title{Get number of mtbis sustained by subject}
 \usage{
-get_mtbi_count(ph_p_otbi, abcd_y_lt, subjects = NULL, cutoff = NULL, t = NULL)
+get_mtbi_count(ph_p_otbi, abcd_y_lt, subjects = NULL, t = NULL, cutoff = NULL)
 }
 \arguments{
-\item{ph_p_otbi}{TBI dataframe}
+\item{ph_p_otbi}{TBI data frame}
 
-\item{abcd_y_lt}{Dataframe containing age information}
+\item{abcd_y_lt}{Data frame containing age information}
 
-\item{subjects}{Vector of subjectkeys.}
-
-\item{cutoff}{Maximum number of mtbis to be reported}
+\item{subjects}{Vector of subjects to filter to.}
 
 \item{t}{timepoint of data collection (0: baseline, 1: 1yfu, ...)}
+
+\item{cutoff}{Maximum number of mtbis to be reported}
 }
 \value{
-mtbi_count Dataframe containing number of previous mTBIs
+A data frame containing number of previous mTBIs
 }
 \description{
 Get number of mtbis sustained by subject

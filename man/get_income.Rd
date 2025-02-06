@@ -7,14 +7,14 @@
 get_income(abcd_p_demo, subjects = NULL, t = NULL)
 }
 \arguments{
-\item{abcd_p_demo}{Dataframe containing parent demographic information}
+\item{abcd_p_demo}{Data frame containing parent demographic information}
 
-\item{subjects}{Vector of subjectkeys.}
+\item{subjects}{Vector of subjects to filter to.}
 
 \item{t}{timepoint of data collection (0: baseline, 1: 1yfu, ...)}
 }
 \value{
-income_df Dataframe containing household incomes
+A data frame containing household incomes
 }
 \description{
 Low: $0 - $50k, Medium: $50k - $100k, High: > $100k

@@ -2,37 +2,35 @@
 % Please edit documentation in R/extraction.R
 \name{get_sex}
 \alias{get_sex}
-\title{Return dataframe containing sex of specified subjects}
+\title{return A data frame containing sex of specified subjects}
 \usage{
 get_sex(
   gish_p_gi,
   subjects = NULL,
-  t = t,
+  t = NULL,
   format = "dummied",
   only_m_f = FALSE,
   as_numeric = FALSE
 )
 }
 \arguments{
-\item{gish_p_gi}{Parent report of sex and gender dataframe}
+\item{gish_p_gi}{Parent report of sex and gender data frame}
 
-\item{subjects}{Vector of subjectkeys.}
+\item{subjects}{Vector of subjects to filter to.}
 
 \item{t}{timepoint of data collection (0: baseline, 1: 1yfu, ...)}
 
-\item{format}{String indicating format to output sex data.
-
-\if{html}{\out{<div class="sourceCode">}}\preformatted{* `"dummied"` single binary column `M`. This is the default.
-* `"undummied"` single column `sex` containing factor values `M` and `F`.
-}\if{html}{\out{</div>}}}
+\item{format}{String indicating format to output sex data:
+* \code{"dummied"} single binary column \code{M}. This is the default.
+* \code{"undummied"} single column \code{sex} containing factor values \code{M} and \code{F}.}
 
 \item{only_m_f}{Logical indicating whether to remove non M/F values}
 
 \item{as_numeric}{Logical indicating whether to convert M/F to 1/0 values}
 }
 \value{
-sex Dataframe containing sex
+A data frame containing sex
 }
 \description{
-Return dataframe containing sex of specified subjects
+return A data frame containing sex of specified subjects
 }

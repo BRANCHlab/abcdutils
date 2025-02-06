@@ -7,16 +7,16 @@
 get_mtbi_mem_daze(ph_p_otbi, abcd_y_lt, subjects = NULL, t = NULL)
 }
 \arguments{
-\item{ph_p_otbi}{TBI dataframe}
+\item{ph_p_otbi}{ABCD table containing TBI information.}
 
-\item{abcd_y_lt}{Dataframe containing age information}
+\item{abcd_y_lt}{ABCD table containing age information.}
 
-\item{subjects}{Vector of subjectkeys.}
+\item{subjects}{Vector of subjects to filter to.}
 
 \item{t}{timepoint of data collection (0: baseline, 1: 1yfu, ...)}
 }
 \value{
-mtbi_mem_daze Dataframe containing latest_mtbi_mem_daze
+A data frame containing latest_mtbi_mem_daze.
 }
 \description{
 Get acute symptom input variable 'latest_mtbi_mem_daze'

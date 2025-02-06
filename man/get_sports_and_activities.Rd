@@ -15,7 +15,7 @@ get_sports_and_activities(
 \item{ph_p_saiq}{ABCD Parent Sports and Activities Involvement
 Questionnaire}
 
-\item{subjects}{Vector of subjectkeys.}
+\item{subjects}{Vector of subjects to filter to.}
 
 \item{t}{timepoint of data collection (0: baseline, 1: 1yfu, ...)}
 
@@ -23,8 +23,16 @@ Questionnaire}
 quartiles}
 }
 \value{
-activities
+A data frame containing sports and activities data.
 }
 \description{
-Extract healthy behaviours: spots and activities questionnaire
+This function returns the sports and activities data from the ABCD Parent
+Sports and Activities Involvement Questionnaire. The values are stored in
+the ABCD table \code{ph_p_saiq.txt} under several column names ending with
+\verb{_school}, \verb{_school_l}, \verb{_outside}, \verb{_outside_l}, \verb{_private}, \verb{_private_l},
+\verb{_p12}, and \verb{_nmonth_p_l}. The final measures are reported as the number of
+school activities, extracurricular activities, activities receiving private
+instruction, and activities participated in the last year. These variables
+can be discretized into quartiles relative to the entire sample at the
+specified timepoint.
 }

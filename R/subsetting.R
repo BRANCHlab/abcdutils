@@ -1,9 +1,7 @@
 #' Subset dataframe to a collection event
 #'
 #' @param abcd_df A dataframe with a subjectkey column.
-#'
 #' @param t timepoint of data collection (0: baseline, 1: 1yfu, ...)
-#'
 #' @export
 filter_timepoint <- function(abcd_df, t) {
     if (!is.null(t)) {
@@ -23,9 +21,7 @@ filter_timepoint <- function(abcd_df, t) {
 #' Subset a dataframe to a given subject list
 #'
 #' @param abcd_df A dataframe with a subjectkey column.
-#'
 #' @param subjects Vector of subjects to filter to.
-#'
 #' @export
 filter_subjects <- function(abcd_df, subjects = NULL) {
     if (is.null(subjects)) {

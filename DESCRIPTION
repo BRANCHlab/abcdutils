@@ -2,9 +2,9 @@ Package: abcdutils
 Title: Utility Functions for the ABCD Dataset
 Version: 0.1.1
 Authors@R: c(
-    person("Prashanth", "Velayudhan", , "prashanth.velayudhan@sickkids.ca", role = c("aut", "cre"),
-           comment = c(ORCID = "0000-0003-4678-7315")),
-    person("Eman", "Nishat", , "eman.nishat@sickkids.ca", role = c("ctb"))
+    person("Prashanth", "Velayudhan", , "prashanth.velayudhan@sickkids.ca", role = c("aut", "cre"), comment = c(ORCID = "0000-0003-4678-7315")),
+    person("Eman", "Nishat", , "eman.nishat@sickkids.ca", role = c("ctb")),
+    person("Alishba", "Afaq", , "alishba.afaq@sickkids.ca", role = c("ctb"))
     )
 Description: A variety of data extraction, cleaning, and plotting functions to facilitate working with the NDA's Adolescent Brain and Cognitive Development dataset.
 License: MIT + file LICENSE
@@ -12,6 +12,7 @@ Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
 Imports:
+    cli,
     data.table,
     digest,
     dplyr,
@@ -22,6 +23,8 @@ Imports:
     tibble,
     utils,
     visdat
+Suggests:
+    lifecycle
 Remotes:
     ropensci/visdat@master
 Depends:
