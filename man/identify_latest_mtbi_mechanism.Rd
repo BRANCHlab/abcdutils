@@ -2,16 +2,16 @@
 % Please edit documentation in R/tbi.R
 \name{identify_latest_mtbi_mechanism}
 \alias{identify_latest_mtbi_mechanism}
-\title{Add columns to a TBI dataframe indicating mechanism of the latest mTBI}
+\title{Add columns to a TBI data frame indicating mechanism of the latest mTBI}
 \usage{
 identify_latest_mtbi_mechanism(tbi_df)
 }
 \arguments{
-\item{tbi_df}{A TBI dataframe}
+\item{tbi_df}{A TBI data frame}
 }
 \value{
-df_mech The modified dataframe
+The modified data frame
 }
 \description{
-Add columns to a TBI dataframe indicating mechanism of the latest mTBI
+Add columns to a TBI data frame indicating mechanism of the latest mTBI
 }

@@ -9,6 +9,9 @@ identify_injured(tbi_df)
 \arguments{
 \item{tbi_df}{A TBI data frame.}
 }
+\value{
+tbi_df with a new column indicating if a child has had an injury.
+}
 \description{
 Identify subjects that have reported any head or neck injury
 }

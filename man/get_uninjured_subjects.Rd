@@ -7,9 +7,9 @@
 get_uninjured_subjects(ph_p_otbi, abcd_y_lt, t = NULL)
 }
 \arguments{
-\item{ph_p_otbi}{TBI dataframe}
+\item{ph_p_otbi}{TBI data frame}
 
-\item{abcd_y_lt}{Dataframe containing age information}
+\item{abcd_y_lt}{Data frame containing age information}
 
 \item{t}{timepoint of data collection (0: baseline, 1: 1yfu, ...)}
 }

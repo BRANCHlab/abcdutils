@@ -7,10 +7,10 @@
 identify_mtbi_times(tbi_df)
 }
 \arguments{
-\item{tbi_df}{A TBI dataframe}
+\item{tbi_df}{A TBI data frame}
 }
 \value{
-dfa The modified dataframe
+The modified data frame
 }
 \description{
 Identify time since and age at each mTBI / most recent mTBI

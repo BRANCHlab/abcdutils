@@ -18,7 +18,7 @@ You can install abcdutils from [GitHub](https://github.com/) with:
 devtools::install_github("psvelayudhan/abcdutils")
 
 # Install a specific tagged version
-devtools::install_github("psvelayudhan/abcdutils@v0.2.0")
+devtools::install_github("psvelayudhan/abcdutils@v0.3.0")
 ```
 
 ## Usage

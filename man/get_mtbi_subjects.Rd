@@ -7,16 +7,16 @@
 get_mtbi_subjects(ph_p_otbi, abcd_y_lt, min_mpi = -10, t = NULL)
 }
 \arguments{
-\item{ph_p_otbi}{TBI dataframe}
+\item{ph_p_otbi}{TBI data frame}
 
-\item{abcd_y_lt}{Dataframe containing age information}
+\item{abcd_y_lt}{Data frame containing age information}
 
 \item{min_mpi}{The minimum time-since-last-mtbi to be selected}
 
 \item{t}{timepoint of data collection (0: baseline, 1: 1yfu, ...)}
 }
 \value{
-subjects Dataframe containing list of required subjects
+subjects Data frame containing list of required subjects
 }
 \description{
 Extract mTBI subjects with a minimum time-since-last-mtbi threshold

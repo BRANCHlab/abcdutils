@@ -7,7 +7,7 @@
 identify_all_tbi(tbi_df)
 }
 \arguments{
-\item{tbi_df}{A TBI dataframe.}
+\item{tbi_df}{A TBI data frame.}
 }
 \value{
 A modified form of tbi_df added tbi columns.

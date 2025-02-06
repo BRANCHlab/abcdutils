@@ -2,16 +2,16 @@
 % Please edit documentation in R/tbi.R
 \name{identify_num_mtbi}
 \alias{identify_num_mtbi}
-\title{Add columns to a TBI dataframe indicating a subject's estimated mTBI count}
+\title{Add columns to a TBI data frame indicating a subject's estimated mTBI count}
 \usage{
 identify_num_mtbi(tbi_df)
 }
 \arguments{
-\item{tbi_df}{A TBI dataframe}
+\item{tbi_df}{A TBI data frame}
 }
 \value{
-df_num_mtbi The modified dataframe
+df_num_mtbi The modified data frame
 }
 \description{
-Add columns to a TBI dataframe indicating a subject's estimated mTBI count
+Add columns to a TBI data frame indicating a subject's estimated mTBI count
 }

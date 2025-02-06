@@ -7,10 +7,10 @@
 identify_mtbi(tbi_df)
 }
 \arguments{
-\item{tbi_df}{A TBI dataframe}
+\item{tbi_df}{A TBI data frame}
 }
 \value{
-The modified dataframe
+The modified data frame
 }
 \description{
 Generate columns indicating which injury types were mTBIs

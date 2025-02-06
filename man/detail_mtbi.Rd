@@ -9,14 +9,14 @@ detail_mtbi(ph_p_otbi, abcd_y_lt, subjects = NULL, t = 0)
 \arguments{
 \item{ph_p_otbi}{ABCD table containing TBI information.}
 
-\item{abcd_y_lt}{Dataframe containing age information}
+\item{abcd_y_lt}{Data frame containing age information}
 
 \item{subjects}{Vector of subjects to extract data for.}
 
 \item{t}{timepoint of data collection (0: baseline, 1: 1yfu, ...)}
 }
 \value{
-subjects Dataframe containing list of required subjects
+subjects Data frame containing list of required subjects
 }
 \description{
 Extract mTBI subjects with a minimum time-since-last-mtbi threshold

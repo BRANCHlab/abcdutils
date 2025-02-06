@@ -9,7 +9,7 @@
 #' @export
 rename_tbi <- function(tbi_df) {
     if (!is.data.frame(tbi_df)) {
-        rlang::abort("Object is not a dataframe.", class = "non_df")
+        rlang::abort("Object is not a data frame.", class = "non_df")
     }
     renamed_tbi <- tbi_df |>
         col_collapse("tbi_1", "tbi_1_l", "hosp_er_inj") |>
@@ -117,7 +117,7 @@ original_tbi_names <- function() {
 #' These definitions aim to match typical GCS-based definitions as well as
 #' possible.
 #'
-#' @param tbi_df A TBI dataframe.
+#' @param tbi_df A TBI data frame.
 #' @return A modified form of tbi_df added tbi columns.
 #' @export
 identify_all_tbi <- function(tbi_df) {
@@ -235,8 +235,8 @@ identify_all_tbi <- function(tbi_df) {
 
 #' Generate columns indicating which injury types were mTBIs
 #'
-#' @param tbi_df A TBI dataframe
-#' @return The modified dataframe
+#' @param tbi_df A TBI data frame
+#' @return The modified data frame
 #' @export
 identify_mtbi <- function(tbi_df) {
     df_mtbi <- tbi_df |> dplyr::mutate(
@@ -285,8 +285,8 @@ identify_mtbi <- function(tbi_df) {
 
 #' Identify time since and age at each mTBI / most recent mTBI
 #'
-#' @param tbi_df A TBI dataframe
-#' @return dfa The modified dataframe
+#' @param tbi_df A TBI data frame
+#' @return The modified data frame
 #' @export
 identify_mtbi_times <- function(tbi_df) {
     # Scale injury ages to match interview ages if necessary
@@ -358,12 +358,10 @@ identify_mtbi_times <- function(tbi_df) {
     return(dft2)
 }
 
-#' Add columns to a TBI dataframe indicating mechanism of the latest mTBI
+#' Add columns to a TBI data frame indicating mechanism of the latest mTBI
 #'
-#' @param tbi_df A TBI dataframe
-#'
-#' @return df_mech The modified dataframe
-#'
+#' @param tbi_df A TBI data frame
+#' @return The modified data frame
 #' @export
 identify_latest_mtbi_mechanism <- function(tbi_df) {
     # Generate column indicating mechanism of latest mTBI
@@ -379,12 +377,10 @@ identify_latest_mtbi_mechanism <- function(tbi_df) {
     return(df_mech)
 }
 
-#' Add columns to a TBI dataframe indicating a subject's estimated mTBI count
+#' Add columns to a TBI data frame indicating a subject's estimated mTBI count
 #'
-#' @param tbi_df A TBI dataframe
-#'
-#' @return df_num_mtbi The modified dataframe
-#'
+#' @param tbi_df A TBI data frame
+#' @return df_num_mtbi The modified data frame
 #' @export
 identify_num_mtbi <- function(tbi_df) {
     # Generate column for best guess of number of mTBIs sustained
@@ -403,12 +399,10 @@ identify_num_mtbi <- function(tbi_df) {
     return(df_num_mtbi)
 }
 
-#' Add columns to a TBI dataframe indicating the LOC of their latest mTBI
+#' Add columns to a TBI data frame indicating the LOC of their latest mTBI
 #'
-#' @param tbi_df A TBI dataframe
-#'
-#' @return dfll The modified dataframe
-#'
+#' @param tbi_df A TBI data frame.
+#' @return tbi_df with a new column indicating the LOC of the latest mTBI.
 #' @export
 identify_latest_mtbi_loc <- function(tbi_df) {
     # Create LOC duration variable for the 'other_loc' category
@@ -437,12 +431,10 @@ identify_latest_mtbi_loc <- function(tbi_df) {
     return(dfll)
 }
 
-#' Add columns to a TBI dataframe indicating if their latest mTBI had mem/daze
+#' Add columns to a TBI data frame indicating if their latest mTBI had mem/daze
 #'
-#' @param tbi_df A TBI dataframe
-#'
-#' @return dfmd The modified dataframe
-#'
+#' @param tbi_df A TBI data frame
+#' @return dfmd The modified data frame
 #' @export
 identify_latest_mtbi_mem_daze <- function(tbi_df) {
     dfmd <- tbi_df |>
@@ -462,10 +454,10 @@ identify_latest_mtbi_mem_daze <- function(tbi_df) {
 #' Extract mTBI subjects with a minimum time-since-last-mtbi threshold
 #'
 #' @param ph_p_otbi ABCD table containing TBI information.
-#' @param abcd_y_lt Dataframe containing age information
+#' @param abcd_y_lt Data frame containing age information
 #' @param subjects Vector of subjects to extract data for.
 #' @param t timepoint of data collection (0: baseline, 1: 1yfu, ...)
-#' @return subjects Dataframe containing list of required subjects
+#' @return subjects Data frame containing list of required subjects
 #' @export
 detail_mtbi <- function(ph_p_otbi,
                         abcd_y_lt,
@@ -567,13 +559,11 @@ detail_mtbi <- function(ph_p_otbi,
 
 #' Extract mTBI subjects with a minimum time-since-last-mtbi threshold
 #'
-#' @param ph_p_otbi TBI dataframe
-#' @param abcd_y_lt Dataframe containing age information
+#' @param ph_p_otbi TBI data frame
+#' @param abcd_y_lt Data frame containing age information
 #' @param min_mpi The minimum time-since-last-mtbi to be selected
 #' @param t timepoint of data collection (0: baseline, 1: 1yfu, ...)
-#'
-#' @return subjects Dataframe containing list of required subjects
-#'
+#' @return subjects Data frame containing list of required subjects
 #' @export
 get_mtbi_subjects <- function(ph_p_otbi,
                               abcd_y_lt,
@@ -596,12 +586,10 @@ get_mtbi_subjects <- function(ph_p_otbi,
 
 #' Extract list of ABCD subjects who have not sustained any head injury
 #'
-#' @param ph_p_otbi TBI dataframe
-#' @param abcd_y_lt Dataframe containing age information
+#' @param ph_p_otbi TBI data frame
+#' @param abcd_y_lt Data frame containing age information
 #' @param t timepoint of data collection (0: baseline, 1: 1yfu, ...)
-#'
 #' @return uninjured_subjects List of uninjured subjects
-#'
 #' @export
 get_uninjured_subjects <- function(ph_p_otbi, abcd_y_lt, t = NULL) {
     subjectkey <- ""
@@ -638,7 +626,7 @@ get_uninjured_subjects <- function(ph_p_otbi, abcd_y_lt, t = NULL) {
 #' Identify subjects that have reported any head or neck injury
 #'
 #' @param tbi_df A TBI data frame.
-#' @return 
+#' @return tbi_df with a new column indicating if a child has had an injury.
 #' @export
 identify_injured <- function(tbi_df) {
     # Avoid dplyr global variable flags
@@ -651,7 +639,7 @@ identify_injured <- function(tbi_df) {
     multi_inj <- ""
     other_multi_inj <- ""
     num_sport_concussions <- ""
-    # Ensure the dataframe is in the correct format (if needed)
+    # Ensure the data frame is in the correct format (if needed)
     tbi_df <- numcol_to_numeric(tbi_df)
     # Generate any head or neck injury column based on the renamed column names
     tbi_df <- tbi_df |> dplyr::mutate(

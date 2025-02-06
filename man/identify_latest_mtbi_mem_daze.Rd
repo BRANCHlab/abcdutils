@@ -2,16 +2,16 @@
 % Please edit documentation in R/tbi.R
 \name{identify_latest_mtbi_mem_daze}
 \alias{identify_latest_mtbi_mem_daze}
-\title{Add columns to a TBI dataframe indicating if their latest mTBI had mem/daze}
+\title{Add columns to a TBI data frame indicating if their latest mTBI had mem/daze}
 \usage{
 identify_latest_mtbi_mem_daze(tbi_df)
 }
 \arguments{
-\item{tbi_df}{A TBI dataframe}
+\item{tbi_df}{A TBI data frame}
 }
 \value{
-dfmd The modified dataframe
+dfmd The modified data frame
 }
 \description{
-Add columns to a TBI dataframe indicating if their latest mTBI had mem/daze
+Add columns to a TBI data frame indicating if their latest mTBI had mem/daze
 }
