@@ -159,14 +159,14 @@ identify_all_tbi <- function(tbi_df) {
             ## Concussion
             other_multi_inj == 1 ~ TRUE,
             ## Negation of other conditions
-            hosp_er_loc != 1 &
-                vehicle_loc != 1 &
-                fall_hit_loc != 1 &
-                violent_loc != 1 &
-                blast_loc != 1 &
-                (other_loc_num - other_loc_num_over_30 == 0) &
+            (hosp_er_inj == 0 | hosp_er_loc != 1) &
+                (vehicle_inj == 0 | vehicle_loc != 1) &
+                (fall_hit_inj == 0 | fall_hit_loc != 1) &
+                (violent_inj == 0 | violent_loc != 1) &
+                (blast_inj == 0 | blast_loc != 1) &
+                (other_multi_inj != 1) &
                 num_sport_concussions == 0 &
-                other_multi_inj != 1 ~ FALSE,
+                (other_loc_inj == 0 | (other_loc_num - other_loc_num_over_30 == 0)) ~ FALSE,
             TRUE ~ NA
         ),
         # Possible mTBI #
@@ -180,11 +180,11 @@ identify_all_tbi <- function(tbi_df) {
             ## Repeated head impacts
             other_multi_inj == 0.5 ~ TRUE,
             ## Negation of other conditions
-            !(hosp_er_loc == 0 & hosp_er_mem_daze == 1) &
-                !(vehicle_loc == 0 & vehicle_mem_daze == 1) &
-                !(fall_hit_loc == 0 & fall_hit_mem_daze == 1) &
-                !(violent_loc == 0 & violent_mem_daze == 1) &
-                !(blast_loc == 0 & blast_mem_daze == 1) &
+            (hosp_er_inj == 0 | !(hosp_er_loc == 0 & hosp_er_mem_daze == 1)) &
+                (vehicle_inj == 0 | !(vehicle_loc == 0 & vehicle_mem_daze == 1)) &
+                (fall_hit_inj == 0 | !(fall_hit_loc == 0 & fall_hit_mem_daze == 1)) &
+                (violent_inj == 0 | !(violent_loc == 0 & violent_mem_daze == 1)) &
+                (blast_inj == 0 | !(blast_loc == 0 & blast_mem_daze == 1)) &
                 other_multi_inj != 0.5 ~ FALSE,
             TRUE ~ NA
         ),
@@ -199,11 +199,11 @@ identify_all_tbi <- function(tbi_df) {
             ## Repeated head impacts
             num_sport_concussions == 0 ~ TRUE,
             ## Negation of other conditions
-            !(hosp_er_loc == 0 & hosp_er_mem_daze == 0) &
-                !(vehicle_loc == 0 & vehicle_mem_daze == 0) &
-                !(fall_hit_loc == 0 & fall_hit_mem_daze == 0) &
-                !(violent_loc == 0 & violent_mem_daze == 0) &
-                !(blast_loc == 0 & blast_mem_daze == 0) &
+            (hosp_er_inj == 0 | !(hosp_er_loc == 0 & hosp_er_mem_daze == 0)) &
+            (vehicle_inj == 0 | !(vehicle_loc == 0 & vehicle_mem_daze == 0)) &
+            (fall_hit_inj == 0 | !(fall_hit_loc == 0 & fall_hit_mem_daze == 0)) &
+            (violent_inj == 0 | !(violent_loc == 0 & violent_mem_daze == 0)) &
+                (blast_inj == 0 | !(blast_loc == 0 & blast_mem_daze == 0)) &
                 num_sport_concussions != 0 ~ FALSE,
             TRUE ~ NA
         ),
@@ -216,12 +216,14 @@ identify_all_tbi <- function(tbi_df) {
             blast_loc == 2 ~ TRUE,
             multi_loc == 2 ~ TRUE,
             ## Negation of other conditions
-            hosp_er_loc != 2 &
-                vehicle_loc != 2 &
-                fall_hit_loc != 2 &
-                violent_loc != 2 &
-                blast_loc != 2 &
-                multi_loc != 2 ~ FALSE,
+            # Either didn't have injury or injury didn't meet
+            #  criteria for moderate TBI
+            (hosp_er_inj == 0 | hosp_er_loc != 2) &
+                (vehicle_inj == 0 | vehicle_loc != 2) &
+                (fall_hit_inj == 0 | fall_hit_loc != 2) &
+                (violent_inj == 0 | violent_loc != 2) &
+                (blast_inj == 0 | blast_loc != 2) &
+                (multi_inj == 0 | multi_loc != 2) ~ FALSE,
             TRUE ~ NA
         ),
         # Severe TBI #
@@ -233,14 +235,12 @@ identify_all_tbi <- function(tbi_df) {
             blast_loc >= 3 ~ TRUE,
             multi_loc >= 3 ~ TRUE,
             ## Negation of other conditions
-            pmax(
-                hosp_er_loc,
-                vehicle_loc,
-                fall_hit_loc,
-                violent_loc,
-                blast_loc,
-                multi_loc
-            ) < 3 ~ FALSE,
+            (hosp_er_inj == 0 | hosp_er_loc < 3) &
+                (vehicle_inj == 0 | vehicle_loc < 3) &
+                (fall_hit_inj == 0 | fall_hit_loc < 3) &
+                (violent_inj == 0 | violent_loc < 3) &
+                (blast_inj == 0 | blast_loc < 3) &
+                (multi_inj == 0 | multi_loc < 3) ~ FALSE,
             TRUE ~ NA
         )
     )
@@ -458,7 +458,8 @@ detail_mtbi <- function(ph_p_otbi,
     ###########################################################################
     renamed_tbi <- rename_tbi(tbi_df)
     identified_tbi <- identify_all_tbi(renamed_tbi)
-    identified_mtbi_times <- identify_mtbi_times(identified_tbi)
+    identified_mtbi <- identify_mtbi(identified_tbi)
+    identified_mtbi_times <- identify_mtbi_times(identified_mtbi)
     identified_mech <- identify_latest_mtbi_mechanism(identified_mtbi_times)
     identified_num_mtbi <- identify_num_mtbi(identified_mech)
     identified_latest_loc <- identify_latest_mtbi_loc(identified_num_mtbi)
@@ -540,7 +541,8 @@ get_mtbi_subjects <- function(ph_p_otbi,
     subjects <- ph_p_otbi |>
         dplyr::filter(
             ph_p_otbi$"mtbi" == 1 &
-                ph_p_otbi$"moderate_or_severe_tbi" == 0 &
+                ph_p_otbi$"moderate_tbi" == 0 &
+                ph_p_otbi$"severe_tbi" == 0 &
                 ph_p_otbi$"latest_mtbi_mpi" >= min_mpi
         ) |>
         dplyr::select("subjectkey")
@@ -624,4 +626,54 @@ identify_injured <- function(tbi_df) {
         )
     )
     return(tbi_df)
+}
+
+#' Generate columns indicating which injury types were mTBIs
+#'
+#' @param tbi_df A TBI data frame.
+#' @return The modified data frame.
+#' @export
+identify_mtbi <- function(tbi_df) {
+    df_mtbi <- tbi_df |> dplyr::mutate(
+        hosp_er_mtbi = dplyr::case_when(
+            (tbi_df$"hosp_er_loc" < 2 & tbi_df$"hosp_er_mem_daze" == 1) |
+                tbi_df$"hosp_er_loc" == 1 ~ 1,
+            TRUE ~ 0
+        ),
+        vehicle_mtbi = dplyr::case_when(
+            (tbi_df$"vehicle_loc" < 2 & tbi_df$"vehicle_mem_daze" == 1) |
+                tbi_df$"vehicle_loc" == 1 ~ 1,
+            TRUE ~ 0
+        ),
+        fall_hit_mtbi = dplyr::case_when(
+            (tbi_df$"fall_hit_loc" < 2 & tbi_df$"fall_hit_mem_daze" == 1) |
+                tbi_df$"fall_hit_loc" == 1 ~ 1,
+            TRUE ~ 0
+        ),
+        violent_mtbi = dplyr::case_when(
+            (tbi_df$"violent_loc" < 2 & tbi_df$"violent_mem_daze" == 1) |
+                tbi_df$"violent_loc" == 1 ~ 1,
+            TRUE ~ 0
+        ),
+        blast_mtbi = dplyr::case_when(
+            (tbi_df$"blast_loc" < 2 & tbi_df$"blast_mem_daze" == 1) |
+                blast_loc == 1 ~ 1,
+            TRUE ~ 0
+        ),
+        other_loc_mtbi_num = dplyr::case_when(
+            (tbi_df$"other_loc_num" - tbi_df$"other_loc_num_over_30") > 0 ~
+                tbi_df$"other_loc_num" - tbi_df$"other_loc_num_over_30",
+            TRUE ~ 0
+        ),
+        other_loc_mtbi = dplyr::case_when(
+            tbi_df$"other_loc_num" - tbi_df$"other_loc_num_over_30" > 0 ~ 1,
+            TRUE ~ 0
+        ),
+        multi_mtbi = dplyr::case_when(
+            (tbi_df$"multi_loc" < 2 & tbi_df$"multi_mem_daze" == 1) |
+                tbi_df$"multi_loc" == 1 ~ 1,
+            TRUE ~ 0
+        )
+    )
+    return(df_mtbi)
 }
