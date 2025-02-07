@@ -1,3 +1,9 @@
+# abcdutils 0.3.1
+
+## Bug fixes
+
+* Typo in `identify_all_tbi` preventing `detail_mtbi` from running fixed
+
 # abcdutils 0.3.0
 
 * Updated TBI/Uninjured extraction functions

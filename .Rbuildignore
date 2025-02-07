@@ -5,3 +5,4 @@ build_lite.R
 build_no_dep.R
 ^data-raw$
 .lintr
+Session.vim
