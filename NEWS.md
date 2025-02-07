@@ -1,3 +1,9 @@
+# abcdutils 0.3.2
+
+## Bug fixes
+
+* `get_mtbi_subjects` and `get_uninjured_subjects` bug fix (no longer extracting only NAs)
+
 # abcdutils 0.3.1
 
 ## Bug fixes
