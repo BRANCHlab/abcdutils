@@ -117,7 +117,7 @@ is_true <- function(x) {
 #'  a value, the other must always be NA), replace both columns with a single
 #'  one.
 #'
-#' @param df dataframe containing columns
+#' @param df A data frame containing columns
 #' @param c1 string name of first column
 #' @param c2 string name of second column
 #' @param new_col string name of collapsed column
@@ -146,4 +146,24 @@ sort_subjects <- function(abcd_df) {
     sorted_df <- abcd_df |>
         dplyr::arrange(abcd_df$"subjectkey")
     return(sorted_df)
+}
+
+#' Assign eventname value to a data frame
+#'
+#' Update the eventname column in a dataframe to a specific timepoint. Useful
+#' during data cleaning for observations who are completely missing in a
+#' particular timepoint.
+#'
+#' @param df A data frame with `eventname` as a column.
+#' @return A data frame with updated eventname column.
+#' @export
+harmonize_eventname <- function(df) {
+    if (is.null(df$"eventname")) {
+        stop("Data frame does not contain an eventname column.")
+    }
+    if (length(unique(stats::na.omit(df$"eventname"))) > 1) {
+        stop("Data frame contains multiple eventnames.")
+    }
+    df$"eventname" <- unique(stats::na.omit(df$"eventname"))
+    return(df)
 }

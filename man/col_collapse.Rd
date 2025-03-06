@@ -7,7 +7,7 @@
 col_collapse(df, c1, c2, new_col)
 }
 \arguments{
-\item{df}{dataframe containing columns}
+\item{df}{A data frame containing columns}
 
 \item{c1}{string name of first column}
 
