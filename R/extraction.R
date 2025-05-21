@@ -1501,13 +1501,12 @@ get_mtbi_mechanism <- function(ph_p_otbi,
 #' @return A data frame containing latest_mtbi_loc
 #' @export
 get_mtbi_loc <- function(ph_p_otbi, abcd_y_lt, subjects = NULL, t = NULL) {
-    mtbi_loc <-
-        detail_mtbi(
-            ph_p_otbi,
-            abcd_y_lt,
-            subjects = subjects,
-            t = t
-        ) |>
+    mtbi_loc <- detail_mtbi(
+        ph_p_otbi,
+        abcd_y_lt,
+        subjects = subjects,
+        t = t
+    ) |>
         dplyr::select(
             "subjectkey",
             "latest_mtbi_loc"
@@ -1524,16 +1523,53 @@ get_mtbi_loc <- function(ph_p_otbi, abcd_y_lt, subjects = NULL, t = NULL) {
 #' @return A data frame containing latest_mtbi_mem_daze.
 #' @export
 get_mtbi_mem_daze <- function(ph_p_otbi, abcd_y_lt, subjects = NULL, t = NULL) {
-    mtbi_mem_daze <-
-        detail_mtbi(
-            ph_p_otbi,
-            abcd_y_lt,
-            subjects = subjects,
-            t = t
-        ) |>
+    mtbi_mem_daze <- detail_mtbi(
+        ph_p_otbi,
+        abcd_y_lt,
+        subjects = subjects,
+        t = t
+    ) |>
         dplyr::select(
             "subjectkey",
             "latest_mtbi_mem_daze"
         )
     return(mtbi_mem_daze)
+}
+
+#' Extract MRI scanner serial number
+#'
+#' @inheritParams filter_timepoint
+#' @inheritParams filter_subjects
+#' @param mri_y_adm_info Data frame storing MRI administrative information.
+#' @return A data frame containing subjectkey and scanner ID.
+#' @export
+get_scanner_id <- function(mri_y_adm_info, subjects = NULL, t = NULL) {
+    scanner_df <- mri_y_adm_info |>
+        dplyr::rename(
+            "subjectkey" = "src_subject_id",
+            "scanner_id" = "mri_info_deviceserialnumber"
+        ) |>
+        filter_timepoint(t = t) |>
+        filter_subjects(subjects = subjects) |>
+        dplyr::select(subjectkey, scanner_id)
+    return(scanner_df)
+}
+
+#' Extract family ID
+#'
+#' @inheritParams filter_timepoint
+#' @inheritParams filter_subjects
+#' @param abcd_y_lt Data frame storing family information.
+#' @return A data frame containing subjectkey and family ID.
+#' @export
+get_family_id <- function(abcd_y_lt, subjects = NULL, t = NULL) {
+    family_df <- abcd_y_lt |>
+        dplyr::rename(
+            "subjectkey" = "src_subject_id",
+            "family_id" = "rel_family_id"
+        ) |>
+        filter_timepoint(t = t) |>
+        filter_subjects(subjects = subjects) |>
+        dplyr::select("subjectkey", "family_id")
+    return(family_df)
 }
