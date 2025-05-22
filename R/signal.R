@@ -60,7 +60,7 @@ abcdutils_deprecated <- function(version, alternative, env = 1) {
         message = c(
             "!" = paste0(
                 "`", sys.call(-1)[[1]], "()` has been deprecated as of",
-                " `abcdutils` version ", version, ".", alternative
+                " `abcdutils` version ", version, ". ", alternative
             )
         ),
         .envir = rlang::caller_env(env)
@@ -79,7 +79,7 @@ abcdutils_defunct <- function(version, alternative, env = 1) {
         message = c(
             "!" = paste0(
                 "`", sys.call(-1)[[1]], "()` has been made defunct as of",
-                " `abcdutils` version ", version, ".", alternative
+                " `abcdutils` version ", version, ". ", alternative
             )
         ),
         .envir = rlang::caller_env(env)

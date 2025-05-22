@@ -1,32 +1,3 @@
-#' Extract white matter neurite densities
-#'
-#' Extract neurite densities for major white matter tracts (AtlasTrack ROIs) as
-#'  well as peri-cortical/sub-adjacent white matter structures defined relative
-#'  to the Desikan Cortical Parcellation.
-#'
-#' @inheritParams filter_timepoint
-#' @inheritParams filter_subjects
-#' @param mri_y_rsi_rnd_at Data file containing neurite density data
-#' @param mri_y_rsi_rnd_wm_dsk Data file containing neurite density data
-#' @return A data frame of white matter neurite densities
-#' @export
-get_all_wmnd <- function(mri_y_rsi_rnd_at,
-                         mri_y_rsi_rnd_wm_dsk,
-                         subjects = NULL,
-                         t = NULL) {
-    mri_y_rsi_rnd_at <- mri_y_rsi_rnd_at |>
-        filter_timepoint(t = t) |>
-        filter_subjects(subjects = subjects) |>
-        dplyr::select("subjectkey", "dmri_rsirnd_fib_allfib")
-    mri_y_rsi_rnd_wm_dsk <- mri_y_rsi_rnd_wm_dsk |>
-        filter_timepoint(t = t) |>
-        filter_subjects(subjects = subjects) |>
-        dplyr::select("subjectkey", "dmri_rsirndwm_cdk_mean")
-    df_list <- list(mri_y_rsi_rnd_at, mri_y_rsi_rnd_wm_dsk)
-    wmnd_df <- merge_df_list(df_list, join = "full")
-    return(wmnd_df)
-}
-
 #' Extract CBCL syndrome scale data
 #'
 #' @inheritParams filter_timepoint
@@ -1547,4 +1518,33 @@ get_subc_var <- function(mrirstv02,
                "rsfmri_var_scs_lesionrh")
         )
     return(subc_var)
+}
+
+#' Extract white matter neurite densities
+#'
+#' Extract neurite densities for major white matter tracts (AtlasTrack ROIs) as
+#'  well as peri-cortical/sub-adjacent white matter structures defined relative
+#'  to the Desikan Cortical Parcellation.
+#'
+#' @inheritParams filter_timepoint
+#' @inheritParams filter_subjects
+#' @param mri_y_rsi_rnd_at Data file containing neurite density data
+#' @param mri_y_rsi_rnd_wm_dsk Data file containing neurite density data
+#' @return A data frame of white matter neurite densities
+#' @export
+get_wmnd <- function(mri_y_rsi_rnd_at,
+                         mri_y_rsi_rnd_wm_dsk,
+                         subjects = NULL,
+                         t = NULL) {
+    mri_y_rsi_rnd_at <- mri_y_rsi_rnd_at |>
+        filter_timepoint(t = t) |>
+        filter_subjects(subjects = subjects) |>
+        dplyr::select("subjectkey", "dmri_rsirnd_fib_allfib")
+    mri_y_rsi_rnd_wm_dsk <- mri_y_rsi_rnd_wm_dsk |>
+        filter_timepoint(t = t) |>
+        filter_subjects(subjects = subjects) |>
+        dplyr::select("subjectkey", "dmri_rsirndwm_cdk_mean")
+    df_list <- list(mri_y_rsi_rnd_at, mri_y_rsi_rnd_wm_dsk)
+    wmnd_df <- merge_df_list(df_list, join = "full")
+    return(wmnd_df)
 }
