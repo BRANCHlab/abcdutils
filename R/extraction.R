@@ -112,25 +112,6 @@ get_exercise <- function(ph_y_yrb,
     return(exercise)
 }
 
-#' Extract family ID
-#'
-#' @inheritParams filter_timepoint
-#' @inheritParams filter_subjects
-#' @param abcd_y_lt Data frame storing family information.
-#' @return A data frame containing subjectkey and family ID.
-#' @export
-get_family_id <- function(abcd_y_lt, subjects = NULL, t = NULL) {
-    family_df <- abcd_y_lt |>
-        dplyr::rename(
-            "subjectkey" = "src_subject_id",
-            "family_id" = "rel_family_id"
-        ) |>
-        filter_timepoint(t = t) |>
-        filter_subjects(subjects = subjects) |>
-        dplyr::select("subjectkey", "family_id")
-    return(family_df)
-}
-
 #' Extract family function
 #'
 #' This function returns parent and youth responses to the ABCD Parent Family
@@ -229,6 +210,25 @@ get_family_function <- function(ce_y_fes,
         ) |>
         dplyr::select("subjectkey", dplyr::starts_with("q"))
     return(family_function)
+}
+
+#' Extract family ID
+#'
+#' @inheritParams filter_timepoint
+#' @inheritParams filter_subjects
+#' @param abcd_y_lt Data frame storing family information.
+#' @return A data frame containing subjectkey and family ID.
+#' @export
+get_family_id <- function(abcd_y_lt, subjects = NULL, t = NULL) {
+    family_df <- abcd_y_lt |>
+        dplyr::rename(
+            "subjectkey" = "src_subject_id",
+            "family_id" = "rel_family_id"
+        ) |>
+        filter_timepoint(t = t) |>
+        filter_subjects(subjects = subjects) |>
+        dplyr::select("subjectkey", "family_id")
+    return(family_df)
 }
 
 #' Extract number of friends
@@ -338,69 +338,6 @@ get_friends <- function(mh_y_or,
     return(friends)
 }
 
-#' Extract cortical network correlations
-#'
-#' @inheritParams filter_timepoint
-#' @inheritParams filter_subjects
-#' @param mri_y_rsfmr_cor_gp_gp Data file containing neurite density data
-#' @return A data frame of white matter neurite densities
-#' @export
-get_gord_cor <- function(mri_y_rsfmr_cor_gp_gp,
-                         subjects = NULL,
-                         t = NULL) {
-    gord_cor <- mri_y_rsfmr_cor_gp_gp |>
-        filter_timepoint(t = t) |>
-        filter_subjects(subjects = subjects)
-    # Store the subjectkeys in the rownames
-    row.names(gord_cor) <- gord_cor$"subjectkey"
-    # Remove the subjectkeys
-    gord_cor <- gord_cor |>
-        dplyr::select(-c("subjectkey", "eventname"))
-    # data frame of just rowmeans
-    gord_cor <- data.frame(rowMeans(gord_cor))
-    gord_cor$"subjectkey" <- rownames(gord_cor)
-    colnames(gord_cor) <- c("avg_gord_cor", "subjectkey")
-    rownames(gord_cor) <- NULL
-    gord_cor <- gord_cor |> dplyr::select(
-        "subjectkey",
-        "avg_gord_cor"
-    )
-    return(gord_cor)
-}
-
-#' return A data frame containing youth-reported genders
-#'
-#' @inheritParams filter_timepoint
-#' @inheritParams filter_subjects
-#' @param gish_y_gi Youth-reported gender data frame
-#' @return A data frame containing sex
-#' @export
-get_gender_y <- function(gish_y_gi,
-                         subjects = NULL,
-                         t = NULL) {
-    pgi <- gish_y_gi |>
-        filter_timepoint(t = t) |>
-        filter_subjects(subjects = subjects) |>
-        dplyr::select(
-            "subjectkey",
-            "kbi_gender", # what is their assigned sex
-        )
-    gender <- pgi |>
-        dplyr::rename(
-            "y_gender" = "kbi_gender",
-        )
-    gender <- gender |>
-        dplyr::mutate(
-            y_gender = dplyr::case_when(
-                y_gender == 1 ~ "M",
-                y_gender == 2 ~ "F",
-                y_gender == 3 ~ "NB",
-                TRUE ~ NA
-            )
-        )
-    return(gender)
-}
-
 #' return A data frame containing parent-reported genders
 #'
 #' Collected parent reported gender information from the `demo_gender_id_v2`
@@ -458,6 +395,69 @@ get_gender_p <- function(gish_p_gi,
             )
     }
     return(gender)
+}
+
+#' return A data frame containing youth-reported genders
+#'
+#' @inheritParams filter_timepoint
+#' @inheritParams filter_subjects
+#' @param gish_y_gi Youth-reported gender data frame
+#' @return A data frame containing sex
+#' @export
+get_gender_y <- function(gish_y_gi,
+                         subjects = NULL,
+                         t = NULL) {
+    pgi <- gish_y_gi |>
+        filter_timepoint(t = t) |>
+        filter_subjects(subjects = subjects) |>
+        dplyr::select(
+            "subjectkey",
+            "kbi_gender", # what is their assigned sex
+        )
+    gender <- pgi |>
+        dplyr::rename(
+            "y_gender" = "kbi_gender",
+        )
+    gender <- gender |>
+        dplyr::mutate(
+            y_gender = dplyr::case_when(
+                y_gender == 1 ~ "M",
+                y_gender == 2 ~ "F",
+                y_gender == 3 ~ "NB",
+                TRUE ~ NA
+            )
+        )
+    return(gender)
+}
+
+#' Extract cortical network correlations
+#'
+#' @inheritParams filter_timepoint
+#' @inheritParams filter_subjects
+#' @param mri_y_rsfmr_cor_gp_gp Data file containing neurite density data
+#' @return A data frame of white matter neurite densities
+#' @export
+get_gord_cor <- function(mri_y_rsfmr_cor_gp_gp,
+                         subjects = NULL,
+                         t = NULL) {
+    gord_cor <- mri_y_rsfmr_cor_gp_gp |>
+        filter_timepoint(t = t) |>
+        filter_subjects(subjects = subjects)
+    # Store the subjectkeys in the rownames
+    row.names(gord_cor) <- gord_cor$"subjectkey"
+    # Remove the subjectkeys
+    gord_cor <- gord_cor |>
+        dplyr::select(-c("subjectkey", "eventname"))
+    # data frame of just rowmeans
+    gord_cor <- data.frame(rowMeans(gord_cor))
+    gord_cor$"subjectkey" <- rownames(gord_cor)
+    colnames(gord_cor) <- c("avg_gord_cor", "subjectkey")
+    rownames(gord_cor) <- NULL
+    gord_cor <- gord_cor |> dplyr::select(
+        "subjectkey",
+        "avg_gord_cor"
+    )
+    return(gord_cor)
 }
 
 #' Extract cortical temporal variances
@@ -570,141 +570,6 @@ get_interview_age <- function(abcd_df,
         )
     }
     return(interview_age)
-}
-
-#' Extract parent psychopathology
-#'
-#' @inheritParams filter_timepoint
-#' @inheritParams filter_subjects
-#' @param mh_p_asr ABCD Parent Adult Self Report Scores Aseba
-#' @param raw Boolean indicating if extracted data should be raw (TRUE) or
-#'  t-scores (FALSE). Defaults to TRUE.
-#' @return A data frame containing parent psychopathology data.
-#' @export
-get_parent_psychopathology <- function(mh_p_asr,
-                                       subjects = NULL,
-                                       t = NULL,
-                                       raw = TRUE) {
-    if (raw == TRUE) {
-        parent_psychopathology <- mh_p_asr |>
-            filter_timepoint(t = t) |>
-            filter_subjects(subjects = subjects) |>
-            dplyr::select("subjectkey", dplyr::ends_with("r")) |>
-            dplyr::select(
-                -c(
-                    "asr_scr_totprob_r",
-                    "asr_scr_internal_r",
-                    "asr_scr_external_r",
-                    "asr_scr_inattention_r", # same as attention
-                    "asr_scr_adhd_r", # same as attention
-                    "asr_scr_rulebreak_r", # same as antisocial
-                    "asr_scr_somaticpr_r" # same as same as somatic
-                )
-            )
-    } else {
-        parent_psychopathology <- mh_p_asr |>
-            filter_timepoint(t = t) |>
-            filter_subjects(subjects = subjects) |>
-            dplyr::select("subjectkey", dplyr::ends_with("t")) |>
-            dplyr::select(
-                -c(
-                    "asr_scr_totprob_t",
-                    "asr_scr_internal_t",
-                    "asr_scr_external_t",
-                    "asr_scr_inattention_t", # same as attention
-                    "asr_scr_adhd_t", # same as attention
-                    "asr_scr_rulebreak_t", # same as antisocial
-                    "asr_scr_somaticpr_t" # same as same as somatic
-                )
-            )
-    }
-    return(parent_psychopathology)
-}
-
-#' Parent report of prosocial behaviour
-#'
-#' This function returns parent responses to the ABCD Parent Prosocial Behavior
-#' Survey. The values are stored in the ABCD table `ce_p_psb.txt` under the
-#' names `prosocial_q1_p`, `prosocial_q2_p`, and `prosocial_q3_p`.'
-#' The function also renames the variables as follows:
-#' - "prosocial_q1_p" -> "considerate_p"
-#' - "prosocial_q2_p" -> "helps_hurt_p"
-#' - "prosocial_q3_p" -> "helpful_p"
-#'
-#' @inheritParams filter_timepoint
-#' @inheritParams filter_subjects
-#' @param ce_p_psb Parent Prosocial Behavior Survey.
-#' @param no_zero Boolean indicating if zero values should be replaced with 1.
-#' @return A data frame containing 3 parent responses concerning prosocial
-#'  behaviour in their children.
-#' @export
-get_prosocial_behaviour_p <- function(ce_p_psb,
-                                      subjects = NULL,
-                                      t = NULL,
-                                      no_zero = FALSE) {
-    prosocial <- ce_p_psb |>
-        filter_timepoint(t = t) |>
-        filter_subjects(subjects = subjects)
-    prosocial <- numcol_to_numeric(prosocial)
-    prosocial <- prosocial |>
-        dplyr::rename(
-            "considerate_p" = "prosocial_q1_p",
-            "helps_hurt_p" = "prosocial_q2_p",
-            "helpful_p" = "prosocial_q3_p"
-        ) |>
-        dplyr::select(
-            "subjectkey",
-            "considerate_p",
-            "helps_hurt_p",
-            "helpful_p"
-        )
-    if (no_zero) {
-        prosocial[prosocial == 0] <- 1
-    }
-    return(prosocial)
-}
-
-#' Youth report of prosocial behaviour
-#'
-#' This function returns youth responses to the ABCD Parent Prosocial Behavior
-#' Survey. The values are stored in the ABCD table `ce_y_psb.txt` under the
-#' names `prosocial_q1_y`, `prosocial_q2_y`, and `prosocial_q3_y`.
-#' The function also renames the variables as follows:
-#' - "prosocial_q1_y" -> "considerate_y"
-#' - "prosocial_q2_y" -> "helps_hurt_y"
-#' - "prosocial_q3_y" -> "helpful_y"
-#'
-#' @inheritParams filter_timepoint
-#' @inheritParams filter_subjects
-#' @param ce_y_psb Youth Prosocial Behavior Survey.
-#' @param no_zero Boolean indicating if zero values should be replaced with 1
-#' @return A data frame containing 3 youth responses concerning prosocial
-#'  behaviour.
-#' @export
-get_prosocial_behaviour_y <- function(ce_y_psb,
-                                      subjects = NULL,
-                                      t = NULL,
-                                      no_zero = FALSE) {
-    prosocial <- ce_y_psb |>
-        filter_timepoint(t = t) |>
-        filter_subjects(subjects = subjects)
-    prosocial <- numcol_to_numeric(prosocial)
-    prosocial <- prosocial |>
-        dplyr::rename(
-            "considerate_y" = "prosocial_q1_y",
-            "helps_hurt_y" = "prosocial_q2_y",
-            "helpful_y" = "prosocial_q3_y"
-        ) |>
-        dplyr::select(
-            "subjectkey",
-            "considerate_y",
-            "helps_hurt_y",
-            "helpful_y"
-        )
-    if (no_zero) {
-        prosocial[prosocial == 0] <- 1
-    }
-    return(prosocial)
 }
 
 #' Extract age at latest mTBI
@@ -891,6 +756,142 @@ get_nihtbx_list_fc <- function(abcd_tbss01,
             "nihtbx_list_fc"
         )
     return(nihtbx_list_fc)
+}
+
+
+#' Extract parent psychopathology
+#'
+#' @inheritParams filter_timepoint
+#' @inheritParams filter_subjects
+#' @param mh_p_asr ABCD Parent Adult Self Report Scores Aseba
+#' @param raw Boolean indicating if extracted data should be raw (TRUE) or
+#'  t-scores (FALSE). Defaults to TRUE.
+#' @return A data frame containing parent psychopathology data.
+#' @export
+get_parent_psychopathology <- function(mh_p_asr,
+                                       subjects = NULL,
+                                       t = NULL,
+                                       raw = TRUE) {
+    if (raw == TRUE) {
+        parent_psychopathology <- mh_p_asr |>
+            filter_timepoint(t = t) |>
+            filter_subjects(subjects = subjects) |>
+            dplyr::select("subjectkey", dplyr::ends_with("r")) |>
+            dplyr::select(
+                -c(
+                    "asr_scr_totprob_r",
+                    "asr_scr_internal_r",
+                    "asr_scr_external_r",
+                    "asr_scr_inattention_r", # same as attention
+                    "asr_scr_adhd_r", # same as attention
+                    "asr_scr_rulebreak_r", # same as antisocial
+                    "asr_scr_somaticpr_r" # same as same as somatic
+                )
+            )
+    } else {
+        parent_psychopathology <- mh_p_asr |>
+            filter_timepoint(t = t) |>
+            filter_subjects(subjects = subjects) |>
+            dplyr::select("subjectkey", dplyr::ends_with("t")) |>
+            dplyr::select(
+                -c(
+                    "asr_scr_totprob_t",
+                    "asr_scr_internal_t",
+                    "asr_scr_external_t",
+                    "asr_scr_inattention_t", # same as attention
+                    "asr_scr_adhd_t", # same as attention
+                    "asr_scr_rulebreak_t", # same as antisocial
+                    "asr_scr_somaticpr_t" # same as same as somatic
+                )
+            )
+    }
+    return(parent_psychopathology)
+}
+
+#' Parent report of prosocial behaviour
+#'
+#' This function returns parent responses to the ABCD Parent Prosocial Behavior
+#' Survey. The values are stored in the ABCD table `ce_p_psb.txt` under the
+#' names `prosocial_q1_p`, `prosocial_q2_p`, and `prosocial_q3_p`.'
+#' The function also renames the variables as follows:
+#' - "prosocial_q1_p" -> "considerate_p"
+#' - "prosocial_q2_p" -> "helps_hurt_p"
+#' - "prosocial_q3_p" -> "helpful_p"
+#'
+#' @inheritParams filter_timepoint
+#' @inheritParams filter_subjects
+#' @param ce_p_psb Parent Prosocial Behavior Survey.
+#' @param no_zero Boolean indicating if zero values should be replaced with 1.
+#' @return A data frame containing 3 parent responses concerning prosocial
+#'  behaviour in their children.
+#' @export
+get_prosocial_behaviour_p <- function(ce_p_psb,
+                                      subjects = NULL,
+                                      t = NULL,
+                                      no_zero = FALSE) {
+    prosocial <- ce_p_psb |>
+        filter_timepoint(t = t) |>
+        filter_subjects(subjects = subjects)
+    prosocial <- numcol_to_numeric(prosocial)
+    prosocial <- prosocial |>
+        dplyr::rename(
+            "considerate_p" = "prosocial_q1_p",
+            "helps_hurt_p" = "prosocial_q2_p",
+            "helpful_p" = "prosocial_q3_p"
+        ) |>
+        dplyr::select(
+            "subjectkey",
+            "considerate_p",
+            "helps_hurt_p",
+            "helpful_p"
+        )
+    if (no_zero) {
+        prosocial[prosocial == 0] <- 1
+    }
+    return(prosocial)
+}
+
+#' Youth report of prosocial behaviour
+#'
+#' This function returns youth responses to the ABCD Parent Prosocial Behavior
+#' Survey. The values are stored in the ABCD table `ce_y_psb.txt` under the
+#' names `prosocial_q1_y`, `prosocial_q2_y`, and `prosocial_q3_y`.
+#' The function also renames the variables as follows:
+#' - "prosocial_q1_y" -> "considerate_y"
+#' - "prosocial_q2_y" -> "helps_hurt_y"
+#' - "prosocial_q3_y" -> "helpful_y"
+#'
+#' @inheritParams filter_timepoint
+#' @inheritParams filter_subjects
+#' @param ce_y_psb Youth Prosocial Behavior Survey.
+#' @param no_zero Boolean indicating if zero values should be replaced with 1
+#' @return A data frame containing 3 youth responses concerning prosocial
+#'  behaviour.
+#' @export
+get_prosocial_behaviour_y <- function(ce_y_psb,
+                                      subjects = NULL,
+                                      t = NULL,
+                                      no_zero = FALSE) {
+    prosocial <- ce_y_psb |>
+        filter_timepoint(t = t) |>
+        filter_subjects(subjects = subjects)
+    prosocial <- numcol_to_numeric(prosocial)
+    prosocial <- prosocial |>
+        dplyr::rename(
+            "considerate_y" = "prosocial_q1_y",
+            "helps_hurt_y" = "prosocial_q2_y",
+            "helpful_y" = "prosocial_q3_y"
+        ) |>
+        dplyr::select(
+            "subjectkey",
+            "considerate_y",
+            "helps_hurt_y",
+            "helpful_y"
+        )
+    if (no_zero) {
+        prosocial[prosocial == 0] <- 1
+    }
+    return(prosocial)
 }
 
 #' Parent report of pubertal status
@@ -1108,6 +1109,9 @@ get_race <- function(abcd_p_demo,
 
 #' Extract MRI scanner serial number
 #'
+#' Extracts variable `mri_info_deviceserialnumber` from table `mri_y_adm_info`
+#' as `scanner_id`.
+#'
 #' @inheritParams filter_timepoint
 #' @inheritParams filter_subjects
 #' @param mri_y_adm_info Data frame storing MRI administrative information.
@@ -1121,7 +1125,7 @@ get_scanner_id <- function(mri_y_adm_info, subjects = NULL, t = NULL) {
         ) |>
         filter_timepoint(t = t) |>
         filter_subjects(subjects = subjects) |>
-        dplyr::select(subjectkey, scanner_id)
+        dplyr::select("subjectkey", "scanner_id")
     return(scanner_df)
 }
 

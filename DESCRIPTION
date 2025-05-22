@@ -1,6 +1,6 @@
 Package: abcdutils
 Title: Utility Functions for the ABCD Dataset
-Version: 0.3.2
+Version: 0.4.0
 Authors@R: c(
     person("Prashanth", "Velayudhan", , "prashanth.velayudhan@sickkids.ca", role = c("aut", "cre"), comment = c(ORCID = "0000-0003-4678-7315")),
     person("Eman", "Nishat", , "eman.nishat@sickkids.ca", role = c("ctb")),

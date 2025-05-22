@@ -2,7 +2,7 @@
 % Please edit documentation in R/extraction.R
 \name{get_mtbi_mechanism}
 \alias{get_mtbi_mechanism}
-\title{Get acute symptom input variable 'latest_mtbi_mechanism'}
+\title{Extract mechanism of latest mTBI}
 \usage{
 get_mtbi_mechanism(
   ph_p_otbi,
@@ -27,5 +27,5 @@ get_mtbi_mechanism(
 A data frame containing latest_mtbi_mechanism
 }
 \description{
-Get acute symptom input variable 'latest_mtbi_mechanism'
+Extract mechanism of latest mTBI
 }

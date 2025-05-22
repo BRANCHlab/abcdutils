@@ -5,8 +5,10 @@
 #' Deprecated function for extracting parent-reported gender.
 #' Please use `get_gender_p()` instead.
 #'
+#' @keywords internal
 #' @param ... Arguments passed to `get_gender_p()`.
 #' @return Data frame containing youth-reported gender.
+#' @export
 get_p_gender <- function(...) {
     abcdutils_deprecated(
         version = "0.4.0",
@@ -22,6 +24,7 @@ get_p_gender <- function(...) {
 #' Defunct function for converting a data list into a data frame. Please
 #'  use `as.data.frame()` instead.
 #'
+#' @keywords internal
 #' @param ph_p_sds Dataframe containing sleep disturbance scale data.
 #' @param subjects Vector of subjectkeys.
 #' @param t timepoint of data collection (0: baseline, 1: 1yfu, ...).
@@ -41,8 +44,10 @@ get_sds_total_probs <- function(ph_p_sds, subjects = NULL, t = NULL) {
 #' Deprecated function for extracting youth-reported gender.
 #' Please use `get_gender_y()` instead.
 #'
+#' @keywords internal
 #' @param ... Arguments passed to `get_gender_y()`.
 #' @return Data frame containing youth-reported gender.
+#' @export
 get_y_gender <- function(...) {
     abcdutils_deprecated(
         version = "0.4.0",
@@ -58,6 +63,7 @@ get_y_gender <- function(...) {
 #' Deprecated function for launching the ABCD data dictionary in browser.
 #' Please use `open_dd()` instead.
 #'
+#' @keywords internal
 #' @export
 open_dict <- function() {
     abcdutils_deprecated(
@@ -73,8 +79,10 @@ open_dict <- function() {
 #' Deprecated function for extracting white matter neurite densities.
 #' Please use `get_wmnd()` instead.
 #'
+#' @keywords internal
 #' @param ... Arguments passed to `get_gender_y()`.
 #' @return Data frame containing youth-reported gender.
+#' @export
 get_all_wmnd <- function(...) {
     abcdutils_deprecated(
         version = "0.4.0",
@@ -82,4 +90,3 @@ get_all_wmnd <- function(...) {
     )
     get_wmnd(...)
 }
-

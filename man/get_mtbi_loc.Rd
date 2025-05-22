@@ -2,7 +2,7 @@
 % Please edit documentation in R/extraction.R
 \name{get_mtbi_loc}
 \alias{get_mtbi_loc}
-\title{Get acute symptom input variable 'latest_mtbi_loc'}
+\title{Extract LOC of latest mTBI}
 \usage{
 get_mtbi_loc(ph_p_otbi, abcd_y_lt, subjects = NULL, t = NULL)
 }
@@ -19,5 +19,5 @@ get_mtbi_loc(ph_p_otbi, abcd_y_lt, subjects = NULL, t = NULL)
 A data frame containing latest_mtbi_loc
 }
 \description{
-Get acute symptom input variable 'latest_mtbi_loc'
+Extract LOC of latest mTBI
 }

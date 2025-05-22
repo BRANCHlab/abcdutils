@@ -17,5 +17,8 @@ get_sds_total_probs(ph_p_sds, subjects = NULL, t = NULL)
 Data frame containing sleep data.
 }
 \description{
-Deprecated function for pulling sleep disturbance scale total problems.
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+Defunct function for converting a data list into a data frame. Please
+use \code{as.data.frame()} instead.
 }
+\keyword{internal}

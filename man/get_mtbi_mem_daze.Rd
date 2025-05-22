@@ -2,7 +2,7 @@
 % Please edit documentation in R/extraction.R
 \name{get_mtbi_mem_daze}
 \alias{get_mtbi_mem_daze}
-\title{Get acute symptom input variable 'latest_mtbi_mem_daze'}
+\title{Extract memory loss / dazed status of latest mTBI}
 \usage{
 get_mtbi_mem_daze(ph_p_otbi, abcd_y_lt, subjects = NULL, t = NULL)
 }
@@ -19,5 +19,5 @@ get_mtbi_mem_daze(ph_p_otbi, abcd_y_lt, subjects = NULL, t = NULL)
 A data frame containing latest_mtbi_mem_daze.
 }
 \description{
-Get acute symptom input variable 'latest_mtbi_mem_daze'
+Extract memory loss / dazed status of latest mTBI
 }

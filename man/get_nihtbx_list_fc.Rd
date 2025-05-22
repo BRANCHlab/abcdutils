@@ -2,7 +2,7 @@
 % Please edit documentation in R/extraction.R
 \name{get_nihtbx_list_fc}
 \alias{get_nihtbx_list_fc}
-\title{Get nihtbx list sorting data}
+\title{Extract NIH toolbox list sorting data}
 \usage{
 get_nihtbx_list_fc(abcd_tbss01, subjects = NULL, t = NULL)
 }
@@ -17,5 +17,5 @@ get_nihtbx_list_fc(abcd_tbss01, subjects = NULL, t = NULL)
 A data frame containing nihtbx list sorting data.
 }
 \description{
-Get nihtbx list sorting data
+Extract NIH toolbox list sorting data
 }

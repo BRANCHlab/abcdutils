@@ -2,7 +2,7 @@
 % Please edit documentation in R/extraction.R
 \name{get_nihtbx_cardsort_fc}
 \alias{get_nihtbx_cardsort_fc}
-\title{Get nihtbx cardsort data}
+\title{Extract NIH toolbox cardsort data}
 \usage{
 get_nihtbx_cardsort_fc(abcd_tbss01, subjects = NULL, t = NULL)
 }
@@ -17,5 +17,5 @@ get_nihtbx_cardsort_fc(abcd_tbss01, subjects = NULL, t = NULL)
 A data frame containing nihtbx cardsort data.
 }
 \description{
-Get nihtbx cardsort data
+Extract NIH toolbox cardsort data
 }

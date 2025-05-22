@@ -2,7 +2,7 @@
 % Please edit documentation in R/extraction.R
 \name{get_mtbi_count}
 \alias{get_mtbi_count}
-\title{Get number of mtbis sustained by subject}
+\title{Extract number of mTBIs sustained by subject}
 \usage{
 get_mtbi_count(ph_p_otbi, abcd_y_lt, subjects = NULL, t = NULL, cutoff = NULL)
 }
@@ -21,5 +21,5 @@ get_mtbi_count(ph_p_otbi, abcd_y_lt, subjects = NULL, t = NULL, cutoff = NULL)
 A data frame containing number of previous mTBIs
 }
 \description{
-Get number of mtbis sustained by subject
+Extract number of mTBIs sustained by subject
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/extraction.R
 \name{get_mtbi_age}
 \alias{get_mtbi_age}
-\title{Get acute symptom input variable 'latest_mtbi_age'}
+\title{Extract age at latest mTBI}
 \usage{
 get_mtbi_age(ph_p_otbi, abcd_y_lt, subjects = NULL, t = NULL, as_years = TRUE)
 }
@@ -21,5 +21,5 @@ get_mtbi_age(ph_p_otbi, abcd_y_lt, subjects = NULL, t = NULL, as_years = TRUE)
 A data frame containing latest_mtbi_age
 }
 \description{
-Get acute symptom input variable 'latest_mtbi_age'
+Extract age at latest mTBI
 }

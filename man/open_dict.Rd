@@ -7,5 +7,8 @@
 open_dict()
 }
 \description{
-This function will launch the ABCD interactive data dictionary in a browser.
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+Deprecated function for launching the ABCD data dictionary in browser.
+Please use \code{open_dd()} instead.
 }
+\keyword{internal}
