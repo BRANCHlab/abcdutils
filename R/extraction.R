@@ -11,6 +11,7 @@ get_cbcl_syndrome_scale <- function(mh_p_cbcl,
                                     raw = TRUE,
                                     t = NULL,
                                     subjects = NULL) {
+    mh_p_cbcl <- swap_src_subjectkey(mh_p_cbcl)
     # Check that the provided syndrome is present
     syndromes <- c(
         "anxdep",
@@ -47,6 +48,7 @@ get_cbcl_syndrome_scale <- function(mh_p_cbcl,
 get_cort_sa <- function(mri_y_smr_area_dsk,
                         subjects = NULL,
                         t = NULL) {
+    mri_y_smr_area_dsk <- swap_src_subjectkey(mri_y_smr_area_dsk)
     cort_raw <- mri_y_smr_area_dsk |>
         filter_timepoint(t = t) |>
         filter_subjects(subjects = subjects)
@@ -68,6 +70,7 @@ get_cort_sa <- function(mri_y_smr_area_dsk,
 get_cort_t <- function(mri_y_smr_thk_dsk,
                        subjects = NULL,
                        t = NULL) {
+    mri_y_smr_thk_dsk <- swap_src_subjectkey(mri_y_smr_thk_dsk)
     cort_raw <- mri_y_smr_thk_dsk |>
         filter_timepoint(t = t) |>
         filter_subjects(subjects = subjects)
@@ -95,6 +98,7 @@ get_cort_t <- function(mri_y_smr_thk_dsk,
 get_exercise <- function(ph_y_yrb,
                          subjects = NULL,
                          t = NULL) {
+    ph_y_yrb <- swap_src_subjectkey(ph_y_yrb)
     exercise <- ph_y_yrb |>
         filter_timepoint(t = t) |>
         filter_subjects(subjects = subjects) |>
@@ -152,6 +156,8 @@ get_family_function <- function(ce_y_fes,
                                 ce_p_fes,
                                 subjects = NULL,
                                 t = NULL) {
+    ce_p_fes <- swap_src_subjectkey(ce_p_fes)
+    ce_y_fes <- swap_src_subjectkey(ce_y_fes)
     p_family_function  <- ce_y_fes |>
         filter_timepoint(t = t) |>
         filter_subjects(subjects = subjects)
@@ -220,9 +226,9 @@ get_family_function <- function(ce_y_fes,
 #' @return A data frame containing subjectkey and family ID.
 #' @export
 get_family_id <- function(abcd_y_lt, subjects = NULL, t = NULL) {
+    abcd_y_lt <- swap_src_subjectkey(abcd_y_lt)
     family_df <- abcd_y_lt |>
         dplyr::rename(
-            "subjectkey" = "src_subject_id",
             "family_id" = "rel_family_id"
         ) |>
         filter_timepoint(t = t) |>
@@ -253,6 +259,8 @@ get_friends <- function(mh_y_or,
                         subjects = NULL,
                         t = NULL,
                         discretize = FALSE) {
+    gish_p_gi <- swap_src_subjectkey(gish_p_gi)
+    mh_y_or <- swap_src_subjectkey(mh_y_or)
     sex <- get_sex(gish_p_gi, subjects, t = 0)
     friends <- mh_y_or |>
         filter_timepoint(t = t) |>
@@ -356,6 +364,7 @@ get_gender_p <- function(gish_p_gi,
                          subjects = NULL,
                          t = NULL,
                          match_y_report = FALSE) {
+    gish_p_gi <- swap_src_subjectkey(gish_p_gi)
     pgi <- gish_p_gi |>
         filter_timepoint(t = t) |>
         filter_subjects(subjects = subjects) |>
@@ -407,6 +416,7 @@ get_gender_p <- function(gish_p_gi,
 get_gender_y <- function(gish_y_gi,
                          subjects = NULL,
                          t = NULL) {
+    gish_y_gi <- swap_src_subjectkey(gish_y_gi)
     pgi <- gish_y_gi |>
         filter_timepoint(t = t) |>
         filter_subjects(subjects = subjects) |>
@@ -440,6 +450,7 @@ get_gender_y <- function(gish_y_gi,
 get_gord_cor <- function(mri_y_rsfmr_cor_gp_gp,
                          subjects = NULL,
                          t = NULL) {
+    mri_y_rsfmr_cor_gp_gp <- swap_src_subjectkey(mri_y_rsfmr_cor_gp_gp)
     gord_cor <- mri_y_rsfmr_cor_gp_gp |>
         filter_timepoint(t = t) |>
         filter_subjects(subjects = subjects)
@@ -470,6 +481,7 @@ get_gord_cor <- function(mri_y_rsfmr_cor_gp_gp,
 get_gord_var <- function(mri_y_rsfmr_var_gp,
                          subjects = NULL,
                          t = NULL) {
+    mri_y_rsfmr_var_gp <- swap_src_subjectkey(mri_y_rsfmr_var_gp)
     gord_var_raw <- mri_y_rsfmr_var_gp |>
         filter_timepoint(t = t) |>
         filter_subjects(subjects = subjects)
@@ -491,6 +503,7 @@ get_gord_var <- function(mri_y_rsfmr_var_gp,
 get_headaches <- function(ph_p_mhx,
                           subjects = NULL,
                           t = NULL) {
+    ph_p_mhx <- swap_src_subjectkey(ph_p_mhx)
     headaches <- ph_p_mhx |>
         filter_timepoint(t = t) |>
         filter_subjects(subjects = subjects)
@@ -518,6 +531,7 @@ get_headaches <- function(ph_p_mhx,
 get_income <- function(abcd_p_demo,
                        subjects = NULL,
                        t = NULL) {
+    abcd_p_demo <- swap_src_subjectkey(abcd_p_demo)
     income <- ""
     income_df <- abcd_p_demo |>
         filter_timepoint(t = t) |>
@@ -552,15 +566,16 @@ get_income <- function(abcd_p_demo,
 #'
 #' @inheritParams filter_timepoint
 #' @inheritParams filter_subjects
-#' @param abcd_df Any ABCD data frame containing interview age
-#' @param as_years Logical indicating whether to convert age to years
-#' @return A data frame containing interview age
+#' @param abcd_y_lt Data frame containing interview age.
+#' @param as_years Logical indicating whether to convert age to years.
+#' @return A data frame containing interview age.
 #' @export
-get_interview_age <- function(abcd_df,
+get_interview_age <- function(abcd_y_lt,
                               subjects = NULL,
                               t = NULL,
                               as_years = TRUE) {
-    interview_age <- abcd_df |>
+    abcd_y_lt <- swap_src_subjectkey(abcd_y_lt)
+    interview_age <- abcd_y_lt |>
         filter_timepoint(t = t) |>
         filter_subjects(subjects = subjects) |>
         dplyr::select("subjectkey", "interview_age")
@@ -586,6 +601,8 @@ get_mtbi_age <- function(ph_p_otbi,
                          subjects = NULL,
                          t = NULL,
                          as_years = TRUE) {
+    abcd_y_lt <- swap_src_subjectkey(abcd_y_lt)
+    ph_p_otbi <- swap_src_subjectkey(ph_p_otbi)
     mtbi_age <- detail_mtbi(ph_p_otbi, abcd_y_lt, subjects, t = t) |>
         dplyr::select(
             "subjectkey",
@@ -613,6 +630,8 @@ get_mtbi_count <- function(ph_p_otbi,
                            subjects = NULL,
                            t = NULL,
                            cutoff = NULL) {
+    abcd_y_lt <- swap_src_subjectkey(abcd_y_lt)
+    ph_p_otbi <- swap_src_subjectkey(ph_p_otbi)
     mtbi_count_df <- ph_p_otbi |>
         detail_mtbi(
             abcd_y_lt,
@@ -644,6 +663,8 @@ get_mtbi_count <- function(ph_p_otbi,
 #' @return A data frame containing latest_mtbi_loc
 #' @export
 get_mtbi_loc <- function(ph_p_otbi, abcd_y_lt, subjects = NULL, t = NULL) {
+    abcd_y_lt <- swap_src_subjectkey(abcd_y_lt)
+    ph_p_otbi <- swap_src_subjectkey(ph_p_otbi)
     mtbi_loc <- detail_mtbi(
         ph_p_otbi,
         abcd_y_lt,
@@ -671,6 +692,8 @@ get_mtbi_mechanism <- function(ph_p_otbi,
                                subjects = NULL,
                                t = NULL,
                                format = "undummied") {
+    abcd_y_lt <- swap_src_subjectkey(abcd_y_lt)
+    ph_p_otbi <- swap_src_subjectkey(ph_p_otbi)
     mtbi_mechanism <- detail_mtbi(
         ph_p_otbi,
         abcd_y_lt,
@@ -702,7 +725,12 @@ get_mtbi_mechanism <- function(ph_p_otbi,
 #' @param abcd_y_lt ABCD table containing age information.
 #' @return A data frame containing latest_mtbi_mem_daze.
 #' @export
-get_mtbi_mem_daze <- function(ph_p_otbi, abcd_y_lt, subjects = NULL, t = NULL) {
+get_mtbi_mem_daze <- function(ph_p_otbi,
+                              abcd_y_lt,
+                              subjects = NULL,
+                              t = NULL) {
+    abcd_y_lt <- swap_src_subjectkey(abcd_y_lt)
+    ph_p_otbi <- swap_src_subjectkey(ph_p_otbi)
     mtbi_mem_daze <- detail_mtbi(
         ph_p_otbi,
         abcd_y_lt,
@@ -726,6 +754,7 @@ get_mtbi_mem_daze <- function(ph_p_otbi, abcd_y_lt, subjects = NULL, t = NULL) {
 get_nihtbx_cardsort_fc <- function(abcd_tbss01,
                                    subjects = NULL,
                                    t = NULL) {
+    abcd_tbss01 <- swap_src_subjectkey(abcd_tbss01)
     nihtbx_full <- abcd_tbss01 |>
         filter_timepoint(t = t) |>
         filter_subjects(subjects = subjects)
@@ -747,6 +776,7 @@ get_nihtbx_cardsort_fc <- function(abcd_tbss01,
 get_nihtbx_list_fc <- function(abcd_tbss01,
                                subjects = NULL,
                                t = NULL) {
+    abcd_tbss01 <- swap_src_subjectkey(abcd_tbss01)
     nihtbx_full <- abcd_tbss01 |>
         filter_timepoint(t = t) |>
         filter_subjects(subjects = subjects)
@@ -772,6 +802,7 @@ get_parent_psychopathology <- function(mh_p_asr,
                                        subjects = NULL,
                                        t = NULL,
                                        raw = TRUE) {
+    mh_p_asr <- swap_src_subjectkey(mh_p_asr)
     if (raw == TRUE) {
         parent_psychopathology <- mh_p_asr |>
             filter_timepoint(t = t) |>
@@ -829,6 +860,7 @@ get_prosocial_behaviour_p <- function(ce_p_psb,
                                       subjects = NULL,
                                       t = NULL,
                                       no_zero = FALSE) {
+    ce_p_psb <- swap_src_subjectkey(ce_p_psb)
     prosocial <- ce_p_psb |>
         filter_timepoint(t = t) |>
         filter_subjects(subjects = subjects)
@@ -872,6 +904,7 @@ get_prosocial_behaviour_y <- function(ce_y_psb,
                                       subjects = NULL,
                                       t = NULL,
                                       no_zero = FALSE) {
+    ce_y_psb <- swap_src_subjectkey(ce_y_psb)
     prosocial <- ce_y_psb |>
         filter_timepoint(t = t) |>
         filter_subjects(subjects = subjects)
@@ -906,6 +939,7 @@ get_pubertal_status_p <- function(ph_p_pds,
                                   subjects = NULL,
                                   t = NULL,
                                   max_value = NULL) {
+    ph_p_pds <- swap_src_subjectkey(ph_p_pds)
     pubertal_status_df <- ph_p_pds |>
         filter_timepoint(t = t) |>
         filter_subjects(subjects = subjects)
@@ -947,6 +981,7 @@ get_pubertal_status_y <- function(ph_y_pds,
                                   subjects = NULL,
                                   t = NULL,
                                   max_value = NULL) {
+    ph_y_pds <- swap_src_subjectkey(ph_y_pds)
     pubertal_status_df <- ph_y_pds |>
         filter_timepoint(t = t) |>
         filter_subjects(subjects = subjects)
@@ -996,6 +1031,7 @@ get_race <- function(abcd_p_demo,
                      t = NULL,
                      dummy = FALSE,
                      asian_as_other = FALSE) {
+    abcd_p_demo <- swap_src_subjectkey(abcd_p_demo)
     race_df <- abcd_p_demo |>
         filter_timepoint(t = t) |>
         filter_subjects(subjects = subjects) |>
@@ -1118,9 +1154,9 @@ get_race <- function(abcd_p_demo,
 #' @return A data frame containing subjectkey and scanner ID.
 #' @export
 get_scanner_id <- function(mri_y_adm_info, subjects = NULL, t = NULL) {
+    mri_y_adm_info <- swap_src_subjectkey(mri_y_adm_info)
     scanner_df <- mri_y_adm_info |>
         dplyr::rename(
-            "subjectkey" = "src_subject_id",
             "scanner_id" = "mri_info_deviceserialnumber"
         ) |>
         filter_timepoint(t = t) |>
@@ -1146,6 +1182,7 @@ get_scanner_id <- function(mri_y_adm_info, subjects = NULL, t = NULL) {
 get_screen_time <- function(nt_p_stq,
                             subjects = NULL,
                             t = NULL) {
+    nt_p_stq <- swap_src_subjectkey(nt_p_stq)
     weekend_hours <- ""
     weekday_hours <- ""
     weekend_mins <- ""
@@ -1210,6 +1247,7 @@ get_sex <- function(gish_p_gi,
                     format = "dummied",
                     only_m_f = FALSE,
                     as_numeric = FALSE) {
+    gish_p_gi <- swap_src_subjectkey(gish_p_gi)
     options <- c("undummied", "dummied")
     if (!(format %in% options)) {
         print("The 'format argument should be one of the following options:")
@@ -1278,6 +1316,7 @@ get_sex <- function(gish_p_gi,
 get_sleep_disturbance <- function(ph_p_sds,
                                   subjects = NULL,
                                   t = NULL) {
+    ph_p_sds <- swap_src_subjectkey(ph_p_sds)
     sds_df <- ph_p_sds |>
         filter_timepoint(t = t) |>
         filter_subjects(subjects = subjects)
@@ -1315,6 +1354,7 @@ get_sports_and_activities <- function(ph_p_saiq,
                                       subjects = NULL,
                                       t = NULL,
                                       discretize = FALSE) {
+    ph_p_saiq <- swap_src_subjectkey(ph_p_saiq)
     saiq <- ph_p_saiq |>
         filter_timepoint(t = t) |>
         filter_subjects(subjects = subjects)
@@ -1458,6 +1498,7 @@ get_sports_and_activities <- function(ph_p_saiq,
 get_subc_cor <- function(mri_y_rsfmr_cor_gp_aseg,
                          subjects = NULL,
                          t = NULL) {
+    mri_y_rsfmr_cor_gp_aseg <- swap_src_subjectkey(mri_y_rsfmr_cor_gp_aseg)
     subc_cor <- mri_y_rsfmr_cor_gp_aseg |>
         filter_timepoint(t = t) |>
         filter_subjects(subjects = subjects)
@@ -1488,6 +1529,7 @@ get_subc_cor <- function(mri_y_rsfmr_cor_gp_aseg,
 get_subc_v <- function(mri_y_smr_vol_aseg,
                        subjects = NULL,
                        t = NULL) {
+    mri_y_smr_vol_aseg <- swap_src_subjectkey(mri_y_smr_vol_aseg)
     smri_raw <- mri_y_smr_vol_aseg |>
         filter_timepoint(t = t) |>
         filter_subjects(subjects = subjects)
@@ -1506,6 +1548,7 @@ get_subc_v <- function(mri_y_smr_vol_aseg,
 get_subc_var <- function(mrirstv02,
                          subjects = NULL,
                          t = NULL) {
+    mrirstv02 <- swap_src_subjectkey(mrirstv02)
     subc_var_raw <- mrirstv02 |>
         filter_timepoint(t = t) |>
         filter_subjects(subjects = subjects)
@@ -1537,9 +1580,11 @@ get_subc_var <- function(mrirstv02,
 #' @return A data frame of white matter neurite densities
 #' @export
 get_wmnd <- function(mri_y_rsi_rnd_at,
-                         mri_y_rsi_rnd_wm_dsk,
-                         subjects = NULL,
-                         t = NULL) {
+                     mri_y_rsi_rnd_wm_dsk,
+                     subjects = NULL,
+                     t = NULL) {
+    mri_y_rsi_rnd_at <- swap_src_subjectkey(mri_y_rsi_rnd_at)
+    mri_y_rsi_rnd_wm_dsk <- swap_src_subjectkey(mri_y_rsi_rnd_wm_dsk)
     mri_y_rsi_rnd_at <- mri_y_rsi_rnd_at |>
         filter_timepoint(t = t) |>
         filter_subjects(subjects = subjects) |>

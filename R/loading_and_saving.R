@@ -78,3 +78,23 @@ write_subjects <- function(subjects, path) {
     subject_df <- data.frame("subjectkey" = subjects)
     readr::write_csv(subject_df, path)
 }
+
+#' Replace "src_subject_id" with "subjectkey"
+#'
+#' @param df A data frame that may have "src_subject_id" as a UID column.
+#' @return df with "subjectkey" as a UID column.
+#' @export
+swap_src_subjectkey <- function(df) {
+    if ("subjectkey" %in% colnames(df)) {
+        return(df)
+    } else if ("src_subject_id" %in% colnames(df)) {
+        df <- dplyr::rename(df, "subjectkey" = "src_subject_id")
+        return(df)
+    } else {
+        abcdutils_error(
+            "Provided data frame must have either \"src_subject_id\" or",
+            " \"subjectkey\" column."
+        )
+    }
+}
+
