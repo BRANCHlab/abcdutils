@@ -4,19 +4,19 @@
 \alias{get_interview_age}
 \title{return A data frame containing interview age of specified subjects}
 \usage{
-get_interview_age(abcd_df, subjects = NULL, t = NULL, as_years = TRUE)
+get_interview_age(abcd_y_lt, subjects = NULL, t = NULL, as_years = TRUE)
 }
 \arguments{
-\item{abcd_df}{Any ABCD data frame containing interview age}
+\item{abcd_y_lt}{Data frame containing interview age.}
 
 \item{subjects}{Vector of subjects to filter to.}
 
 \item{t}{timepoint of data collection (0: baseline, 1: 1yfu, ...)}
 
-\item{as_years}{Logical indicating whether to convert age to years}
+\item{as_years}{Logical indicating whether to convert age to years.}
 }
 \value{
-A data frame containing interview age
+A data frame containing interview age.
 }
 \description{
 return A data frame containing interview age of specified subjects

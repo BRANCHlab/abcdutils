@@ -1301,6 +1301,28 @@ get_sex <- function(gish_p_gi,
     return(sex)
 }
 
+#' Extract site ID
+#'
+#' The extracted `site_id` variable is equal to the `site_id_l` variable in the
+#' ABCD table `abcd_y_lt`.
+#'
+#' @inheritParams filter_timepoint
+#' @inheritParams filter_subjects
+#' @param abcd_y_lt Data frame storing site information.
+#' @return A data frame containing subjectkey and site ID.
+#' @export
+get_site_id <- function(abcd_y_lt, subjects = NULL, t = NULL) {
+    abcd_y_lt <- swap_src_subjectkey(abcd_y_lt)
+    family_df <- abcd_y_lt |>
+        dplyr::rename(
+            "site_id" = "site_id_l"
+        ) |>
+        filter_timepoint(t = t) |>
+        filter_subjects(subjects = subjects) |>
+        dplyr::select("subjectkey", "site_id")
+    return(family_df)
+}
+
 #' General factor for Sleep Disturbance from the sleep disturbance scale.
 #'
 #' This function returns a total measure for sleep disturbance from

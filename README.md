@@ -96,6 +96,7 @@ history:
 | get_race                   | Child ethnicity                                                                                                 |
 | get_scanner_id             | Scanner-specific ID variable                                                                                    |
 | get_screen_time            | Screentime on weekdays and weekends in hours                                                                    |
+| get_site_id                | Site-specific ID variable                                                                                       |
 | get_sex                    | Sex at birth                                                                                                    |
 | get_sleep_disturbance      | Sum of problems on Sleep Disturbance Scale                                                                      |
 | get_sports_and_activities  | Total participation in sports and activities                                                                    |
