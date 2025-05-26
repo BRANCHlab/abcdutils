@@ -1150,10 +1150,19 @@ get_race <- function(abcd_p_demo,
 #'
 #' @inheritParams filter_timepoint
 #' @inheritParams filter_subjects
+#' @inheritParams get_site_id
 #' @param mri_y_adm_info Data frame storing MRI administrative information.
+#' @param sample_missing If TRUE, populates missing scanner IDs based on the
+#'  scanners present at each observation's site of data collection. Sampling
+#'  is weighted according to prevalence of that scanner among all ABCD subjects
+#'  with scanner ID values from that site.
 #' @return A data frame containing subjectkey and scanner ID.
 #' @export
-get_scanner_id <- function(mri_y_adm_info, subjects = NULL, t = NULL) {
+get_scanner_id <- function(mri_y_adm_info,
+                           subjects = NULL,
+                           t = NULL,
+                           abcd_y_lt = NULL,
+                           sample_missing = FALSE) {
     mri_y_adm_info <- swap_src_subjectkey(mri_y_adm_info)
     scanner_df <- mri_y_adm_info |>
         dplyr::rename(
@@ -1162,6 +1171,38 @@ get_scanner_id <- function(mri_y_adm_info, subjects = NULL, t = NULL) {
         filter_timepoint(t = t) |>
         filter_subjects(subjects = subjects) |>
         dplyr::select("subjectkey", "scanner_id")
+    if (sample_missing) {
+        if (is.null(abcd_y_lt)) {
+            abcdutils_error(
+                "`abcd_y_lt` argument must be provided to sample missing",
+                " scanner IDs."
+            )
+        }
+        assigned_scanners <- assign_site_scanner(
+            mri_y_adm_info,
+            abcd_y_lt,
+            subjects = subjects,
+            t = t
+        )
+        cat(
+            "Sampled scanner ID for ",
+            nrow(assigned_scanners),
+            " subjects.\n",
+            sep = ""
+        )
+        scanner_df <- rbind(
+            stats::na.omit(scanner_df),
+            dplyr::select(assigned_scanners, "subjectkey", "scanner_id")
+        )
+        row.names(scanner_df) <- NULL
+        # Ensure no duplicate subjects
+        if (nrow(scanner_df) != length(unique(scanner_df$"subjectkey"))) {
+            abcdutils_error(
+                "Duplicate subjects occurred during scanner sampling. Please",
+                " file a GitHub issue describing how to reproduce this error."
+            )
+        }
+    }
     return(scanner_df)
 }
 
