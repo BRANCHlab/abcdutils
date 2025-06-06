@@ -533,6 +533,8 @@ get_mtbi_subjects <- function(ph_p_otbi,
                               abcd_y_lt,
                               min_mpi = -10,
                               t = NULL) {
+    ph_p_otbi <- swap_src_subjectkey(ph_p_otbi)
+    abcd_y_lt <- swap_src_subjectkey(abcd_y_lt)
     ph_p_otbi <- detail_mtbi(
         ph_p_otbi,
         abcd_y_lt,
