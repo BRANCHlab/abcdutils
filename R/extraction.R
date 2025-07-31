@@ -43,20 +43,28 @@ get_cbcl_syndrome_scale <- function(mh_p_cbcl,
 #' @inheritParams filter_timepoint
 #' @inheritParams filter_subjects
 #' @param mri_y_smr_area_dsk Data file containing cortical data
+#' @param only_total Logical indicating whether to return only the total
+#'  cortical surface area or all cortical surface areas. Defaults to TRUE
 #' @return A data frame of cortical surface areas
 #' @export
 get_cort_sa <- function(mri_y_smr_area_dsk,
                         subjects = NULL,
-                        t = NULL) {
+                        t = NULL,
+                        only_total = TRUE) {
     mri_y_smr_area_dsk <- swap_src_subjectkey(mri_y_smr_area_dsk)
     cort_raw <- mri_y_smr_area_dsk |>
         filter_timepoint(t = t) |>
         filter_subjects(subjects = subjects)
-    cort_sa_df <- cort_raw |>
-        dplyr::select(
-            "subjectkey",
-            "smri_area_cdk_total"
-        )
+    if (only_total) {
+        cort_sa_df <- cort_raw |>
+            dplyr::select(
+                "subjectkey",
+                "smri_area_cdk_total"
+            )
+    } else {
+        cort_sa_df <- cort_raw |>
+            dplyr::select(-"eventname") 
+    }
     return(cort_sa_df)
 }
 
@@ -65,20 +73,30 @@ get_cort_sa <- function(mri_y_smr_area_dsk,
 #' @inheritParams filter_timepoint
 #' @inheritParams filter_subjects
 #' @param mri_y_smr_thk_dsk Data file containing cortical data
+#' @param only_mean Logical indicating whether to return only the mean cortical
+#'  thickness or all cortical thicknesses. Defaults to TRUE.
 #' @return A data frame of cortical thicknesses
 #' @export
 get_cort_t <- function(mri_y_smr_thk_dsk,
                        subjects = NULL,
-                       t = NULL) {
+                       t = NULL,
+                       only_mean = TRUE) {
     mri_y_smr_thk_dsk <- swap_src_subjectkey(mri_y_smr_thk_dsk)
     cort_raw <- mri_y_smr_thk_dsk |>
         filter_timepoint(t = t) |>
         filter_subjects(subjects = subjects)
-    cort_t_df <- cort_raw |>
-        dplyr::select(
-            "subjectkey",
-            "smri_thick_cdk_mean"
-        )
+    if (only_mean) {
+        cort_t_df <- cort_raw |>
+            dplyr::select(
+                "subjectkey",
+                "smri_thick_cdk_mean"
+            )
+    } else {
+        cort_t_df <- cort_raw |>
+            dplyr::select(
+                -"eventname"
+            )
+    }
     return(cort_t_df)
 }
 
@@ -468,6 +486,40 @@ get_gord_cor <- function(mri_y_rsfmr_cor_gp_gp,
         "subjectkey",
         "avg_gord_cor"
     )
+    return(gord_cor)
+}
+
+get_gord_cor2 <- function(mri_y_rsfmr_cor_gp_gp,
+                         subjects = NULL,
+                         t = NULL) {
+    mri_y_rsfmr_cor_gp_gp <- swap_src_subjectkey(mri_y_rsfmr_cor_gp_gp)
+    gord_cor <- mri_y_rsfmr_cor_gp_gp |>
+        filter_timepoint(t = t) |>
+        filter_subjects(subjects = subjects)
+    # Store the subjectkeys in the rownames
+    row.names(gord_cor) <- gord_cor$"subjectkey"
+    # mean absolute correlation of dmn to all other networks
+    gord_cor <- gord_cor |>
+        dplyr::mutate(
+            
+        )
+    # Remove the subjectkeys
+    intra_connectivities <- gord_cor |>
+        dplyr::select(
+            "subjectkey",
+            "rsfmri_c_ngd_dt_ngd_dt", # default mode network intra-connectivity
+            "rsfmri_c_ngd_sa_ngd_sa", # salient network intra-connectivity
+            "rsfmri_c_ngd_fo_ngd_fo", # fronto-parietal network intra-connectivity
+        )
+    # data frame of just rowmeans
+    #gord_cor <- data.frame(rowMeans(gord_cor))
+    #gord_cor$"subjectkey" <- rownames(gord_cor)
+    #colnames(gord_cor) <- c("avg_gord_cor", "subjectkey")
+    #rownames(gord_cor) <- NULL
+    #gord_cor <- gord_cor |> dplyr::select(
+    #    "subjectkey",
+    #    "avg_gord_cor"
+    #)
     return(gord_cor)
 }
 
@@ -1587,17 +1639,25 @@ get_subc_cor <- function(mri_y_rsfmr_cor_gp_aseg,
 #' @inheritParams filter_timepoint
 #' @inheritParams filter_subjects
 #' @param mri_y_smr_vol_aseg Data file containing subcortical data
+#' @param only_whole_brain If TRUE, collects only whole brain volume. Else,
+#'  collects all fts.
 #' @return A data frame containing subcortical volumes.
 #' @export
 get_subc_v <- function(mri_y_smr_vol_aseg,
                        subjects = NULL,
-                       t = NULL) {
+                       t = NULL,
+                       only_whole_brain = TRUE) {
     mri_y_smr_vol_aseg <- swap_src_subjectkey(mri_y_smr_vol_aseg)
     smri_raw <- mri_y_smr_vol_aseg |>
         filter_timepoint(t = t) |>
         filter_subjects(subjects = subjects)
-    subc_v_df <- smri_raw |>
-        dplyr::select("subjectkey", "smri_vol_scs_wholeb")
+    if (only_whole_brain) {
+        subc_v_df <- smri_raw |>
+            dplyr::select("subjectkey", "smri_vol_scs_wholeb")
+    } else {
+        subc_v_df <- smri_raw |>
+            dplyr::select(-"eventname")
+    }
     return(subc_v_df)
 }
 
@@ -1645,17 +1705,29 @@ get_subc_var <- function(mrirstv02,
 get_wmnd <- function(mri_y_rsi_rnd_at,
                      mri_y_rsi_rnd_wm_dsk,
                      subjects = NULL,
-                     t = NULL) {
+                     t = NULL,
+                     only_mean = TRUE) {
     mri_y_rsi_rnd_at <- swap_src_subjectkey(mri_y_rsi_rnd_at)
     mri_y_rsi_rnd_wm_dsk <- swap_src_subjectkey(mri_y_rsi_rnd_wm_dsk)
-    mri_y_rsi_rnd_at <- mri_y_rsi_rnd_at |>
-        filter_timepoint(t = t) |>
-        filter_subjects(subjects = subjects) |>
-        dplyr::select("subjectkey", "dmri_rsirnd_fib_allfib")
-    mri_y_rsi_rnd_wm_dsk <- mri_y_rsi_rnd_wm_dsk |>
-        filter_timepoint(t = t) |>
-        filter_subjects(subjects = subjects) |>
-        dplyr::select("subjectkey", "dmri_rsirndwm_cdk_mean")
+    if (only_mean) {
+        mri_y_rsi_rnd_at <- mri_y_rsi_rnd_at |>
+            filter_timepoint(t = t) |>
+            filter_subjects(subjects = subjects) |>
+            dplyr::select("subjectkey", "dmri_rsirnd_fib_allfib")
+        mri_y_rsi_rnd_wm_dsk <- mri_y_rsi_rnd_wm_dsk |>
+            filter_timepoint(t = t) |>
+            filter_subjects(subjects = subjects) |>
+            dplyr::select("subjectkey", "dmri_rsirndwm_cdk_mean")
+    } else {
+        mri_y_rsi_rnd_at <- mri_y_rsi_rnd_at |>
+            filter_timepoint(t = t) |>
+            filter_subjects(subjects = subjects) |>
+            dplyr::select("subjectkey", dplyr::contains("dmri_rsirnd_fib_"))
+        mri_y_rsi_rnd_wm_dsk <- mri_y_rsi_rnd_wm_dsk |>
+            filter_timepoint(t = t) |>
+            filter_subjects(subjects = subjects) |>
+            dplyr::select("subjectkey", dplyr::contains("dmri_rsirndwm_cdk_"))
+    }
     df_list <- list(mri_y_rsi_rnd_at, mri_y_rsi_rnd_wm_dsk)
     wmnd_df <- merge_df_list(df_list, join = "full")
     return(wmnd_df)
