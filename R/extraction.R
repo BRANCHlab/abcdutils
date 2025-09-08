@@ -1,4 +1,4 @@
-#' Extract CBCL syndrome scale data
+#' Extract CBCL syndrome scale data{{{
 #'
 #' @inheritParams filter_timepoint
 #' @inheritParams filter_subjects
@@ -36,7 +36,7 @@ get_cbcl_syndrome_scale <- function(mh_p_cbcl,
     cols_to_keep <- c("subjectkey", syndromes)
     ss_data <- mh_p_cbcl[, cols_to_keep]
     return(ss_data)
-}
+}# }}}
 
 #' Extract cortical surface areas
 #'
