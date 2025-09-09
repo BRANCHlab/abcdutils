@@ -4,7 +4,7 @@
 \alias{get_cort_t}
 \title{Extract cortical thicknesses}
 \usage{
-get_cort_t(mri_y_smr_thk_dsk, subjects = NULL, t = NULL)
+get_cort_t(mri_y_smr_thk_dsk, subjects = NULL, t = NULL, only_mean = TRUE)
 }
 \arguments{
 \item{mri_y_smr_thk_dsk}{Data file containing cortical data}
@@ -12,6 +12,9 @@ get_cort_t(mri_y_smr_thk_dsk, subjects = NULL, t = NULL)
 \item{subjects}{Vector of subjects to filter to.}
 
 \item{t}{timepoint of data collection (0: baseline, 1: 1yfu, ...)}
+
+\item{only_mean}{Logical indicating whether to return only the mean cortical
+thickness or all cortical thicknesses. Defaults to TRUE.}
 }
 \value{
 A data frame of cortical thicknesses

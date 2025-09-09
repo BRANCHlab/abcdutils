@@ -4,7 +4,7 @@
 \alias{get_cort_sa}
 \title{Extract cortical surface areas}
 \usage{
-get_cort_sa(mri_y_smr_area_dsk, subjects = NULL, t = NULL)
+get_cort_sa(mri_y_smr_area_dsk, subjects = NULL, t = NULL, only_total = TRUE)
 }
 \arguments{
 \item{mri_y_smr_area_dsk}{Data file containing cortical data}
@@ -12,6 +12,9 @@ get_cort_sa(mri_y_smr_area_dsk, subjects = NULL, t = NULL)
 \item{subjects}{Vector of subjects to filter to.}
 
 \item{t}{timepoint of data collection (0: baseline, 1: 1yfu, ...)}
+
+\item{only_total}{Logical indicating whether to return only the total
+cortical surface area or all cortical surface areas. Defaults to TRUE}
 }
 \value{
 A data frame of cortical surface areas

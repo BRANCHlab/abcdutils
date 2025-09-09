@@ -4,7 +4,12 @@
 \alias{get_subc_v}
 \title{Extract subcortical volumes}
 \usage{
-get_subc_v(mri_y_smr_vol_aseg, subjects = NULL, t = NULL)
+get_subc_v(
+  mri_y_smr_vol_aseg,
+  subjects = NULL,
+  t = NULL,
+  only_whole_brain = TRUE
+)
 }
 \arguments{
 \item{mri_y_smr_vol_aseg}{Data file containing subcortical data}
@@ -12,6 +17,10 @@ get_subc_v(mri_y_smr_vol_aseg, subjects = NULL, t = NULL)
 \item{subjects}{Vector of subjects to filter to.}
 
 \item{t}{timepoint of data collection (0: baseline, 1: 1yfu, ...)}
+
+\item{only_whole_brain}{If TRUE, collects only whole brain volume. Else,
+collects all fts. Whole brain volume is extracted as the column
+"smri_vol_scs_wholeb".}
 }
 \value{
 A data frame containing subcortical volumes.

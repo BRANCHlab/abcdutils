@@ -1,4 +1,4 @@
-#' Extract CBCL syndrome scale data{{{
+#' Extract CBCL syndrome scale data
 #'
 #' @inheritParams filter_timepoint
 #' @inheritParams filter_subjects
@@ -36,7 +36,7 @@ get_cbcl_syndrome_scale <- function(mh_p_cbcl,
     cols_to_keep <- c("subjectkey", syndromes)
     ss_data <- mh_p_cbcl[, cols_to_keep]
     return(ss_data)
-}# }}}
+}
 
 #' Extract cortical surface areas
 #'
@@ -467,59 +467,39 @@ get_gender_y <- function(gish_y_gi,
 #' @export
 get_gord_cor <- function(mri_y_rsfmr_cor_gp_gp,
                          subjects = NULL,
-                         t = NULL) {
+                         t = NULL,
+                         desired_networks) {
     mri_y_rsfmr_cor_gp_gp <- swap_src_subjectkey(mri_y_rsfmr_cor_gp_gp)
     gord_cor <- mri_y_rsfmr_cor_gp_gp |>
         filter_timepoint(t = t) |>
         filter_subjects(subjects = subjects)
-    # Store the subjectkeys in the rownames
-    row.names(gord_cor) <- gord_cor$"subjectkey"
-    # Remove the subjectkeys
-    gord_cor <- gord_cor |>
-        dplyr::select(-c("subjectkey", "eventname"))
-    # data frame of just rowmeans
-    gord_cor <- data.frame(rowMeans(gord_cor))
-    gord_cor$"subjectkey" <- rownames(gord_cor)
-    colnames(gord_cor) <- c("avg_gord_cor", "subjectkey")
-    rownames(gord_cor) <- NULL
-    gord_cor <- gord_cor |> dplyr::select(
-        "subjectkey",
-        "avg_gord_cor"
+    networks <- c(
+        "auditory" = "ad",
+        "cingulo_opercular" = "cgc",
+        "cingulo_parietal" = "ca",
+        "default" = "dt",
+        "dorsal_attention" = "dla",
+        "fronto_parietal" = "fo",
+        "none" = "n",
+        "retrosplenial_temporal" = "rspltp",
+        "salience" = "sa",
+        "sensorimotor_hand" = "smh",
+        "sensorimotor_mouth" = "smm",
+        "ventral_attention" = "vta",
+        "visual" = "vs"
     )
-    return(gord_cor)
-}
-
-get_gord_cor2 <- function(mri_y_rsfmr_cor_gp_gp,
-                         subjects = NULL,
-                         t = NULL) {
-    mri_y_rsfmr_cor_gp_gp <- swap_src_subjectkey(mri_y_rsfmr_cor_gp_gp)
-    gord_cor <- mri_y_rsfmr_cor_gp_gp |>
-        filter_timepoint(t = t) |>
-        filter_subjects(subjects = subjects)
-    # Store the subjectkeys in the rownames
-    row.names(gord_cor) <- gord_cor$"subjectkey"
-    # mean absolute correlation of dmn to all other networks
-    gord_cor <- gord_cor |>
-        dplyr::mutate(
-            
-        )
+    keep_vars <- lapply(
+        desired_networks,
+        function(x) {
+            paste0("rsfmri_c_ngd_", networks[[x[[1]]]], "_ngd_", networks[[x[[2]]]])
+        }
+    ) |> unlist()
     # Remove the subjectkeys
-    intra_connectivities <- gord_cor |>
+    gord_cor <- gord_cor |>
         dplyr::select(
             "subjectkey",
-            "rsfmri_c_ngd_dt_ngd_dt", # default mode network intra-connectivity
-            "rsfmri_c_ngd_sa_ngd_sa", # salient network intra-connectivity
-            "rsfmri_c_ngd_fo_ngd_fo", # fronto-parietal network intra-connectivity
+            dplyr::all_of(keep_vars)
         )
-    # data frame of just rowmeans
-    #gord_cor <- data.frame(rowMeans(gord_cor))
-    #gord_cor$"subjectkey" <- rownames(gord_cor)
-    #colnames(gord_cor) <- c("avg_gord_cor", "subjectkey")
-    #rownames(gord_cor) <- NULL
-    #gord_cor <- gord_cor |> dplyr::select(
-    #    "subjectkey",
-    #    "avg_gord_cor"
-    #)
     return(gord_cor)
 }
 
@@ -1617,19 +1597,11 @@ get_subc_cor <- function(mri_y_rsfmr_cor_gp_aseg,
     subc_cor <- mri_y_rsfmr_cor_gp_aseg |>
         filter_timepoint(t = t) |>
         filter_subjects(subjects = subjects)
-    # Store the subjectkeys in the rownames
-    row.names(subc_cor) <- subc_cor$"subjectkey"
-    # Remove the subjectkeys
-    subc_cor <- subc_cor |>
-        dplyr::select(-c("subjectkey", "eventname"))
     # Data frame of just rowmeans
-    subc_cor <- data.frame(rowMeans(subc_cor))
-    subc_cor$"subjectkey" <- rownames(subc_cor)
-    colnames(subc_cor) <- c("avg_subc_cor", "subjectkey")
-    rownames(subc_cor) <- NULL
     subc_cor <- subc_cor |> dplyr::select(
         "subjectkey",
-        "avg_subc_cor"
+        "rsfmri_cor_ngd_fopa_scs_aglh",  # FPN and left amygdala
+        "rsfmri_cor_ngd_fopa_scs_agrh"   # FPN and left amygdala
     )
     return(subc_cor)
 }
@@ -1640,7 +1612,8 @@ get_subc_cor <- function(mri_y_rsfmr_cor_gp_aseg,
 #' @inheritParams filter_subjects
 #' @param mri_y_smr_vol_aseg Data file containing subcortical data
 #' @param only_whole_brain If TRUE, collects only whole brain volume. Else,
-#'  collects all fts.
+#' collects all fts. Whole brain volume is extracted as the column
+#' "smri_vol_scs_wholeb".
 #' @return A data frame containing subcortical volumes.
 #' @export
 get_subc_v <- function(mri_y_smr_vol_aseg,
@@ -1700,6 +1673,8 @@ get_subc_var <- function(mrirstv02,
 #' @inheritParams filter_subjects
 #' @param mri_y_rsi_rnd_at Data file containing neurite density data
 #' @param mri_y_rsi_rnd_wm_dsk Data file containing neurite density data
+#' @param only_mean Logical indicating whether to return only the mean cortical
+#'  thickness or all cortical thicknesses. Defaults to TRUE.
 #' @return A data frame of white matter neurite densities
 #' @export
 get_wmnd <- function(mri_y_rsi_rnd_at,
