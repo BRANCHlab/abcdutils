@@ -4,7 +4,7 @@
 \alias{get_gord_cor}
 \title{Extract cortical network correlations}
 \usage{
-get_gord_cor(mri_y_rsfmr_cor_gp_gp, subjects = NULL, t = NULL)
+get_gord_cor(mri_y_rsfmr_cor_gp_gp, subjects = NULL, t = NULL, roi_pairs)
 }
 \arguments{
 \item{mri_y_rsfmr_cor_gp_gp}{Data file containing neurite density data}
@@ -12,6 +12,22 @@ get_gord_cor(mri_y_rsfmr_cor_gp_gp, subjects = NULL, t = NULL)
 \item{subjects}{Vector of subjects to filter to.}
 
 \item{t}{timepoint of data collection (0: baseline, 1: 1yfu, ...)}
+
+\item{roi_pairs}{List where each item in the list is a 2-item vector of ROIs
+to select a correlation variable for. Possible ROIs are:
+- "auditory"
+- "cingulo_opercular"
+- "cingulo_parietal"
+- "default"
+- "dorsal_attention"
+- "fronto_parietal"
+- "none"
+- "retrosplenial_temporal"
+- "salience"
+- "sensorimotor_hand"
+- "sensorimotor_mouth"
+- "ventral_attention"
+- "visual"}
 }
 \value{
 A data frame of white matter neurite densities

@@ -4,7 +4,7 @@
 \alias{get_subc_cor}
 \title{Extract subcortical network correlations}
 \usage{
-get_subc_cor(mri_y_rsfmr_cor_gp_aseg, subjects = NULL, t = NULL)
+get_subc_cor(mri_y_rsfmr_cor_gp_aseg, subjects = NULL, t = NULL, roi_pairs)
 }
 \arguments{
 \item{mri_y_rsfmr_cor_gp_aseg}{Data file containing neurite density data}
@@ -12,6 +12,43 @@ get_subc_cor(mri_y_rsfmr_cor_gp_aseg, subjects = NULL, t = NULL)
 \item{subjects}{Vector of subjects to filter to.}
 
 \item{t}{timepoint of data collection (0: baseline, 1: 1yfu, ...)}
+
+\item{roi_pairs}{List where each item in the list is a 2-item vector of ROIs
+to select a correlation variable for. Possible ROIs are:
+Network ROIs:
+- auditory
+- cingulo_opercular
+- cingulo_parietal
+- default
+- dorsal_attention
+- fronto_parietal
+- none
+- retrosplenial_temporal
+- salience
+- sensorimotor_hand
+- sensorimotor_mouth
+- ventral_attention
+- visual
+Subcortical structure ROIs:
+- left_accumbens_area
+- right_accumbens_area
+- left_amygdala
+- right_amygdala
+- brain_stem
+- left_caudate
+- right_caudate
+- left_cerebellum_cortex
+- right_cerebellum_cortex
+- left_hippocampus
+- right_hippocampus
+- left_pallidum
+- right_pallidum
+- left_putamen
+- right_putamen
+- left_thalamus_proper
+- right_thalamus_proper
+- left_ventraldc
+- right_ventraldc}
 }
 \value{
 A data frame of white matter neurite densities

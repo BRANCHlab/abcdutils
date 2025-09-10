@@ -20,6 +20,9 @@ get_wmnd(
 \item{subjects}{Vector of subjects to filter to.}
 
 \item{t}{timepoint of data collection (0: baseline, 1: 1yfu, ...)}
+
+\item{only_mean}{Logical indicating whether to return only the mean cortical
+thickness or all cortical thicknesses. Defaults to TRUE.}
 }
 \value{
 A data frame of white matter neurite densities

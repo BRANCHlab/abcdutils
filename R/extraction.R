@@ -463,12 +463,27 @@ get_gender_y <- function(gish_y_gi,
 #' @inheritParams filter_timepoint
 #' @inheritParams filter_subjects
 #' @param mri_y_rsfmr_cor_gp_gp Data file containing neurite density data
+#' @param roi_pairs List where each item in the list is a 2-item vector of ROIs
+#' to select a correlation variable for. Possible ROIs are:
+#'     - "auditory"
+#'     - "cingulo_opercular"
+#'     - "cingulo_parietal"
+#'     - "default"
+#'     - "dorsal_attention"
+#'     - "fronto_parietal"
+#'     - "none"
+#'     - "retrosplenial_temporal"
+#'     - "salience"
+#'     - "sensorimotor_hand"
+#'     - "sensorimotor_mouth"
+#'     - "ventral_attention"
+#'     - "visual"
 #' @return A data frame of white matter neurite densities
 #' @export
 get_gord_cor <- function(mri_y_rsfmr_cor_gp_gp,
                          subjects = NULL,
                          t = NULL,
-                         desired_networks) {
+                         roi_pairs) {
     mri_y_rsfmr_cor_gp_gp <- swap_src_subjectkey(mri_y_rsfmr_cor_gp_gp)
     gord_cor <- mri_y_rsfmr_cor_gp_gp |>
         filter_timepoint(t = t) |>
@@ -489,9 +504,14 @@ get_gord_cor <- function(mri_y_rsfmr_cor_gp_gp,
         "visual" = "vs"
     )
     keep_vars <- lapply(
-        desired_networks,
+        roi_pairs,
         function(x) {
-            paste0("rsfmri_c_ngd_", networks[[x[[1]]]], "_ngd_", networks[[x[[2]]]])
+            paste0(
+                "rsfmri_c_ngd_",
+                networks[[x[[1]]]],
+                "_ngd_",
+                networks[[x[[2]]]]
+            )
         }
     ) |> unlist()
     # Remove the subjectkeys
@@ -501,28 +521,6 @@ get_gord_cor <- function(mri_y_rsfmr_cor_gp_gp,
             dplyr::all_of(keep_vars)
         )
     return(gord_cor)
-}
-
-#' Extract cortical temporal variances
-#'
-#' @inheritParams filter_timepoint
-#' @inheritParams filter_subjects
-#' @param mri_y_rsfmr_var_gp Data file containing neurite density data
-#' @return A data frame of white matter neurite densities
-#' @export
-get_gord_var <- function(mri_y_rsfmr_var_gp,
-                         subjects = NULL,
-                         t = NULL) {
-    mri_y_rsfmr_var_gp <- swap_src_subjectkey(mri_y_rsfmr_var_gp)
-    gord_var_raw <- mri_y_rsfmr_var_gp |>
-        filter_timepoint(t = t) |>
-        filter_subjects(subjects = subjects)
-    gord_var <- gord_var_raw |>
-        dplyr::select(
-            "subjectkey",
-            dplyr::contains("rsfmri_var_cortgordon_")
-        )
-    return(gord_var)
 }
 
 #' Get subject headache history
@@ -1588,21 +1586,97 @@ get_sports_and_activities <- function(ph_p_saiq,
 #' @inheritParams filter_timepoint
 #' @inheritParams filter_subjects
 #' @param mri_y_rsfmr_cor_gp_aseg Data file containing neurite density data
+#' @param roi_pairs List where each item in the list is a 2-item vector of ROIs
+#' to select a correlation variable for. Possible ROIs are:
+#' Network ROIs:
+#'     - auditory
+#'     - cingulo_opercular
+#'     - cingulo_parietal
+#'     - default
+#'     - dorsal_attention
+#'     - fronto_parietal
+#'     - none
+#'     - retrosplenial_temporal
+#'     - salience
+#'     - sensorimotor_hand
+#'     - sensorimotor_mouth
+#'     - ventral_attention
+#'     - visual
+#' Subcortical structure ROIs:
+#'     - left_accumbens_area
+#'     - right_accumbens_area
+#'     - left_amygdala
+#'     - right_amygdala
+#'     - brain_stem
+#'     - left_caudate
+#'     - right_caudate
+#'     - left_cerebellum_cortex
+#'     - right_cerebellum_cortex
+#'     - left_hippocampus
+#'     - right_hippocampus
+#'     - left_pallidum
+#'     - right_pallidum
+#'     - left_putamen
+#'     - right_putamen
+#'     - left_thalamus_proper
+#'     - right_thalamus_proper
+#'     - left_ventraldc
+#'     - right_ventraldc
 #' @return A data frame of white matter neurite densities
 #' @export
 get_subc_cor <- function(mri_y_rsfmr_cor_gp_aseg,
                          subjects = NULL,
-                         t = NULL) {
+                         t = NULL,
+                         roi_pairs) {
     mri_y_rsfmr_cor_gp_aseg <- swap_src_subjectkey(mri_y_rsfmr_cor_gp_aseg)
     subc_cor <- mri_y_rsfmr_cor_gp_aseg |>
         filter_timepoint(t = t) |>
         filter_subjects(subjects = subjects)
-    # Data frame of just rowmeans
-    subc_cor <- subc_cor |> dplyr::select(
-        "subjectkey",
-        "rsfmri_cor_ngd_fopa_scs_aglh",  # FPN and left amygdala
-        "rsfmri_cor_ngd_fopa_scs_agrh"   # FPN and left amygdala
-    )
+        rois <- c(
+            "auditory" = "au",
+            "cingulo_opercular" = "cerc",
+            "cingulo_parietal" = "copa",
+            "default" = "df",
+            "dorsal_attention" = "dsa",
+            "fronto_parietal" = "fopa",
+            "none" = "none",
+            "retrosplenial_temporal" = "rst",
+            "salience" = "sa",
+            "sensorimotor_hand" = "smh",
+            "sensorimotor_mouth" = "smm",
+            "ventral_attention" = "vta",
+            "visual" = "vs",
+            "left_accumbens_area" = "aalh",
+            "right_accumbens_area" = "aarh",
+            "left_amygdala" = "aglh",
+            "right_amygdala" = "agrh",
+            "brain_stem" = "bs",
+            "left_caudate" = "cdelh",
+            "right_caudate" = "cderh",
+            "left_cerebellum_cortex" = "crcxlh",
+            "right_cerebellum_cortex" = "crcxrh",
+            "left_hippocampus" = "hplh",
+            "right_hippocampus" = "hprh",
+            "left_pallidum" = "pllh",
+            "right_pallidum" = "plrh",
+            "left_putamen" = "ptlh",
+            "right_putamen" = "ptrh",
+            "left_thalamus_proper" = "thplh",
+            "right_thalamus_proper" = "thprh",
+            "left_ventraldc" = "vtdclh",
+            "right_ventraldc" = "vtdcrh"
+        )
+    keep_vars <- lapply(
+        roi_pairs,
+        function(x) {
+            paste0("rsfmri_cor_ngd_", rois[[x[[1]]]], "_scs_", rois[[x[[2]]]])
+        }
+    ) |> unlist()
+    subc_cor <- subc_cor |>
+        dplyr::select(
+            "subjectkey",
+            dplyr::all_of(keep_vars)
+        )
     return(subc_cor)
 }
 
