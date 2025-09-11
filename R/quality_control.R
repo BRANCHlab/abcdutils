@@ -22,14 +22,14 @@ get_qc_data <- function(mri_y_qc_incl,
         filter_timepoint(t = t) |>
         filter_subjects(subjects = subjects) |>
         dplyr::select(
-            subjectkey,
+            "subjectkey",
             paste0("imgincl_", type, "_include")
         )
     qc_pass <- stats::na.omit(mri_y_qc_incl[mri_y_qc_incl[, 2] == 1, ])$"subjectkey"
     qc_fail <- stats::na.omit(mri_y_qc_incl[mri_y_qc_incl[, 2] != 1, ])$"subjectkey"
     qc_missing <- mri_y_qc_incl |>
-        filter(if_any(everything(), is.na)) |>
-        dplyr::select(subjectkey) |>
+        dplyr::filter(dplyr::if_any(dplyr::everything(), is.na)) |>
+        dplyr::select("subjectkey") |>
         unlist() |>
         as.vector()
     return(

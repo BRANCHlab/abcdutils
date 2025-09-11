@@ -559,33 +559,12 @@ get_mtbi_subjects <- function(ph_p_otbi,
 #' @return uninjured_subjects List of uninjured subjects
 #' @export
 get_uninjured_subjects <- function(ph_p_otbi, abcd_y_lt, t = NULL) {
+    any_headneck_inj <- ""
     subjectkey <- ""
-    mtbi <- ""
-    possible_mtbi <- ""
-    improbable_tbi <- ""
-    moderate_tbi <- ""
-    severe_tbi <- ""
-    all_inj <- ""
-    mtbi_sum <- ""
-    possible_mtbi_sum <- ""
-    improbable_tbi_sum <- ""
-    moderate_tbi_sum <- ""
-    severe_tbi_sum <- ""
     ph_p_otbi <- detail_mtbi(ph_p_otbi, abcd_y_lt, t = t) |>
-        dplyr::group_by(subjectkey) |>
-        dplyr::summarize(
-            mtbi_sum = sum(mtbi, na.rm = TRUE),
-            possible_mtbi_sum = sum(possible_mtbi, na.rm = TRUE),
-            improbable_tbi_sum = sum(improbable_tbi, na.rm = TRUE),
-            moderate_tbi_sum = sum(moderate_tbi, na.rm = TRUE),
-            severe_tbi_sum = sum(severe_tbi, na.rm = TRUE)
-        ) |>
-        dplyr::mutate(
-            all_inj = mtbi_sum + possible_mtbi_sum + improbable_tbi_sum +
-                moderate_tbi_sum + severe_tbi_sum
-        )
+        identify_injured() |>
+        dplyr::filter(is.na(any_headneck_inj) | !any_headneck_inj)
     uninjured_subjects <- ph_p_otbi |>
-        dplyr::filter(all_inj == 0) |>
         dplyr::select(subjectkey)
     return(uninjured_subjects)
 }
