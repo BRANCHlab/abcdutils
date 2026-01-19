@@ -215,6 +215,7 @@ identify_all_tbi <- function(tbi_df) {
             violent_loc == 2 ~ TRUE,
             blast_loc == 2 ~ TRUE,
             multi_loc == 2 ~ TRUE,
+            (other_loc_max_loc_mins > 30 & other_loc_max_loc_mins <= 1440 ~ TRUE),
             ## Negation of other conditions
             # Either didn't have injury or injury didn't meet
             #  criteria for moderate TBI
@@ -223,7 +224,8 @@ identify_all_tbi <- function(tbi_df) {
                 (fall_hit_inj == 0 | fall_hit_loc != 2) &
                 (violent_inj == 0 | violent_loc != 2) &
                 (blast_inj == 0 | blast_loc != 2) &
-                (multi_inj == 0 | multi_loc != 2) ~ FALSE,
+                (multi_inj == 0 | multi_loc != 2) &
+                (other_loc_inj == 0 | (!(other_loc_max_loc_mins > 30 & other_loc_max_loc_mins <= 1440))) ~ FALSE,
             TRUE ~ NA
         ),
         # Severe TBI #
@@ -234,12 +236,14 @@ identify_all_tbi <- function(tbi_df) {
             violent_loc >= 3 ~ TRUE,
             blast_loc >= 3 ~ TRUE,
             multi_loc >= 3 ~ TRUE,
+            (other_loc_max_loc_mins > 1440 ~ TRUE),
             ## Negation of other conditions
             (hosp_er_inj == 0 | hosp_er_loc < 3) &
                 (vehicle_inj == 0 | vehicle_loc < 3) &
                 (fall_hit_inj == 0 | fall_hit_loc < 3) &
                 (violent_inj == 0 | violent_loc < 3) &
                 (blast_inj == 0 | blast_loc < 3) &
+                (other_loc_inj == 0 | (other_loc_max_loc_mins <= 1440)) &
                 (multi_inj == 0 | multi_loc < 3) ~ FALSE,
             TRUE ~ NA
         )
