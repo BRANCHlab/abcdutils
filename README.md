@@ -15,10 +15,10 @@ You can install abcdutils from [GitHub](https://github.com/) with:
 
 ``` r
 # Latest development version
-devtools::install_github("psvelayudhan/abcdutils")
+devtools::install_github("BRANCHlab/abcdutils")
 
 # Install a specific tagged version
-devtools::install_github("psvelayudhan/abcdutils@v0.4.0")
+devtools::install_github("BRANCHlab/abcdutils@v0.4.0")
 ```
 
 ## Usage
